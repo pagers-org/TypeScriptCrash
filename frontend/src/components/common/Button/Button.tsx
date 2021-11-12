@@ -1,4 +1,4 @@
-import { StyledButton } from './Button.styles'
+import { StyledButton, StyledLink } from './Button.styles'
 
 export interface Props {
   to: string;
@@ -7,8 +7,13 @@ export interface Props {
 }
 
 const Button = ({ to, cyan, fullWidth }: Props) => {
-  return (
-    <>
-    </>
-  );
+  return to
+    ? (
+      <StyledLink cyan={cyan ? 1 : 0} />
+    )
+    : (
+      <StyledButton />
+    );
 }
+
+export default Button;

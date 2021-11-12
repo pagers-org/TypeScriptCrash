@@ -1,11 +1,36 @@
-import { StyledHeader, StyledTitle } from "./Header.styles";
+import { Link } from 'react-router-dom'
+import Button from "../Button/Button";
+import { Spacer, StyledHeader, Wrapper } from "./Header.styles";
 
-const Header = ():JSX.Element => {
+interface Props {
+  user: object;
+  onLogout: () => {}
+}
+
+const Header = ({ user, onLogout }: Props) => {
   return (
-    <StyledHeader>
-      <StyledTitle>테스트!</StyledTitle>
-    </StyledHeader>
-  )
+    <>
+      <StyledHeader>
+        <Wrapper>
+          <Link to="/" className="logo">Reacters</Link>
+          <div className="right">
+            {user
+              ? (
+                <>
+                  <UserInfo>{user.username}</UserInfo>
+                  <Button onClick={onLogout}>로그아웃</Button>
+                </>
+              )
+              : (
+                <Button to="/login">로그인</Button>
+              )}
+
+          </div>
+        </Wrapper>
+      </StyledHeader>
+      <Spacer />
+    </>
+  );
 };
 
 export default Header;

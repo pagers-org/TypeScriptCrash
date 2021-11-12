@@ -1,4 +1,5 @@
 import { CSSProperties } from 'react';
+import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components';
 import palette from '../../../lib/styles/palette';
 
@@ -38,4 +39,8 @@ const styleButton = css<CSSProperties>`
 
 export const StyledButton = styled.button`
   ${styleButton}
+`;
+
+export const StyledLink = styled(Link)`
+  ${styleButton};
 `;
