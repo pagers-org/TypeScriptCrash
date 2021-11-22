@@ -314,3 +314,194 @@ add에 대한 처음 두 선언문은 타입의 정보를 제공할 뿐이므로
 정리하자면, 코드 생성은 타입 시스템과 무관하므로 런타임 동작과 성능에 영향을 주지 않습니다. 또한 타입 오류가 존재하더라도 코드 생성(컴파일)은 가능합니다.
 
 마지막으로 타입스크립트 타입은 런타임에 사용할 수 없습니다. 런타임에 타입을 지정하려면 타입 정보 유지를 위한 별도의 방법이 필요하며, 일반적으로 태그된 유니온 및 속성 체크 방법을 사용합니다. 혹은 클래스 같이 타입스크립트 타입과 런타임 값 둘 다 제공하는 방법이 있습니다.
+
+<br>
+
+# 구조적 타이핑에 익숙해지기
+> 자바스크립트는 본질적으로 **덕 타이핑(Duck Typing)** 기반으로 어떤 함수의 매개변수 값이 제대로 주어진다면 그 값이 어떻게 만들어졌는지 신경쓰지 않고 사용합니다.
+
+타입스크립트는 매개변수 값이 요구사항을 만족한다면 타입이 무엇인지 신경 쓰지 않는 동작을 그대로 모델링합니다. 그러나 `타입 체커의 타입 이해도가 사람과 조금 다르므로 가끔 예상치 못한 결과가 나옵니다`.
+
+물리 라이브러리와 2D 벡터 타입을 다루는 아래의 경우를 볼까요?
+
+```js
+interface Vector2D{
+  x: number;
+  y: number;
+}
+
+// 백터 길이를 계산하는 함수
+function calculateLength(v: Vector2D){
+  return Math.sqrt(v.x * v.x * v.y);
+}
+```
+
+여기에 이름이 들어간 벡터를 추가합니다.
+
+```js
+interface NamedVector {
+  name: string;
+  x: number;
+  y: number;
+}
+```
+
+`NamedVector`는 number 타입의 x, y 속성이 있으므로 calculateLength 함수로 호출이 가능합니다.
+
+```js
+const v: NamedVector = { x: 3, y: 4, name: 'Zee' };
+calculateLength(v);  // 결과는 5입니다.
+```
+
+Vector2D와 NamedVector의 관계를 전혀 선언하지 않았고, NamedVector에 대응되는 calculateLength를 구현하지 않았음에도 정상적으로 작동합니다. 이는 타입스크립트의 타입 시스템이 자바스크립트 런타임 동작을 모델링하기 때문입니다.
+
+여기서 구조적 타이핑(Structural Typing)이라는 용어가 등장하죠. 이 구조적 타이핑 때문에 문제가 발생하기도 합니다.
+
+```js
+interface Vector3D {
+  x: number;
+  y: number;
+  z: number;
+}
+
+// 벡터의 길이를 1로 만드는 정규화 함수
+function normalize(v: Vector3D) {
+  const length = calculateLength(v);
+  return {
+    x: v.x / length,
+    y: v.y / length,
+    z: v.z / length,
+  };
+}
+
+// 그러나 이 함수는 1보다 조금 더 긴 길이를 가진 결과(1.41)를 출력합니다.
+```
+
+타입스크립트가 오류를 잡지 못한 이유는 무엇일까요? 바로 calculateLength는 2D 벡터를 기반으로 연산하지만 normalize가 3D 벡터로 연산되어 z가 정규화에서 무시된 것입니다. 그런데 타입 체커는 이 오류를 잡아내지 못했죠. 왜 그럴까요?
+
+Vector3D와 호환되는 {x, y, z} 객체로 calculateLength를 호출하면 구조적 타이핑 관점에서 x와 y가 있어서 Vector2D와 호환되므로 오류가 발생하지 않는 것이죠(물론 이를 처리할 설정도 존재합니다).
+
+함수를 작성할 때 호출에 사용되는 매개변수의 속성들이 매개변수의 타입에 선언된 속성만을 가질 거라 생각하기 쉬운데, 이런 타입은 `봉인된(Sealed)` 또는 `정확한(Precise)` 타입이라고 불리며 타입스크립트에서는 표현할 수 없습니다. 좋든 싫든 타입은 `열려(open)`있으니까요.
+
+> 타입이 열려 있다는 것은 타입의 확장이 가능하다는 의미로 타입에 서언된 속성 외에 임의의 속성을 추가해도 오류가 발생하지 않는다는 것이죠.
+> - 즉, 고양이라는 타입에 크기가 추가되어 작은 고양이가 되어도 고양이라는 뜻입니다.
+
+덕분게 가끔 당황스러운 결과를 맞이합니다.
+
+```js
+function calculateLengthL1(v: Vector3D) {
+  let length = 0;
+  for (const axis of Object.keys(v)) {
+    const coord = v[axis];
+              // 'string'은 'Vector3D'의 인덱스로 사용할 수 없기에
+              // 엘리먼트는 암시적으로 'any' 타입입니다.
+    length += Math.abs(coord);
+  }
+  return length;
+}
+```
+
+왜 이런 오류가 발생하죠? axis는 Vector3D 타입인 v의 키 중 하나이므로 'x', 'y', 'z' 중 하나여야 하며 Vector3D 선언에 따라 모두 number이므로 coord의 타입이 number가 되어야 한다고 예상됩니다.
+
+그러나 사실은 타입스크립트가 오류를 정확히 찾아낸 것입니다. 앞에서 Vector3D는 봉인(다른 속성이 없는)되었다고 가정했죠? 그런데 다음 코드처럼 작성이 가능합니다.
+
+```js
+const vec3D = {x: 3, y: 4, z: 1, address: '123 Broadway'};
+calculateLengthL1(vec3D);  // NaN이 반환됩니다.
+```
+
+v는 어떤 속성이든 가질 수 있으므로 axis의 타입은 string이 될 수도 있습니다. 그러므로 number라고 확정할 수 없죠. 정확한 타입으로 객체를 순회하는 것은 까다로운 문제가 되는 것입니다. 이런 경우 루프보다는 모든 속성을 각각 더하는 구현이 더 낫습니다.
+
+```js
+function calculateLengthL1(v: Vector3D) {
+  return Math.abs(v.x) + Math.abs(v.y) + Math.abs(v.z);
+}
+```
+
+더불어 구조적 타이핑은 클래스와 관련된 할당문에도 꽤 황당환 결과를 보여줍니다.
+
+```js
+class C {
+  foo: string;
+  constructor(foo: string) {
+    this.foo = foo;
+  }
+}
+
+const c = new C('instance of C');
+const d: C = { foo: 'object literal' };  // 정상!
+```
+
+d가 C 타입에 할당되는 이유가 뭘까요? d는 string 타입의 foo 속성을 가지며 하나의 매개변수(보통은 매개변수 없이 호출되지만요)로 호출 되는 생성자(Object.prototype으로부터 비롯된)를 가집니다. 그래서 구조적으로는 필요한 속성, 생성자가 존재하기 때문에 문제가 없죠. 만약 C의 생성자에 단순 할당이 아니라 연산 로직이 존재한다면 d의 경우는 생성자를 실행하지 않으므로 문제가 발생합니다. 이런 부분이 C 타입 매개변수를 선언하여 C 또는 서브클래스를 보장하는 C++, 자바 같은 언어와 매우 다른 특징이죠.
+
+테스트를 작성할 때는 구조적 타이핑이 유리합니다. 데이터베이스에 쿼리(query) 후 결과를 처리하는 함수를 살펴볼까요?
+
+```js
+interface PostgresDB {
+  runQuery: (sql: string) => any[];
+}
+
+interface Author {
+  first: string;
+  last: string;
+}
+
+function getAuthors(database: PostgresDB): Author[] {
+  const authorRows = database.runQuery(`SELECT FIRST, LAST FROM AUTHORS`);
+  return authorRows.map(row => ({first: row[0], last: row[1]}));
+}
+```
+
+getAuthors 함수를 테스트하기 위해서는 모킹(Mocking)한 PostgresDB를 생성해야 하지만, 구조적 타이핑을 활용하면 더 구체적인 인터페이스를 정의할 수 있습니다.
+
+```js
+interface PostgresDB {
+  runQuery: (sql: string) => any[];
+}
+
+interface Author {
+  first: string;
+  last: string;
+}
+
+interface DB {
+  runQuery: (sql: string) => any[];
+}
+
+function getAuthors(database: DB): Author[] {
+  const authorRows = database.runQuery(`SELECT FIRST, LAST FROM AUTHORS`);
+  return authorRows.map(row => ({first: row[0], last: row[1]}));
+}
+```
+
+runQuery 메서드가 있으므로 실제 환경에서도 getAuthors에 PostgresDB를 사용할 수 있죠. 구조적 타이핑 덕분에 PostgresDB가 DB 인터페이스를 구현하는지 명확히 선언할 필요가 없습니다.
+
+테스트를 작성할 경우 더 간단하게 객체를 매개변수로 사용할 수 있습니다.
+
+```js
+test('getAuthors', () => {
+  const authors = getAuthors({
+    runQuery(sql: string) {
+      return [['Toni', 'Morrison'], ['Maya', 'Angelou']];
+    }
+  });
+  expect(authors).toEqual([
+    {first: 'Toni', last: 'Morrison'},
+    {first: 'Maya', last: 'Angelou'}
+  ]);
+});
+```
+
+타입스크립트는 테스트 DB가 해당 인터페이스를 충족하는지 확인합니다. 테스트 코드에는 실제 환경의 데이터베이스에 대한 정보와 모킹 라이브러리조차 필요 없죠. 추상화(DB)로 로직과 테스트를 특정한 구현(PostgresDB)으로부터 분리한 것입니다.
+
+테스트 이외에 구조적 타이핑의 장점은 `라이브러리 간 의존성을 완벽히 분리`할 수 있다는 것입니다.
+
+<br>
+
+정리해볼까요?
+1. 자바스크립트는 덕 타이핑 기반이며 타입스크립트가 이를 모델링하기 위해 구조적 타이핑을 사용하는 것을 이해합시다.
+   - 어떤 인터페이스에 할당 가능한 값이라면 타입 선언에 명시적으로 나열된 속성을 가지고 있겠죠? 타입은 봉인되어 있지 않습니다.
+2. 클래스도 구조적 타이핑 규칙을 따르며, 클래스의 인스턴스가 예상과 다를 수 있습니다.
+3. 구조적 타이핑을 사용하면 유닛 테스팅(Unit Testing)을 손쉽게 할 수 있습니다.
+
+<br>
