@@ -1,37 +1,33 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
-    "module": "ES6",
-    // @ts-check와 같은 효과를 내는 옵션은 checkJs
+    "baseUrl": ".",
     "allowJs": true,
-    // tsc
-    "target": "ES5",
-    // 컴파일된 파일 출력 경로
-    "outDir": "./dist",
-    // 프로미스 베이스
-    "moduleResolution": "Node",
-    "lib": [
-      "ES2015",
-      "DOM",
-      "DOM.Iterable"
-    ],
-    // 타입이 정해져있지 않은 코드를 any라도 지정해야한다고 제한
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "strictPropertyInitialization": false,
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noEmit": true,
     "noImplicitAny": true,
-    // 1번째 인자 : 제공되는 types
-    // 2번째 인자 : 내가 만드는 types
-    "typeRoots": [
-      "./node_modules/@types",
-      "./types"
-    ],
-    // strict와 관련된 모든 속성이 true로 변경됨
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "preserveConstEnums": true,
+    "removeComments": false,
+    "resolveJsonModule": true,
+    "downlevelIteration": true,
     "strict": true,
+    "sourceMap": true,
+    "useDefineForClassFields": true,
+    "importHelpers": true,
+    "skipLibCheck": true,
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost"],
+    "types": ["node"],
+    "paths": {
+      "@project/ui/src/*": ["../ui/src/*"],
+    },
   },
-  // src 하위에 있는 폴더만 컴파일 하겠다
-  "include": [
-    "./src/**/*",
-    "./moonbucks-menu/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ] // 기본값
 }

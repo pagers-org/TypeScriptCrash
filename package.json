@@ -1,8 +1,12 @@
 {
-  "name": "typescriptcrash",
+  "name": "@fecrash/workspace",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsc -w"
@@ -19,13 +23,13 @@
   },
   "homepage": "https://github.com/InSeong-So/TypeScriptCrash#readme",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.3.1",
-    "@typescript-eslint/parser": "^5.3.1",
-    "eslint": "^8.2.0",
-    "eslint-config-prettier": "^8.3.0",
+    "@typescript-eslint/eslint-plugin": "^5.14.0",
+    "@typescript-eslint/parser": "^5.14.0",
+    "eslint": "^8.11.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "prettier": "^2.4.1",
+    "prettier": "^2.5.1",
     "prettier-eslint": "^13.0.0",
-    "typescript": "^4.4.4"
+    "typescript": "^4.6.2"
   }
 }
