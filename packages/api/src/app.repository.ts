@@ -1,5 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Nedb = require('nedb');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { nanoid } = require('nanoid');
 
 export class AppRepository<T> {
   protected readonly nedb;
@@ -51,8 +53,9 @@ export class AppRepository<T> {
    * @param data new data
    */
   async insert(data: T): Promise<T> {
+    const generatedData = { ...data, _id: nanoid() };
     return new Promise((resolve, reject) => {
-      this.nedb.insert(data, (error, doc) => {
+      this.nedb.insert(generatedData, (error, doc) => {
         if (error) {
           reject(error);
         }
