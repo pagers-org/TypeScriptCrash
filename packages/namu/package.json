@@ -1,7 +1,6 @@
 {
-  "name": "parang",
-  "version": "1.0.0",
-  "description": "",
+  "name": "@fecrash/namu",
+  "version": "0.0.1",
   "main": "webpack.config.js",
   "scripts": {
     "watch:tsc": "tsc -w",
@@ -10,9 +9,6 @@
     "start": "webpack-dev-server",
     "test": "tsc && webpack && cypress run --browser chrome"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "css-loader": "^6.5.1",
     "html-webpack-plugin": "^5.5.0",
