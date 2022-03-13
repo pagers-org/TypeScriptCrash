@@ -8,8 +8,8 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc -w"
+    "start:api": "npm run start -w ./packages/api",
+    "start:parang": "npm run start -w ./packages/parang"
   },
   "repository": {
     "type": "git",
