@@ -10,6 +10,16 @@ export class UserService extends AppService<UserEntity> {
     this.userRepository = userRepository;
   }
 
+  async findUser(
+    payload: Pick<UserEntity, 'email' | 'password'>,
+  ): Promise<UserEntity> {
+    return this.userRepository.login(payload);
+  }
+
+  async findBookmark(payload: UserEntity) {
+    return this.userRepository.bookmarkList(payload);
+  }
+
   async add(payload: UserEntity, url: string): Promise<UserEntity> {
     return this.userRepository.addLibrary(payload, url);
   }

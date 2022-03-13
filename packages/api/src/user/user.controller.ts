@@ -10,7 +10,19 @@ export class UserController extends AppController<UserEntity> {
     this.userService = userService;
   }
 
-  @Post(':url')
+  @Post('login')
+  async findUser(
+    @Body() payload: Pick<UserEntity, 'email' | 'password'>,
+  ): Promise<UserEntity> {
+    return this.userService.findUser(payload);
+  }
+
+  @Post('bookmark')
+  async findBookmark(@Body() payload: UserEntity) {
+    return this.userService.findBookmark(payload);
+  }
+
+  @Post('bookmark/:url')
   async add(
     @Param('url') url: string,
     @Body() payload: UserEntity,
@@ -18,7 +30,7 @@ export class UserController extends AppController<UserEntity> {
     return this.userService.add(payload, url);
   }
 
-  @Delete(':id')
+  @Delete('bookmark/:id')
   async remove(
     @Param('id') libraryId: string,
     @Body() payload: UserEntity,

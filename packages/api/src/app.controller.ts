@@ -18,6 +18,7 @@ export class AppController<T> {
 
   @Post()
   async save(@Body() data: T): Promise<T> {
+    console.log(data);
     return this.appService.save(data);
   }
 

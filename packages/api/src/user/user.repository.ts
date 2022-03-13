@@ -10,6 +10,31 @@ export class UserRepository extends AppRepository<UserEntity> {
     super('./db/user.db');
   }
 
+  async login({
+    email,
+    password,
+  }: Pick<UserEntity, 'email' | 'password'>): Promise<UserEntity> {
+    return new Promise((resolve, reject) => {
+      this.nedb.find({ email, password }, (error, docs) => {
+        if (error) {
+          reject(error);
+        }
+        resolve(docs);
+      });
+    });
+  }
+
+  async bookmarkList({ _id }: UserEntity) {
+    return new Promise((resolve, reject) => {
+      this.nedb.find({ _id }, (error, docs) => {
+        if (error) {
+          reject(error);
+        }
+        resolve(docs[0].bookmark || []);
+      });
+    });
+  }
+
   async addLibrary({ _id }: UserEntity, url: string): Promise<UserEntity> {
     const data = { _id: nanoid(), url };
     return new Promise((resolve, reject) => {
