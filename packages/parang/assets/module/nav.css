@@ -79,7 +79,7 @@ nav div.item input[type=radio]:checked+label::after {
   transition: transform 0.3s ease-in-out, opacity 0.2s ease-in-out 0.1s;
 }
 
-@-webkit-keyframes explorebtn {
+@-webkit-keyframes explore {
 
   0%,
   100% {
@@ -92,7 +92,7 @@ nav div.item input[type=radio]:checked+label::after {
   }
 }
 
-@keyframes explorebtn {
+@keyframes explore {
 
   0%,
   100% {
@@ -105,25 +105,25 @@ nav div.item input[type=radio]:checked+label::after {
   }
 }
 
-input[type=radio]#explorebtn:checked+label[for] svg path:nth-of-type(3),
-input[type=radio]#explorebtn:checked+label[for] svg path:nth-of-type(6),
-input[type=radio]#explorebtn:checked+label[for] svg path:nth-of-type(9) {
-  -webkit-animation: explorebtn 0.3s linear;
-  animation: explorebtn 0.3s linear;
+input[type=radio]#explore:checked+label[for] svg path:nth-of-type(3),
+input[type=radio]#explore:checked+label[for] svg path:nth-of-type(6),
+input[type=radio]#explore:checked+label[for] svg path:nth-of-type(9) {
+  -webkit-animation: explore 0.3s linear;
+  animation: explore 0.3s linear;
 }
 
-input[type=radio]#explorebtn:checked+label[for] svg path:nth-of-type(2),
-input[type=radio]#explorebtn:checked+label[for] svg path:nth-of-type(5),
-input[type=radio]#explorebtn:checked+label[for] svg path:nth-of-type(8) {
-  -webkit-animation: explorebtn 0.3s linear 0.1s;
-  animation: explorebtn 0.3s linear 0.1s;
+input[type=radio]#explore:checked+label[for] svg path:nth-of-type(2),
+input[type=radio]#explore:checked+label[for] svg path:nth-of-type(5),
+input[type=radio]#explore:checked+label[for] svg path:nth-of-type(8) {
+  -webkit-animation: explore 0.3s linear 0.1s;
+  animation: explore 0.3s linear 0.1s;
 }
 
-input[type=radio]#explorebtn:checked+label[for] svg path:nth-of-type(1),
-input[type=radio]#explorebtn:checked+label[for] svg path:nth-of-type(4),
-input[type=radio]#explorebtn:checked+label[for] svg path:nth-of-type(7) {
-  -webkit-animation: explorebtn 0.3s linear 0.2s;
-  animation: explorebtn 0.3s linear 0.2s;
+input[type=radio]#explore:checked+label[for] svg path:nth-of-type(1),
+input[type=radio]#explore:checked+label[for] svg path:nth-of-type(4),
+input[type=radio]#explore:checked+label[for] svg path:nth-of-type(7) {
+  -webkit-animation: explore 0.3s linear 0.2s;
+  animation: explore 0.3s linear 0.2s;
 }
 
 @-webkit-keyframes cartbtn {
@@ -184,7 +184,7 @@ input[type=radio]#cartbtn:checked+label[for] svg path:nth-child(3) {
   animation: cartbtn 0.3s ease-out;
 }
 
-@-webkit-keyframes savedbtn {
+@-webkit-keyframes saved {
 
   0%,
   100% {
@@ -202,7 +202,7 @@ input[type=radio]#cartbtn:checked+label[for] svg path:nth-child(3) {
   }
 }
 
-@keyframes savedbtn {
+@keyframes saved {
 
   0%,
   100% {
@@ -220,12 +220,12 @@ input[type=radio]#cartbtn:checked+label[for] svg path:nth-child(3) {
   }
 }
 
-input[type=radio]#savedbtn:checked+label[for] svg path {
-  -webkit-animation: savedbtn 0.3s linear;
-  animation: savedbtn 0.3s linear;
+input[type=radio]#saved:checked+label[for] svg path {
+  -webkit-animation: saved 0.3s linear;
+  animation: saved 0.3s linear;
 }
 
-@-webkit-keyframes profilebtn {
+@-webkit-keyframes profile {
 
   0%,
   100% {
@@ -242,7 +242,7 @@ input[type=radio]#savedbtn:checked+label[for] svg path {
   }
 }
 
-@keyframes profilebtn {
+@keyframes profile {
 
   0%,
   100% {
@@ -259,7 +259,7 @@ input[type=radio]#savedbtn:checked+label[for] svg path {
   }
 }
 
-input[type=radio]#profilebtn:checked+label[for] svg path:first-of-type {
-  -webkit-animation: profilebtn 0.3s linear;
-  animation: profilebtn 0.3s linear;
+input[type=radio]#profile:checked+label[for] svg path:first-of-type {
+  -webkit-animation: profile 0.3s linear;
+  animation: profile 0.3s linear;
 }
