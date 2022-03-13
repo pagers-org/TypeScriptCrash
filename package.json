@@ -1,23 +1,26 @@
 {
   "name": "@fecrash/workspace",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "TypeScript Crash",
   "private": true,
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
-    "start:api": "npm run start -w ./packages/api",
-    "start:parang": "npm run start -w ./packages/parang"
+    "start:api": "npm run build -w ./packages/api && npm run start:prod -w ./packages/api && npm run start -w ./packages/parang",
+    "start:parang": "npm run start -w ./packages/parang",
+    "start:console": "npm run start -w ./packages/console",
+    "start:joy": "npm run start -w ./packages/joy",
+    "start:namu": "npm run start -w ./packages/namu",
+    "start:seal": "npm run start -w ./packages/seal",
+    "start:yechu": "npm run start -w ./packages/yechu"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/InSeong-So/TypeScriptCrash.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "InSeong-So",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/InSeong-So/TypeScriptCrash/issues"
   },
