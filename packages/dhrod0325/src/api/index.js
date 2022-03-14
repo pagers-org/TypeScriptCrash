@@ -28,12 +28,8 @@ export async function addBookmark(url, data) {
 }
 
 export async function removeBookmark(url, data) {
-    const config = {
+    return request(url, data, {
         method: 'DELETE',
         headers: new Headers({'content-type': 'application/json'}),
-    };
-    if (data) config.body = JSON.stringify(data);
-
-    const response = await fetch(url, config);
-    return await response.json();
+    });
 }

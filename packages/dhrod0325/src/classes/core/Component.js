@@ -1,11 +1,15 @@
 export class Component extends HTMLElement {
     state = {};
 
+    connectedCallback() {
+    }
+
     setState(state) {
         this.state = state;
     }
 
-    connectedCallback() {
+    getState() {
+        return this.state;
     }
 
     render() {

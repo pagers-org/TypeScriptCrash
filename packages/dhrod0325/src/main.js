@@ -1,6 +1,6 @@
 import '../assets/index.css';
 
-import {PinList} from "./classes/component/PinList";
+import {PinList} from "./classes/components/PinList";
 import {App} from "./classes/App";
 
 window.customElements.define('pin-list', PinList);
