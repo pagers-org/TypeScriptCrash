@@ -1,5 +1,5 @@
 import '../assets/index.css';
-import { addBookmark, getBookmarkList } from './api';
+import { addBookmark, getBookmarkList } from './api/bookmark';
 import { $, toggleLoading, debounce } from './helper/index.js';
 
 (() => {
@@ -78,8 +78,8 @@ $('nav').addEventListener('click', async event => {
     const $content = `
     <div class="container">
     ${result
-      .map(
-        ({ _id, url }, index) => `
+        .map(
+          ({ _id, url }, index) => `
       <div class="pin">
         <div class="button-wrapper">
           <div class="anim-icon anim-icon-md heart">
@@ -88,8 +88,8 @@ $('nav').addEventListener('click', async event => {
           </div>
         </div><img src="https://randomfox.ca/images/${url}.jpg">
       </div>`,
-      )
-      .join('')}
+        )
+        .join('')}
     </div>
     `;
 

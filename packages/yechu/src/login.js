@@ -1,5 +1,5 @@
 import '../assets/page/login.css';
-import { login, signup } from './api/index.js';
+import { login, signup } from './api/login.js';
 import { $, $all } from './helper/index.js';
 
 $all('.message a').forEach(tag => {

@@ -1,11 +1,11 @@
-const config = {
-  method: 'POST',
-  headers: new Headers({ 'content-type': 'application/json' }),
-};
-
 export async function parseData(url, data) {
-  if (data) config.body = JSON.stringify(data);
-  const response = await fetch(url, config);
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: data && JSON.stringify(data),
+  });
   const parse = await response.json();
   return parse;
 };
