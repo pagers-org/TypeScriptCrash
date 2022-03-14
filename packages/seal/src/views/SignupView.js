@@ -1,6 +1,7 @@
 import View from './View.js';
 import { $ } from '../helper/dom.js';
 import { signup } from '../api/index.js';
+import { BASE_URL, ERROR_MESSAGE, SUCCESS_MESSAGE } from '../constant/index.js';
 
 export default class SignupView extends View {
   constructor(element = $('.signup'), template = new Template()) {
@@ -8,10 +9,10 @@ export default class SignupView extends View {
 
     this.template = template;
     this.element.innerHTML = this.template.initialize();
-    this.bar();
+    this.handleSignupButton();
   }
 
-  bar() {
+  handleSignupButton() {
     $('button[data-submit="signup"]').addEventListener('click', async event => {
       event.preventDefault();
 
@@ -20,19 +21,26 @@ export default class SignupView extends View {
       const passwordConfirm = $('#signup-password-confirm').value;
 
       if (password !== passwordConfirm)
-        return alert('패스워드를 확인해주세요.');
-      const regEmail =
-        /^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
-      if (!regEmail.test(email)) return alert('옳지 않은 이메일 형식입니다.');
+        return alert(ERROR_MESSAGE.WRONG_PASSWORD);
 
-      await signup('http://localhost:3000/api/user', {
+      if (this.checkEmailFormat(email))
+        return alert(ERROR_MESSAGE.INVALID_EMAIL_FORMAT);
+
+      await signup(`${BASE_URL}/api/user`, {
         email,
         password,
-        status: 0,
+        status: 0, // TODO: status 상수화
       });
 
-      alert('회원가입이 완료되었습니다.\n로그인해주세요.');
+      alert(SUCCESS_MESSAGE.SIGNUP);
     });
+  }
+
+  checkEmailFormat(email) {
+    const regEmail =
+      /^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+
+    return !regEmail(email);
   }
 }
 
