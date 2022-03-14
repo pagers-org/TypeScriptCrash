@@ -1,6 +1,8 @@
 import View from './View.js';
 import { $ } from '../helper/dom.js';
 import { login } from '../api/index.js';
+import { BASE_URL, INDEX_PAGE, LOCAL_STORAGE_KEY } from '../constant/index.js';
+import { setLocalStorage } from '../helper/localstorage.js';
 
 export default class LoginView extends View {
   constructor(element = $('.app'), template = new Template()) {
@@ -8,24 +10,26 @@ export default class LoginView extends View {
 
     this.template = template;
     this.element.innerHTML = this.template.initialize();
-    this.baz();
+    this.handleLoginButton();
   }
 
-  baz() {
+  handleLoginButton() {
     $('button[data-submit="login"]').addEventListener('click', async event => {
       event.preventDefault();
 
       const email = $('#login-email').value;
       const password = $('#login-password').value;
 
-      const data = await login('http://localhost:3000/api/user/login', {
+      const data = await login(`${BASE_URL}/user/login`, {
         email,
         password,
       });
+
       const { _id, email: userEmail } = data[0];
+
       alert(`환영합니다, ${userEmail}님!`);
-      localStorage.setItem('user_token', _id);
-      location.replace('http://localhost:5510/');
+      setLocalStorage(LOCAL_STORAGE_KEY.USER_TOKEN, _id);
+      location.replace(`${INDEX_PAGE}/`);
     });
   }
 }
