@@ -1,8 +1,6 @@
 import {$, debounce} from "../helper";
 import {addBookmark} from "../api";
 
-//https://randomfox.ca/images/${random}.jpg
-
 export class PinList extends HTMLElement {
     rowCount = 10;
     globalIndex = 0;

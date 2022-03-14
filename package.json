@@ -7,7 +7,7 @@
     "packages/*"
   ],
   "scripts": {
-    "start:api": "npm run build -w ./packages/api && npm run start:prod -w ./packages/api && npm run start -w ./packages/parang",
+    "start:api": "npm run build -w ./packages/api && npm run start:prod -w ./packages/api",
     "start:parang": "npm run start -w ./packages/parang",
     "start:console": "npm run start -w ./packages/console",
     "start:joy": "npm run start -w ./packages/joy",
