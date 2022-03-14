@@ -1,14 +1,11 @@
-import '../assets/page/login.css';
-import { login, signup } from './api/index.js';
-import { $, $all } from './helper/index.js';
+import '../../assets/page/login.css';
+import { login, signup } from '../api';
+import { BASE_URL } from '../constants';
+import { $, $all } from '../helper';
 
-$all('.message a').forEach(tag => {
-  tag.addEventListener('click', () => {
-    $all('.forms').forEach(form => {
-      form.classList.toggle('hidden');
-    });
-  });
-});
+const toggleForm = () =>
+  $all('.forms').forEach(form => form.classList.toggle('hidden'));
+$all('.message a').forEach(tag => tag.addEventListener('click', toggleForm));
 
 $('button[data-submit="signup"]').addEventListener('click', async event => {
   event.preventDefault();
@@ -22,7 +19,7 @@ $('button[data-submit="signup"]').addEventListener('click', async event => {
     /^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
   if (!regEmail.test(email)) return alert('옳지 않은 이메일 형식입니다.');
 
-  await signup('http://localhost:3000/api/user', {
+  await signup(`${BASE_URL}/api/user`, {
     email,
     password,
     status: 0,
