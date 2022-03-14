@@ -1,85 +1,38 @@
 import '../assets/index.css';
-import { addBookmark, getBookmarkList } from './api';
-import { $, toggleLoading, debounce } from './helper/index.js';
 
-(() => {
-  const isLogin = localStorage.getItem('user_token');
-  if (isLogin !== null) return;
+import {PinList} from "./classes/PinList";
+import {$, authCheck} from "./helper";
+import {getBookmarkList} from "./api";
 
-  location.replace('./login.html');
-})();
 
-let globalIndex = 0;
+authCheck();
 
-const createPin = () => {
-  toggleLoading();
-  const pin = document.createElement('div');
-  const buttonWrapper = document.createElement('div');
-  const image = document.createElement('img');
-  const random = Math.floor(Math.random() * 123) + 1;
-  image.src = `https://randomfox.ca/images/${random}.jpg`;
-  buttonWrapper.setAttribute('class', 'button-wrapper');
-  buttonWrapper.innerHTML = `
-  <div class="anim-icon anim-icon-md heart">
-    <input type="checkbox" id="heart${globalIndex}" />
-    <label for="heart${globalIndex}" key=${random}></label>
-  </div>
-  `;
-  pin.classList.add('pin');
-  pin.appendChild(buttonWrapper);
-  pin.appendChild(image);
-  toggleLoading();
-  return pin;
-};
-
-const loadMore = debounce(() => {
-  const container = $('.container');
-  const pinList = [];
-  for (let i = 10; i > 0; i--) {
-    pinList.push(createPin(++globalIndex));
-  }
-  container.append(...pinList);
-}, 500);
-
-loadMore();
-
-window.addEventListener('scroll', () => {
-  const loader = $('.loader');
-  if (loader === null) return;
-  if (loader.getBoundingClientRect().top > window.innerHeight) return;
-  loadMore();
-});
+window.customElements.define('pin-list', PinList);
 
 $('nav').addEventListener('click', async event => {
-  event.stopPropagation();
-  if (!event.target.matches('input')) return;
+    event.stopPropagation();
 
-  const $main = $('main');
-  $main.innerHTML = '';
+    if (!event.target.matches('input')) return;
 
-  if (event.target.matches('#explore')) {
-    $main.classList.remove('saved');
-    $main.innerHTML = `
-      <div class="container"></div>
+    const $main = $('main');
+    $main.innerHTML = '';
+
+    if (event.target.matches('#explore')) {
+        $main.classList.remove('saved');
+        $main.innerHTML = `
+      <pin-list></pin-list>
       <div class="loader"></div>
     `;
 
-    globalIndex = 0;
-    loadMore();
-  }
+    }
 
-  if (event.target.matches('#saved')) {
-    $main.classList.add('saved');
-    const _id = localStorage.getItem('user_token');
-    const result = await getBookmarkList(
-      'http://localhost:3000/api/user/bookmark',
-      { _id },
-    );
-    const $content = `
+    if (event.target.matches('#saved')) {
+        $main.classList.add('saved');
+        const _id = localStorage.getItem('user_token');
+        const result = await getBookmarkList({_id});
+        $main.innerHTML = `
     <div class="container">
-    ${result
-      .map(
-        ({ _id, url }, index) => `
+    ${result.map(({_id, url}, index) => `
       <div class="pin">
         <div class="button-wrapper">
           <div class="anim-icon anim-icon-md heart">
@@ -87,24 +40,8 @@ $('nav').addEventListener('click', async event => {
             <label for="heart${index}" key=${_id}></label>
           </div>
         </div><img src="https://randomfox.ca/images/${url}.jpg">
-      </div>`,
-      )
-      .join('')}
+      </div>`,).join('')}
     </div>
     `;
-
-    $main.innerHTML = $content;
-  }
-});
-
-$('main').addEventListener('click', async event => {
-  if (!event.target.matches('label[for^="heart"]')) return;
-  const _id = localStorage.getItem('user_token');
-  await addBookmark(
-    `http://localhost:3000/api/user/bookmark/${event.target.getAttribute(
-      'key',
-    )}`,
-    { _id },
-  );
-  console.log('북마크에 저장되었습니다.');
+    }
 });
