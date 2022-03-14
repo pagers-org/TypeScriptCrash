@@ -1,16 +1,18 @@
 export class App {
     container;
+    components = [];
 
     state = {
         pinList: []
     }
 
-    stateProxy = new Proxy(this.state, {
-        set(target, p, value, receiver) {
-            target[p] = value;
-            return true;
-        }
-    });
+    stateProxy = createOnChangeProxy((target, property) => {
+        this.components.forEach(e => {
+            e.dispatchEvent(new CustomEvent('onStateChange', {
+                detail: {target, property}
+            }));
+        });
+    }, this.state);
 
     constructor(container) {
         this.authCheck();
@@ -19,8 +21,12 @@ export class App {
     }
 
     addComponent(componentElement) {
+        this.components.push(componentElement);
+
         componentElement.setState(this.stateProxy);
+
         this.container.appendChild(componentElement);
+
         componentElement.render();
     }
 
@@ -33,4 +39,30 @@ export class App {
 
         location.replace('./login.html');
     }
+}
+
+function createOnChangeProxy(callback, target) {
+    return new Proxy(target, {
+        get(target, property) {
+            const item = target[property];
+
+            if (item && typeof item === 'object') {
+                return createOnChangeProxy(() => {
+                    callback(target, property);
+                }, item);
+            }
+
+            return item
+        },
+        set(target, property, newValue) {
+            if (target[property] === newValue) {
+                return true;
+            }
+
+            target[property] = newValue
+            callback(target, property);
+
+            return true
+        },
+    })
 }
