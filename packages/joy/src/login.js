@@ -1,16 +1,16 @@
 import '../assets/page/login.css';
 import { login, signup } from './api/index.js';
-import { $, $all } from './helper/index.js';
+import { $, $all } from './util/dom.js';
 
-$all('.message a').forEach(tag => {
+$all('.message a').forEach((tag) => {
   tag.addEventListener('click', () => {
-    $all('.forms').forEach(form => {
+    $all('.forms').forEach((form) => {
       form.classList.toggle('hidden');
     });
   });
 });
 
-$('button[data-submit="signup"]').addEventListener('click', async event => {
+$('button[data-submit="signup"]').addEventListener('click', async (event) => {
   event.preventDefault();
 
   const email = $('#signup-email').value;
@@ -31,7 +31,7 @@ $('button[data-submit="signup"]').addEventListener('click', async event => {
   alert('회원가입이 완료되었습니다.\n로그인해주세요.');
 });
 
-$('button[data-submit="login"]').addEventListener('click', async event => {
+$('button[data-submit="login"]').addEventListener('click', async (event) => {
   event.preventDefault();
 
   const email = $('#login-email').value;

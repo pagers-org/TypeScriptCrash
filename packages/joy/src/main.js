@@ -1,6 +1,6 @@
 import '../assets/index.css';
 import { addBookmark, getBookmarkList } from './api';
-import { $, toggleLoading, debounce } from './helper/index.js';
+import { $, toggleLoading, debounce } from './util/index.js';
 
 (() => {
   const isLogin = localStorage.getItem('user_token');
@@ -50,7 +50,7 @@ window.addEventListener('scroll', () => {
   loadMore();
 });
 
-$('nav').addEventListener('click', async event => {
+$('nav').addEventListener('click', async (event) => {
   event.stopPropagation();
   if (!event.target.matches('input')) return;
 
@@ -73,7 +73,7 @@ $('nav').addEventListener('click', async event => {
     const _id = localStorage.getItem('user_token');
     const result = await getBookmarkList(
       'http://localhost:3000/api/user/bookmark',
-      { _id },
+      { _id }
     );
     const $content = `
     <div class="container">
@@ -87,7 +87,7 @@ $('nav').addEventListener('click', async event => {
             <label for="heart${index}" key=${_id}></label>
           </div>
         </div><img src="https://randomfox.ca/images/${url}.jpg">
-      </div>`,
+      </div>`
       )
       .join('')}
     </div>
@@ -97,14 +97,14 @@ $('nav').addEventListener('click', async event => {
   }
 });
 
-$('main').addEventListener('click', async event => {
+$('main').addEventListener('click', async (event) => {
   if (!event.target.matches('label[for^="heart"]')) return;
   const _id = localStorage.getItem('user_token');
   await addBookmark(
     `http://localhost:3000/api/user/bookmark/${event.target.getAttribute(
-      'key',
+      'key'
     )}`,
-    { _id },
+    { _id }
   );
   console.log('북마크에 저장되었습니다.');
 });
