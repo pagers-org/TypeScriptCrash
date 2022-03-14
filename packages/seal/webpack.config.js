@@ -19,6 +19,7 @@ module.exports = {
     // 각 html에 필요한 entry 파일
     index: './src/main.js',
     login: './src/login.js',
+    signup: './src/signup.js',
   },
   output: {
     path: path.resolve(__dirname, 'public'),
@@ -33,7 +34,7 @@ module.exports = {
     new HTMLWebpackPlugin({
       hash: true,
       filename: 'index.html',
-      excludeChunks: ['login'], // entry에서 해당 리스트를 제외한 나머지
+      chunks: ['index'], // entry에서 해당 리스트를 제외한 나머지
       template: path.resolve(__dirname, 'index.html'),
       favicon: './favicon.ico',
     }),
@@ -42,6 +43,13 @@ module.exports = {
       filename: 'login.html',
       chunks: ['login'], // entry에서 해당 리스트만 포함
       template: path.resolve(__dirname, 'login.html'),
+      favicon: './favicon.ico',
+    }),
+    new HTMLWebpackPlugin({
+      hash: true,
+      filename: 'signup.html',
+      chunks: ['signup'], // entry에서 해당 리스트만 포함
+      template: path.resolve(__dirname, 'signup.html'),
       favicon: './favicon.ico',
     }),
     new webpack.HotModuleReplacementPlugin(),
