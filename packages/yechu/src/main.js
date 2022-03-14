@@ -72,7 +72,7 @@ $('nav').addEventListener('click', async event => {
     $main.classList.add('saved');
     const _id = localStorage.getItem('user_token');
     const result = await getBookmarkList(
-      'http://localhost:3000/api/user/bookmark',
+      '/user/bookmark',
       { _id },
     );
     const $content = `
@@ -101,7 +101,7 @@ $('main').addEventListener('click', async event => {
   if (!event.target.matches('label[for^="heart"]')) return;
   const _id = localStorage.getItem('user_token');
   await addBookmark(
-    `http://localhost:3000/api/user/bookmark/${event.target.getAttribute(
+    `/user/bookmark/${event.target.getAttribute(
       'key',
     )}`,
     { _id },
