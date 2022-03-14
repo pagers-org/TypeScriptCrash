@@ -1,6 +1,6 @@
 export default class View {
   constructor(element) {
-    if (element) throw 'element를 설정해주세요!';
+    if (!element) throw 'element를 설정해주세요!';
 
     this.element = element;
     this.display = this.element.style.display || '';
