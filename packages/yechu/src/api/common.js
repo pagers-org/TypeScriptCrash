@@ -1,4 +1,5 @@
 export async function parseData(url, data) {
+
   const response = await fetch(url, {
     method: 'POST',
     headers: {
@@ -6,6 +7,5 @@ export async function parseData(url, data) {
     },
     body: data && JSON.stringify(data),
   });
-  const parse = await response.json();
-  return parse;
+  return response.json();
 };
