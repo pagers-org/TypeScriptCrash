@@ -1,0 +1,25 @@
+{
+  "name": "@fecrash/yechu",
+  "version": "0.0.1",
+  "main": "webpack.config.js",
+  "scripts": {
+    "watch:tsc": "tsc -w",
+    "watch:webpack": "webpack -w",
+    "build": "tsc && webpack",
+    "start": "webpack-dev-server",
+    "test": "tsc && webpack && cypress run --browser chrome"
+  },
+  "devDependencies": {
+    "css-loader": "^6.5.1",
+    "html-webpack-plugin": "^5.5.0",
+    "resolve-url-loader": "^5.0.0",
+    "sass": "^1.49.0",
+    "sass-loader": "^12.4.0",
+    "style-loader": "^3.3.1",
+    "ts-loader": "^9.2.6",
+    "tsconfig-paths-webpack-plugin": "^3.5.2",
+    "webpack": "^5.66.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.7.3"
+  }
+}
