@@ -1,6 +1,6 @@
 import '../assets/index.css';
 import { addBookmark, getBookmarkList } from './api';
-import { $, toggleLoading, debounce } from './util/index.js';
+import { $, toggleLoading, debounce } from './util';
 
 (() => {
   const isLogin = localStorage.getItem('user_token');
@@ -11,6 +11,7 @@ import { $, toggleLoading, debounce } from './util/index.js';
 
 let globalIndex = 0;
 
+//여우 사진 게시글 만들기
 const createPin = () => {
   toggleLoading();
   const pin = document.createElement('div');
@@ -32,6 +33,7 @@ const createPin = () => {
   return pin;
 };
 
+//무한 스크롤
 const loadMore = debounce(() => {
   const container = $('.container');
   const pinList = [];
@@ -51,12 +53,14 @@ window.addEventListener('scroll', () => {
 });
 
 $('nav').addEventListener('click', async (event) => {
-  event.stopPropagation();
+  event.stopPropagation(); //이벤트 버블링 제거
+  console.log(event.target);
   if (!event.target.matches('input')) return;
 
   const $main = $('main');
   $main.innerHTML = '';
 
+  //선택한 탭이 explore라면
   if (event.target.matches('#explore')) {
     $main.classList.remove('saved');
     $main.innerHTML = `
@@ -71,10 +75,7 @@ $('nav').addEventListener('click', async (event) => {
   if (event.target.matches('#saved')) {
     $main.classList.add('saved');
     const _id = localStorage.getItem('user_token');
-    const result = await getBookmarkList(
-      'http://localhost:3000/api/user/bookmark',
-      { _id }
-    );
+    const result = await getBookmarkList({ _id });
     const $content = `
     <div class="container">
     ${result
@@ -100,11 +101,10 @@ $('nav').addEventListener('click', async (event) => {
 $('main').addEventListener('click', async (event) => {
   if (!event.target.matches('label[for^="heart"]')) return;
   const _id = localStorage.getItem('user_token');
-  await addBookmark(
-    `http://localhost:3000/api/user/bookmark/${event.target.getAttribute(
-      'key'
-    )}`,
-    { _id }
-  );
+  const _key = event.target.getAttribute('key');
+  await addBookmark({
+    _id,
+    _key,
+  });
   console.log('북마크에 저장되었습니다.');
 });
