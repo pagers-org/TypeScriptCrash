@@ -1,7 +1,7 @@
 import View from './View.js';
 import { $ } from '../helper/dom.js';
 import { signup } from '../api/index.js';
-import { BASE_URL, ERROR_MESSAGE, SUCCESS_MESSAGE } from '../constant/index.js';
+import { BASE_URL, ERROR_MESSAGE, INDEX_PAGE, SUCCESS_MESSAGE } from '../constant/index.js';
 
 export default class SignupView extends View {
   constructor(element = $('.signup'), template = new Template()) {
@@ -33,6 +33,7 @@ export default class SignupView extends View {
       });
 
       alert(SUCCESS_MESSAGE.SIGNUP);
+      location.replace(`${INDEX_PAGE}/login.html`);
     });
   }
 
@@ -40,7 +41,7 @@ export default class SignupView extends View {
     const regEmail =
       /^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
 
-    return !regEmail(email);
+    return !regEmail.test(email);
   }
 }
 
