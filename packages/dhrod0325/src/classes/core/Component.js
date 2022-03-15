@@ -1,17 +1,30 @@
 export class Component extends HTMLElement {
-    state = {};
+    store;
 
     connectedCallback() {
-    }
-
-    setState(state) {
-        this.state = state;
-    }
-
-    getState() {
-        return this.state;
+        this.render();
     }
 
     render() {
+    }
+
+    onStateChange(target, property) {
+        const watchItems = this.watch();
+
+        for (const key in watchItems) {
+            if (key === property) {
+                watchItems[key].apply(this);
+            }
+        }
+
+        this.render();
+    }
+
+    watch() {
+        return {}
+    }
+
+    events() {
+
     }
 }

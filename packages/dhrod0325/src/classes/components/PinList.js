@@ -1,13 +1,12 @@
 import {Component} from "../core/Component";
-import {debounce} from "../core/debounce";
 import {addBookmark, removeBookmark} from "../../api";
+import {ViewUtils} from "../utils/ViewUtils";
 
 export class PinList extends Component {
     rowCount = 10;
     pinListId = 0;
 
-    render() {
-        this.innerHTML = this.getState().pinList.map(this.createPin).join('');
+    connectedCallback() {
         this.loadMore();
     }
 
@@ -26,7 +25,6 @@ export class PinList extends Component {
     }
 
     pushPin(pin = this.createRandomPin()) {
-        this.getState().pinList.push(pin);
         const template = document.createElement('template');
         template.innerHTML = this.createPin(pin);
 
@@ -56,7 +54,7 @@ export class PinList extends Component {
 
     loadMore() {
         for (let i = 0; i < this.rowCount; i++) {
-            debounce(() => {
+            ViewUtils.debounce(() => {
                 this.pushPin();
             }, 500)();
         }
