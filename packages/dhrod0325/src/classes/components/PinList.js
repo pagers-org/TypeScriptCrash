@@ -1,76 +1,92 @@
 import {Component} from "../core/Component";
 import {addBookmark, removeBookmark} from "../../api";
+import {Debounce} from "../utils/Debounce";
 import {ViewUtils} from "../utils/ViewUtils";
 
-export class PinList extends Component {
-    rowCount = 10;
-    pinListId = 0;
-
-    connectedCallback() {
-        this.loadMore();
-    }
-
-    createPin(pin) {
-        return `
+function pinTemplate(pin) {
+    return `
             <div class="pin">
                 <div class="button-wrapper">
                     <div class="anim-icon anim-icon-md heart">
-                        <input type="checkbox" id="heart${pin.id}" @click="togglePin">
-                        <label for="heart${pin.id}"></label>
+                        <input type="checkbox" id="heart${pin._id}" class="togglePin">
+                        <label for="heart${pin._id}"></label>
                     </div>
                 </div>
                 <img src="${pin.image}" alt=""/>
             </div>
         `;
+}
+
+function createRandomPin(pinId) {
+    const key = Math.floor(Math.random() * 123) + 1;
+
+    return {
+        _id: pinId,
+        image: 'https://randomfox.ca/images/' + key + '.jpg',
+        key
     }
+}
 
-    pushPin(pin = this.createRandomPin()) {
-        const template = document.createElement('template');
-        template.innerHTML = this.createPin(pin);
+export class PinList extends Component {
+    currentLoadedPinCount = 0;
+    rowCount = 10;
+    scrollEventUse = true;
 
-        const appendElement = template.content.firstElementChild;
-        this.appendChild(appendElement);
+    connectedCallback() {
+        this.loadPinList(this.rowCount);
 
-        appendElement.querySelectorAll('*').forEach(element => {
-            const clickEvent = element.getAttribute('@click');
-
-            if (clickEvent) {
-                element.addEventListener('click', () => {
-                    this.events[clickEvent](element, pin);
-                })
-            }
+        window.addEventListener('scroll', () => {
+            this.scrollEvent();
         });
     }
 
-    createRandomPin() {
-        const key = Math.floor(Math.random() * 123) + 1;
-
-        return {
-            id: this.pinListId++,
-            image: 'https://randomfox.ca/images/' + key + '.jpg',
-            key
-        }
+    pushPin(pin = createRandomPin(this.currentLoadedPinCount)) {
+        const appendElement = ViewUtils.stringToElement(pinTemplate(pin));
+        this.appendChild(appendElement);
+        appendElement.querySelector('.togglePin').addEventListener('click', async (e) => {
+            await this.pinToggleEvent(e.target, pin);
+        });
+        this.currentLoadedPinCount++;
     }
 
-    loadMore() {
-        for (let i = 0; i < this.rowCount; i++) {
-            ViewUtils.debounce(() => {
+    loadPinList(loadCount = this.rowCount) {
+        for (let i = 0; i < loadCount; i++) {
+            Debounce.debounce(() => {
                 this.pushPin();
             }, 500)();
         }
     }
 
-    events = {
-        togglePin: async (element, pin) => {
-            if (element.checked) {
-                const _id = localStorage.getItem('user_token');
-                await addBookmark(`/api/user/bookmark/${pin.key}`, {_id},);
-                console.log('add bookmark');
-            } else {
-                const _id = localStorage.getItem('user_token');
-                await removeBookmark(`/api/user/bookmark/${pin.key}`, {_id},);
-                console.log('remove bookmark');
-            }
+    clear() {
+        this.innerHTML = '';
+    }
+
+    scrollEvent() {
+        if (!this.scrollEventUse) {
+            return;
+        }
+
+        const {
+            scrollTop,
+            scrollHeight,
+            clientHeight
+        } = document.documentElement;
+
+        if (scrollTop + clientHeight >= scrollHeight - 5) {
+            this.loadPinList();
+        }
+    }
+
+    async pinToggleEvent(element, pin) {
+        const data = {
+            _id: localStorage.getItem('user_token'),
+            key: pin.key
+        }
+
+        if (element.checked) {
+            await addBookmark(data);
+        } else {
+            await removeBookmark(data);
         }
     }
 }

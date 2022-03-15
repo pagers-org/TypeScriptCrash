@@ -16,8 +16,6 @@ export class Component extends HTMLElement {
                 watchItems[key].apply(this);
             }
         }
-
-        this.render();
     }
 
     watch() {
