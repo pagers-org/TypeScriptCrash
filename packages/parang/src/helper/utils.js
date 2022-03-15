@@ -1,8 +1,10 @@
 export const createUUID = () => {
-  let dt = new Date().getTime();
+  let present = new Date().getTime();
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, callback => {
-    const r = (dt + Math.random() * 16) % 16 | 0;
-    dt = Math.floor(dt / 16);
-    return (callback == 'x' ? r : (r & 0x3) | 0x8).toString(16);
+    const randomNumber = (present + Math.random() * 16) % 16 | 0;
+    present = Math.floor(present / 16);
+    return (
+      callback == 'x' ? randomNumber : (randomNumber & 0x3) | 0x8
+    ).toString(16);
   });
 };
