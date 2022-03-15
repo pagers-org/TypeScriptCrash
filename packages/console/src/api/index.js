@@ -1,8 +1,13 @@
-import { instance } from './http';
+import { BASE_URL } from '../utils/constants';
 
 const fetchFn = async (url, data, method) => {
   try {
-    const response = await fetch(url, instance(method, data));
+    const config = {
+      method: method,
+      headers: new Headers({ 'content-type': 'application/json' }),
+    };
+    if (data) config.body = JSON.stringify(data);
+    const response = await fetch(`${BASE_URL}${url}`, config);
     const parse = await response.json();
     return parse;
   } catch (err) {

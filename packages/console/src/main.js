@@ -22,7 +22,7 @@ const createPin = () => {
   buttonWrapper.setAttribute('class', 'button-wrapper');
   buttonWrapper.innerHTML = `
   <div class="anim-icon anim-icon-md heart">
-    <input type="checkbox" id="heart${globalIndex}" key="${random}" />
+    <input type="checkbox" id="heart${globalIndex}" key=${random} />
     <label for="heart${globalIndex}" key=${random}></label>
   </div>
   `;
@@ -79,10 +79,7 @@ const renderExplorePage = async $main => {
 
 const renderSavePage = async $main => {
   $main.classList.add('saved');
-  const result = await getBookmarkList(
-    'http://localhost:3000/api/user/bookmark',
-    { _id },
-  );
+  const result = await getBookmarkList('/user/bookmark', { _id });
   const $content = `
     <div class="container">
     ${result
@@ -105,23 +102,17 @@ const renderSavePage = async $main => {
 };
 
 $('main').addEventListener('click', async event => {
+  event.stopPropagation();
   const $main = $('main');
-  const requestUrl = `http://localhost:3000/api/user/bookmark/${event.target.getAttribute(
-    'key',
-  )}`;
-
-  // save 에서 삭제하는 경우
-  if (event.target.getAttribute('key').length > 3) {
+  const requestUrl = `/user/bookmark/${event.target.getAttribute('key')}`;
+  if (event.target.getAttribute('key')?.length > 3) {
     await removeBookmark(requestUrl, { _id });
     renderSavePage($main);
   }
+  // 아래함수는 아직..작업중입니당
   if (event.target.matches('input[id^="heart"]')) {
     if (event.target.checked) {
-      console.log('1', requestUrl);
       await addBookmark(requestUrl, { _id });
-    } else {
-      console.log('2', requestUrl);
-      await removeBookmark(requestUrl, { _id });
     }
   }
 

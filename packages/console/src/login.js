@@ -21,7 +21,7 @@ $('button[data-submit="signup"]').addEventListener('click', async event => {
   if (password !== passwordConfirm) return alert('패스워드를 확인해주세요.');
   if (!REGEX_EMAIL.test(email)) return alert('옳지 않은 이메일 형식입니다.');
 
-  await signup('http://localhost:3000/api/user', {
+  await signup('/user', {
     email,
     password,
     status: 0,
@@ -36,7 +36,7 @@ $('button[data-submit="login"]').addEventListener('click', async event => {
   const email = $('#login-email').value;
   const password = $('#login-password').value;
 
-  const data = await login('http://localhost:3000/api/user/login', {
+  const data = await login('/user/login', {
     email,
     password,
   });
