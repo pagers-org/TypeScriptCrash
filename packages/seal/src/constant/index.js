@@ -2,6 +2,8 @@ export const BASE_URL = 'http://localhost:3000/api';
 
 export const INDEX_PAGE = 'http://localhost:5510';
 
+export const RANDOM_IMAGE_URL = 'https://randomfox.ca/images';
+
 export const LOCAL_STORAGE_KEY = {
   USER_TOKEN: 'user_token',
 };
@@ -14,3 +16,5 @@ export const ERROR_MESSAGE = {
 export const SUCCESS_MESSAGE = {
   SIGNUP: '회원가입이 완료되었습니다.\n로그인해주세요.',
 };
+
+export const MAX_IMAGE_NUMBER = 123;

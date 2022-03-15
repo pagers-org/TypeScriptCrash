@@ -1,26 +1,43 @@
 import { addBookmark, getBookmarkList } from '../api';
+import {
+  BASE_URL,
+  LOCAL_STORAGE_KEY,
+  MAX_IMAGE_NUMBER,
+  RANDOM_IMAGE_URL,
+} from '../constant';
 import { debounce } from '../helper';
 import { $, toggleLoading } from '../helper/dom';
+import { getLocalStorage } from '../helper/localstorage';
+import { getRandomNumber } from '../helper/random';
 import View from './View';
 
 export default class MainView extends View {
   constructor(element = $('.app'), template = new Template()) {
     super(element);
-    this.baz();
-    this.loadMore();
-    this.foo();
-
+    this.checkLogin();
+    this.loadMore = this.loadMoreWithDebounce();
     this.template = template;
-    this.element.innerHTML = this.template.initialize();
+    this.initializeTemplate();
 
     this.globalIndex = 0;
 
-    this.bar();
-    this.hou();
+    this.bindEvents();
   }
 
-  baz() {
-    const isLogin = localStorage.getItem('user_token');
+  bindEvents() {
+    $('main').addEventListener('click', this.handleClickBookmark.bind(this));
+    window.addEventListener('scroll', this.handleWindowScroll.bind(this));
+    $('nav').addEventListener('click', this.handleClickTab.bind(this));
+  }
+
+  initializeTemplate() {
+    this.loadMore();
+    this.element.innerHTML = this.template.initialize();
+    $('.saved').style.display = 'none';
+  }
+
+  checkLogin() {
+    const isLogin = getLocalStorage(LOCAL_STORAGE_KEY.USER_TOKEN);
     if (isLogin !== null) return;
 
     location.replace('./login.html');
@@ -28,106 +45,86 @@ export default class MainView extends View {
 
   createPin() {
     toggleLoading();
-    const pin = document.createElement('div');
-    const buttonWrapper = document.createElement('div');
-    const image = document.createElement('img');
-    const random = Math.floor(Math.random() * 123) + 1;
-    image.src = `https://randomfox.ca/images/${random}.jpg`;
-    buttonWrapper.setAttribute('class', 'button-wrapper');
-    buttonWrapper.innerHTML = `
-    <div class="anim-icon anim-icon-md heart">
-      <input type="checkbox" id="heart${this.globalIndex}" />
-      <label for="heart${this.globalIndex}" key=${random}></label>
-    </div>
-    `;
-    pin.classList.add('pin');
-    pin.appendChild(buttonWrapper);
-    pin.appendChild(image);
+
+    const random = getRandomNumber(MAX_IMAGE_NUMBER);
+
+    const pin = this.template.getPin(this.globalIndex, random);
+
     toggleLoading();
+
     return pin;
   }
 
-  loadMore() {
-    debounce(() => {
+  loadMoreWithDebounce() {
+    return debounce(() => {
       const container = $('.container');
       const pinList = [];
       for (let i = 10; i > 0; i--) {
-        pinList.push(this.createPin(++this.globalIndex));
+        pinList.push(this.createPin());
       }
-      container.append(...pinList);
-    }, 500)();
+      container.innerHTML += pinList.join('');
+    }, 500);
   }
 
-  foo() {
-    window.addEventListener('scroll', () => {
-      const loader = $('.loader');
-      if (loader === null) return;
-      if (loader.getBoundingClientRect().top > window.innerHeight) return;
-      this.loadMore();
+  async renderBookmark() {
+    const saved = $('.saved');
+
+    const _id = getLocalStorage(LOCAL_STORAGE_KEY.USER_TOKEN);
+    const result = await getBookmarkList(`${BASE_URL}/user/bookmark`, {
+      _id,
     });
+    const $content = this.template.getBookmarkTab(result);
+
+    saved.innerHTML = $content;
   }
 
-  bar() {
-    $('nav').addEventListener('click', async event => {
-      event.stopPropagation();
-      if (!event.target.matches('input')) return;
+  async handleClickTab(event) {
+    event.stopPropagation();
+    const saved = $('.saved');
+    const container = $('.container');
+    if (!event.target.matches('input')) return;
 
-      const $main = $('main');
-      $main.innerHTML = '';
+    const tab = event.target.id;
 
-      if (event.target.matches('#explore')) {
-        $main.classList.remove('saved');
-        $main.innerHTML = `
-        <div class="container"></div>
-        <div class="loader"></div>
-      `;
+    switch (tab) {
+      case 'saved': {
+        saved.style.display = 'block';
+        container.style.display = 'none';
+
+        this.renderBookmark();
+        break;
+      }
+      case 'explore': {
+        saved.style.display = 'none';
+        container.style.display = 'block';
 
         this.globalIndex = 0;
         this.loadMore();
+        break;
       }
-
-      if (event.target.matches('#saved')) {
-        $main.classList.add('saved');
-        const _id = localStorage.getItem('user_token');
-        const result = await getBookmarkList(
-          'http://localhost:3000/api/user/bookmark',
-          { _id },
-        );
-        const $content = `
-      <div class="container">
-      ${result
-        .map(
-          ({ _id, url }, index) => `
-        <div class="pin">
-          <div class="button-wrapper">
-            <div class="anim-icon anim-icon-md heart">
-              <input type="checkbox" id="heart${index}" checked>
-              <label for="heart${index}" key=${_id}></label>
-            </div>
-          </div><img src="https://randomfox.ca/images/${url}.jpg">
-        </div>`,
-        )
-        .join('')}
-      </div>
-      `;
-
-        $main.innerHTML = $content;
-      }
-    });
+    }
   }
 
-  hou() {
-    $('main').addEventListener('click', async event => {
-      if (!event.target.matches('label[for^="heart"]')) return;
-      const _id = localStorage.getItem('user_token');
-      await addBookmark(
-        `http://localhost:3000/api/user/bookmark/${event.target.getAttribute(
-          'key',
-        )}`,
-        { _id },
-      );
-      console.log('북마크에 저장되었습니다.');
-    });
+  handleWindowScroll() {
+    const loader = $('.loader');
+
+    if (loader === null) return;
+
+    const { y, height } = loader.getBoundingClientRect();
+
+    if (-y < height * 0.8) return;
+
+    this.loadMore();
+  }
+
+  async handleClickBookmark(event) {
+    if (!event.target.matches('label[for^="heart"]')) return;
+    const _id = getLocalStorage(LOCAL_STORAGE_KEY.USER_TOKEN);
+    await addBookmark(
+      `${BASE_URL}/user/bookmark/${event.target.getAttribute('key')}`,
+      { _id },
+    );
+    console.log('북마크에 저장되었습니다.');
   }
 }
 
@@ -168,8 +165,45 @@ class Template {
       </header>
       <main>
         <div class="container"></div>
+        <div class="saved"></div>
         <div class="loader"></div>
       </main>
+    `;
+  }
+
+  getPin(index, random) {
+    const imageSrc = `${RANDOM_IMAGE_URL}/${random}.jpg`;
+
+    return `
+      <div class="pin">
+        <div class="button-wrapper">
+          <div class="anim-icon anim-icon-md heart">
+            <input type="checkbox" id="heart${index}" />
+            <label for="heart${index}" key=${random}></label>
+          </div>
+        </div>
+        <img src="${imageSrc}" />
+      </div>
+    `;
+  }
+
+  getBookmarkTab(result) {
+    return `
+      <div class="container">
+      ${result
+        .map(
+          ({ _id, url }, index) => `
+        <div class="pin">
+          <div class="button-wrapper">
+            <div class="anim-icon anim-icon-md heart">
+              <input type="checkbox" id="heart${index}" checked>
+              <label for="heart${index}" key=${_id}></label>
+            </div>
+          </div><img src="${RANDOM_IMAGE_URL}/${url}.jpg">
+        </div>`,
+        )
+        .join('')}
+      </div>
     `;
   }
 }
