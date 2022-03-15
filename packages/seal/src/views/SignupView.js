@@ -12,32 +12,37 @@ export default class SignupView {
     this.element = $('.app');
     this.template = template;
     this.element.innerHTML = this.template.initialize();
-    this.handleSignupButton();
+    this.bindEvents();
   }
 
-  handleSignupButton() {
-    $('button[data-submit="signup"]').addEventListener('click', async event => {
-      event.preventDefault();
+  bindEvents() {
+    $('button[data-submit="signup"]').addEventListener(
+      'click',
+      this.handleClickSignupButton.bind(this),
+    );
+  }
 
-      const email = $('#signup-email').value;
-      const password = $('#signup-password').value;
-      const passwordConfirm = $('#signup-password-confirm').value;
+  async handleClickSignupButton(event) {
+    event.preventDefault();
 
-      if (password !== passwordConfirm)
-        return alert(ERROR_MESSAGE.WRONG_PASSWORD);
+    const email = $('#signup-email').value;
+    const password = $('#signup-password').value;
+    const passwordConfirm = $('#signup-password-confirm').value;
 
-      if (this.checkEmailFormat(email))
-        return alert(ERROR_MESSAGE.INVALID_EMAIL_FORMAT);
+    if (password !== passwordConfirm)
+      return alert(ERROR_MESSAGE.WRONG_PASSWORD);
 
-      await signup(`${BASE_URL}/user`, {
-        email,
-        password,
-        status: 0, // TODO: status 상수화
-      });
+    if (this.checkEmailFormat(email))
+      return alert(ERROR_MESSAGE.INVALID_EMAIL_FORMAT);
 
-      alert(SUCCESS_MESSAGE.SIGNUP);
-      location.replace(`${INDEX_PAGE}/login.html`);
+    await signup(`${BASE_URL}/user`, {
+      email,
+      password,
+      status: 0, // TODO: status 상수화
     });
+
+    alert(SUCCESS_MESSAGE.SIGNUP);
+    location.replace(`${INDEX_PAGE}/login.html`);
   }
 
   checkEmailFormat(email) {

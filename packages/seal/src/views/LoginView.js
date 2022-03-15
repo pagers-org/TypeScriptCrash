@@ -11,24 +11,29 @@ export default class LoginView {
     this.handleLoginButton();
   }
 
-  handleLoginButton() {
-    $('button[data-submit="login"]').addEventListener('click', async event => {
-      event.preventDefault();
+  bindEvents() {
+    $('button[data-submit="login"]').addEventListener(
+      'click',
+      this.handleClickLoginButton.bind(this),
+    );
+  }
 
-      const email = $('#login-email').value;
-      const password = $('#login-password').value;
+  async handleClickLoginButton(event) {
+    event.preventDefault();
 
-      const data = await login(`${BASE_URL}/user/login`, {
-        email,
-        password,
-      });
+    const email = $('#login-email').value;
+    const password = $('#login-password').value;
 
-      const { _id, email: userEmail } = data[0];
-
-      alert(`환영합니다, ${userEmail}님!`);
-      setLocalStorage(LOCAL_STORAGE_KEY.USER_TOKEN, _id);
-      location.replace(`${INDEX_PAGE}/`);
+    const data = await login(`${BASE_URL}/user/login`, {
+      email,
+      password,
     });
+
+    const { _id, email: userEmail } = data[0];
+
+    alert(`환영합니다, ${userEmail}님!`);
+    setLocalStorage(LOCAL_STORAGE_KEY.USER_TOKEN, _id);
+    location.replace(`${INDEX_PAGE}/`);
   }
 }
 
