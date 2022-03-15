@@ -1,12 +1,13 @@
+import { instance } from './http';
+
 const fetchFn = async (url, data, method) => {
-  const config = {
-    method: method,
-    headers: new Headers({ 'content-type': 'application/json' }),
-  };
-  if (data) config.body = JSON.stringify(data);
-  const response = await fetch(url, config);
-  const parse = await response.json();
-  return parse;
+  try {
+    const response = await fetch(url, instance(method, data));
+    const parse = await response.json();
+    return parse;
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export async function login(url, data) {

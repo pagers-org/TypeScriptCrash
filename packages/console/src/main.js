@@ -10,6 +10,7 @@ import { $, toggleLoading, debounce } from './helper/index.js';
 })();
 
 let globalIndex = 0;
+const _id = localStorage.getItem('user_token');
 
 const createPin = () => {
   toggleLoading();
@@ -21,7 +22,7 @@ const createPin = () => {
   buttonWrapper.setAttribute('class', 'button-wrapper');
   buttonWrapper.innerHTML = `
   <div class="anim-icon anim-icon-md heart">
-    <input type="checkbox" id="heart${globalIndex}" />
+    <input type="checkbox" id="heart${globalIndex}" key="${random}" />
     <label for="heart${globalIndex}" key=${random}></label>
   </div>
   `;
@@ -78,7 +79,6 @@ const renderExplorePage = async $main => {
 
 const renderSavePage = async $main => {
   $main.classList.add('saved');
-  const _id = localStorage.getItem('user_token');
   const result = await getBookmarkList(
     'http://localhost:3000/api/user/bookmark',
     { _id },
@@ -91,7 +91,7 @@ const renderSavePage = async $main => {
       <div class="pin">
         <div class="button-wrapper">
           <div class="anim-icon anim-icon-md heart">
-            <input type="checkbox" id="heart${index}" checked>
+            <input type="checkbox" id="heart${index}" key=${_id} checked>
             <label for="heart${index}" key=${_id}></label>
           </div>
         </div><img src="https://randomfox.ca/images/${url}.jpg">
@@ -105,19 +105,26 @@ const renderSavePage = async $main => {
 };
 
 $('main').addEventListener('click', async event => {
-  if (!event.target.matches('label[for^="heart"]')) return;
-  const _id = localStorage.getItem('user_token');
+  const $main = $('main');
   const requestUrl = `http://localhost:3000/api/user/bookmark/${event.target.getAttribute(
     'key',
   )}`;
 
-  const $main = $('main');
+  // save 에서 삭제하는 경우
   if (event.target.getAttribute('key').length > 3) {
     await removeBookmark(requestUrl, { _id });
     renderSavePage($main);
-  } else {
-    await addBookmark(requestUrl, { _id });
+  }
+  if (event.target.matches('input[id^="heart"]')) {
+    if (event.target.checked) {
+      console.log('1', requestUrl);
+      await addBookmark(requestUrl, { _id });
+    } else {
+      console.log('2', requestUrl);
+      await removeBookmark(requestUrl, { _id });
+    }
   }
 
+  if (!event.target.matches('label[for^="heart"]')) return;
   console.log('북마크에 저장되었습니다.');
 });
