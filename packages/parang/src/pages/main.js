@@ -1,15 +1,25 @@
-import { addBookmark, getBookmarkList } from '../api/index.js';
+import Client from '../api/index.js';
 import { Profile, Explore, Bookmark } from '../components/index.js';
 import { debounce } from '../helper/debounce.js';
 import { $ } from '../helper/dom.js';
+import { getUserToken } from '../helper/storage.js';
 import { createUUID } from '../helper/utils.js';
 
 export default class MainView {
+  userToken;
+  client;
+  photoIndex;
+  profile;
+  expore;
+  bookmark;
+
   constructor() {
-    const isLogin = localStorage.getItem('user_token');
-    if (isLogin === null) {
-      location.replace('./login.html');
-    }
+    this.userToken = getUserToken();
+    if (this.userToken === undefined) location.replace('./login.html');
+
+    this.client = new Client({
+      headers: new Headers({ 'content-type': 'application/json' }),
+    });
 
     this.photoIndex = 0;
 
@@ -17,8 +27,6 @@ export default class MainView {
     this.explore = new Explore();
     this.bookmark = new Bookmark();
 
-    // this.$main = $('main');
-    // this.$main.innerHTML = '';
     this.$container = $('.container');
 
     this.loadMore();
@@ -53,11 +61,9 @@ export default class MainView {
 
     if (event.target.matches('#saved')) {
       $main.classList.add('saved');
-      const _id = localStorage.getItem('user_token');
-      const result = await getBookmarkList(
-        'http://localhost:3000/api/user/bookmark',
-        { _id },
-      );
+      const result = await this.client.request('/api/user/bookmark', {
+        _id: this.userToken,
+      });
       const $content = `
       <div class="container">
       ${result
@@ -82,18 +88,16 @@ export default class MainView {
 
   async likeFox(event) {
     if (!event.target.matches('label[for^="heart"]')) return;
-    const _id = localStorage.getItem('user_token');
-    await addBookmark(
-      `http://localhost:3000/api/user/bookmark/${event.target.getAttribute(
-        'key',
-      )}`,
+    const _id = getUserToken();
+    await this.client.request(
+      `/api/user/bookmark/${event.target.getAttribute('key')}`,
       { _id },
     );
     alert('북마크에 저장되었습니다.');
   }
 
   createPin() {
-    this.explore.allResolve().then(items => {
+    this.explore.getImageList().then(items => {
       this.$container.append(
         ...items.map(({ url: foxImageURL }) => {
           const pin = document.createElement('div');
