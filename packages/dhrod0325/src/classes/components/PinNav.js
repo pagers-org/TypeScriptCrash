@@ -39,16 +39,21 @@ function template() {
 }
 
 export class PinNav extends Component {
+    static EVENTS = {
+        savedClicked: 'savedClicked',
+        exploreClicked: 'exploreClicked'
+    };
+
     render() {
         const element = ViewUtils.stringToElement(template());
         this.appendChild(element);
 
         element.querySelector('[data-label="saved"]').addEventListener('click', async (e) => {
-            this.dispatchEvent(new CustomEvent('savedClicked'));
+            this.dispatchEvent(new CustomEvent(PinNav.EVENTS.savedClicked));
         });
 
         element.querySelector('[data-label="explore"]').addEventListener('click', e => {
-            this.dispatchEvent(new CustomEvent('exploreClicked'));
+            this.dispatchEvent(new CustomEvent(PinNav.EVENTS.exploreClicked));
         });
     }
 }

@@ -7,7 +7,7 @@ import {Loading} from "./classes/components/Loading";
 import {App} from "./classes/App";
 import {AuthUtils} from "./classes/utils/AuthUtils";
 import {addBookmark, getBookmarkList, removeBookmark} from "./api";
-
+import {createRandomFoxImageUrl} from "./classes/components/Pin";
 
 window.customElements.define('pin-list', PinList);
 window.customElements.define('pin-nav', PinNav);
@@ -38,19 +38,20 @@ app.addComponent(pinNav, state);
 app.addComponent(pinList, state);
 app.addComponent(loading, state);
 
-pinNav.addEventListener('savedClicked', async (e) => {
+pinNav.addEventListener(PinNav.EVENTS.savedClicked, async (e) => {
     pinList.scrollEventUse = false;
     pinList.clear();
 
     state.user.bookMarks.forEach(bookMark => {
-        bookMark.image = `https://randomfox.ca/images/${bookMark.url}.jpg`;
+        bookMark.image = createRandomFoxImageUrl(bookMark.url);
+
         pinList.pushPin(bookMark);
     });
 
     state.navigate = 'saved';
 });
 
-pinNav.addEventListener('exploreClicked', e => {
+pinNav.addEventListener(PinNav.EVENTS.exploreClicked, e => {
     pinList.scrollEventUse = true;
     pinList.clear();
     pinList.loadPinList();
@@ -58,7 +59,7 @@ pinNav.addEventListener('exploreClicked', e => {
     state.navigate = 'explore';
 });
 
-pinList.addEventListener('favButtonClicked', async (e) => {
+pinList.addEventListener(PinList.EVENTS.favButtonClicked, async (e) => {
     const {pin} = e.detail;
 
     const data = {
@@ -74,7 +75,7 @@ pinList.addEventListener('favButtonClicked', async (e) => {
     });
 });
 
-pinList.addEventListener('cancelFavButtonClicked', async (e) => {
+pinList.addEventListener(PinList.EVENTS.cancelFavButtonClicked, async (e) => {
     const {pin, element} = e.detail;
 
     const data = {
@@ -93,10 +94,10 @@ pinList.addEventListener('cancelFavButtonClicked', async (e) => {
     }
 });
 
-pinList.addEventListener('preLoadPinList', e => {
+pinList.addEventListener(PinList.EVENTS.prePin, e => {
     loading.show();
 });
 
-pinList.addEventListener('afterLoadPinList', e => {
+pinList.addEventListener(PinList.EVENTS.afterPin, e => {
     loading.hide();
 });

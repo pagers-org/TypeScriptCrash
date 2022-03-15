@@ -4,6 +4,13 @@ import {ViewUtils} from "../utils/ViewUtils";
 import {createRandomPin, pinTemplate} from "./Pin";
 
 export class PinList extends Component {
+    static EVENTS = {
+        prePin: 'prePin',
+        afterPin: 'afterPin',
+        favButtonClicked: 'favButtonClicked',
+        cancelFavButtonClicked: 'cancelFavButtonClicked'
+    }
+
     currentLoadedPinCount = 0;
     rowCount = 10;
     scrollEventUse = true;
@@ -20,7 +27,7 @@ export class PinList extends Component {
     }
 
     pushPin(pin = createRandomPin(this.currentLoadedPinCount)) {
-        this.dispatchEvent(new CustomEvent('preLoadPinList'));
+        this.dispatchEvent(new CustomEvent(PinList.EVENTS.prePin));
 
         const appendElement = ViewUtils.stringToElement(pinTemplate(pin));
         this.appendChild(appendElement);
@@ -41,7 +48,7 @@ export class PinList extends Component {
 
         this.currentLoadedPinCount++;
 
-        this.dispatchEvent(new CustomEvent('afterLoadPinList'));
+        this.dispatchEvent(new CustomEvent(PinList.EVENTS.afterPin));
     }
 
     loadPinList(loadCount = this.rowCount) {
@@ -60,9 +67,9 @@ export class PinList extends Component {
         const detailData = {detail: {element, pin}};
 
         if (element.checked) {
-            this.dispatchEvent(new CustomEvent('favButtonClicked', detailData));
+            this.dispatchEvent(new CustomEvent(PinList.EVENTS.favButtonClicked, detailData));
         } else {
-            this.dispatchEvent(new CustomEvent('cancelFavButtonClicked', detailData));
+            this.dispatchEvent(new CustomEvent(PinList.EVENTS.cancelFavButtonClicked, detailData));
         }
     }
 }

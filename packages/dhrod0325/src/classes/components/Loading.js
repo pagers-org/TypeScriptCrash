@@ -1,7 +1,7 @@
 import {Component} from "../core/Component";
 import {ViewUtils} from "../utils/ViewUtils";
 
-const html = `
+const template = `
 <section class="loading">
     <svg xmlns="http://www.w3.org/2000/svg"
          version="1.0" width="160px" height="20px" viewBox="0 0 128 16"
@@ -24,20 +24,19 @@ const html = `
 </section>`;
 
 export class Loading extends Component {
+    loadingBar;
+
     render() {
-        this.appendChild(ViewUtils.stringToElement(html));
+        this.appendChild(ViewUtils.stringToElement(template));
+        this.loadingBar = this.querySelector('.loading');
         this.hide();
     }
 
     show() {
-        console.log('show');
-        this.querySelector('.loading').classList.remove('hidden');
+        this.loadingBar.classList.remove('hidden');
     }
 
     hide() {
-        console.log('hide');
-        this.querySelector('.loading').classList.add('hidden');
+        this.loadingBar.classList.add('hidden');
     }
-
-    lo
 }

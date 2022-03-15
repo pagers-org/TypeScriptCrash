@@ -12,12 +12,20 @@ export function pinTemplate(pin) {
         `;
 }
 
+export function createRandomKey() {
+    return Math.floor(Math.random() * 123) + 1;
+}
+
+export function createRandomFoxImageUrl(key) {
+    return `https://randomfox.ca/images/${key}.jpg`;
+}
+
 export function createRandomPin(pinId) {
-    const key = Math.floor(Math.random() * 123) + 1;
+    const key = createRandomKey();
 
     return {
         _id: pinId,
-        image: 'https://randomfox.ca/images/' + key + '.jpg',
+        image: createRandomFoxImageUrl(key),
         key
     }
 }

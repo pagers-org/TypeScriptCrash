@@ -8,20 +8,6 @@ export class Component extends HTMLElement {
     render() {
     }
 
-    onStateChange(target, property) {
-        const watchItems = this.watch();
-
-        for (const key in watchItems) {
-            if (key === property) {
-                watchItems[key].apply(this);
-            }
-        }
-    }
-
-    watch() {
-        return {}
-    }
-
     setState(state) {
         this.state = state;
     }
