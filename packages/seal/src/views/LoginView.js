@@ -1,13 +1,11 @@
-import View from './View.js';
 import { $ } from '../helper/dom.js';
 import { login } from '../api/index.js';
 import { BASE_URL, INDEX_PAGE, LOCAL_STORAGE_KEY } from '../constant/index.js';
 import { setLocalStorage } from '../helper/localstorage.js';
 
-export default class LoginView extends View {
-  constructor(element = $('.app'), template = new Template()) {
-    super(element);
-
+export default class LoginView {
+  constructor(template = new Template()) {
+    this.element = $('.app');
     this.template = template;
     this.element.innerHTML = this.template.initialize();
     this.handleLoginButton();

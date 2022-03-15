@@ -9,11 +9,10 @@ import { debounce } from '../helper';
 import { $, toggleLoading } from '../helper/dom';
 import { getLocalStorage } from '../helper/localstorage';
 import { getRandomNumber } from '../helper/random';
-import View from './View';
 
-export default class MainView extends View {
-  constructor(element = $('.app'), template = new Template()) {
-    super(element);
+export default class MainView {
+  constructor(template = new Template()) {
+    this.element = $('.app');
     this.checkLogin();
     this.loadMore = this.loadMoreWithDebounce();
     this.template = template;

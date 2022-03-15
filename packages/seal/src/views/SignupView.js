@@ -1,12 +1,15 @@
-import View from './View.js';
 import { $ } from '../helper/dom.js';
 import { signup } from '../api/index.js';
-import { BASE_URL, ERROR_MESSAGE, INDEX_PAGE, SUCCESS_MESSAGE } from '../constant/index.js';
+import {
+  BASE_URL,
+  ERROR_MESSAGE,
+  INDEX_PAGE,
+  SUCCESS_MESSAGE,
+} from '../constant/index.js';
 
-export default class SignupView extends View {
-  constructor(element = $('.signup'), template = new Template()) {
-    super(element);
-
+export default class SignupView {
+  constructor(template = new Template()) {
+    this.element = $('.app');
     this.template = template;
     this.element.innerHTML = this.template.initialize();
     this.handleSignupButton();
@@ -26,7 +29,7 @@ export default class SignupView extends View {
       if (this.checkEmailFormat(email))
         return alert(ERROR_MESSAGE.INVALID_EMAIL_FORMAT);
 
-      await signup(`${BASE_URL}/api/user`, {
+      await signup(`${BASE_URL}/user`, {
         email,
         password,
         status: 0, // TODO: status 상수화
