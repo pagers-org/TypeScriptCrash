@@ -1,5 +1,5 @@
 import '../assets/index.css';
-import { addBookmark, getBookmarkList } from './api';
+import { addBookmark, getBookmarkList, removeBookmark } from './api';
 import { $, toggleLoading, debounce } from './helper/index.js';
 
 (() => {
@@ -58,24 +58,32 @@ $('nav').addEventListener('click', async event => {
   $main.innerHTML = '';
 
   if (event.target.matches('#explore')) {
-    $main.classList.remove('saved');
-    $main.innerHTML = `
+    renderExplorePage($main);
+  }
+  if (event.target.matches('#saved')) {
+    renderSavePage($main);
+  }
+});
+
+const renderExplorePage = async $main => {
+  $main.classList.remove('saved');
+  $main.innerHTML = `
       <div class="container"></div>
       <div class="loader"></div>
     `;
 
-    globalIndex = 0;
-    loadMore();
-  }
+  globalIndex = 0;
+  loadMore();
+};
 
-  if (event.target.matches('#saved')) {
-    $main.classList.add('saved');
-    const _id = localStorage.getItem('user_token');
-    const result = await getBookmarkList(
-      'http://localhost:3000/api/user/bookmark',
-      { _id },
-    );
-    const $content = `
+const renderSavePage = async $main => {
+  $main.classList.add('saved');
+  const _id = localStorage.getItem('user_token');
+  const result = await getBookmarkList(
+    'http://localhost:3000/api/user/bookmark',
+    { _id },
+  );
+  const $content = `
     <div class="container">
     ${result
       .map(
@@ -93,18 +101,23 @@ $('nav').addEventListener('click', async event => {
     </div>
     `;
 
-    $main.innerHTML = $content;
-  }
-});
+  $main.innerHTML = $content;
+};
 
 $('main').addEventListener('click', async event => {
   if (!event.target.matches('label[for^="heart"]')) return;
   const _id = localStorage.getItem('user_token');
-  await addBookmark(
-    `http://localhost:3000/api/user/bookmark/${event.target.getAttribute(
-      'key',
-    )}`,
-    { _id },
-  );
+  const requestUrl = `http://localhost:3000/api/user/bookmark/${event.target.getAttribute(
+    'key',
+  )}`;
+
+  const $main = $('main');
+  if (event.target.getAttribute('key').length > 3) {
+    await removeBookmark(requestUrl, { _id });
+    renderSavePage($main);
+  } else {
+    await addBookmark(requestUrl, { _id });
+  }
+
   console.log('북마크에 저장되었습니다.');
 });
