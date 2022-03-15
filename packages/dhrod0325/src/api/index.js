@@ -25,7 +25,7 @@ export async function addBookmark(data) {
     return request(`/api/user/bookmark/${data.key}`, data);
 }
 
-export async function removeBookmark(url, data) {
+export async function removeBookmark(data) {
     return request(`/api/user/bookmark/${data.key}`, data, {
         method: 'DELETE',
         headers: new Headers({'content-type': 'application/json'}),

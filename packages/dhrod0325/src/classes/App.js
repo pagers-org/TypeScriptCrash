@@ -1,15 +1,15 @@
 export class App {
     container;
     components = [];
-    store = {};
 
     constructor(container) {
         this.container = container;
     }
 
-    addComponent(componentElement) {
+    addComponent(componentElement, state = {}) {
+        componentElement.setState(state);
+
         this.components.push(componentElement);
         this.container.appendChild(componentElement);
-        componentElement.store = this.store;
     }
 }

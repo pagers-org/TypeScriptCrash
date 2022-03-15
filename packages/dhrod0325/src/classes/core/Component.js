@@ -1,5 +1,5 @@
 export class Component extends HTMLElement {
-    store;
+    state;
 
     connectedCallback() {
         this.render();
@@ -22,7 +22,21 @@ export class Component extends HTMLElement {
         return {}
     }
 
-    events() {
+    setState(state) {
+        this.state = state;
+    }
 
+    addOnScrollBottomEvent(callback) {
+        window.addEventListener('scroll', () => {
+            const {
+                scrollTop,
+                scrollHeight,
+                clientHeight
+            } = document.documentElement;
+
+            if (scrollTop + clientHeight >= scrollHeight - 5) {
+                callback();
+            }
+        });
     }
 }

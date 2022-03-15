@@ -1,31 +1,7 @@
 import {Component} from "../core/Component";
-import {addBookmark, removeBookmark} from "../../api";
 import {Debounce} from "../utils/Debounce";
 import {ViewUtils} from "../utils/ViewUtils";
-
-function pinTemplate(pin) {
-    return `
-            <div class="pin">
-                <div class="button-wrapper">
-                    <div class="anim-icon anim-icon-md heart">
-                        <input type="checkbox" id="heart${pin._id}" class="togglePin">
-                        <label for="heart${pin._id}"></label>
-                    </div>
-                </div>
-                <img src="${pin.image}" alt=""/>
-            </div>
-        `;
-}
-
-function createRandomPin(pinId) {
-    const key = Math.floor(Math.random() * 123) + 1;
-
-    return {
-        _id: pinId,
-        image: 'https://randomfox.ca/images/' + key + '.jpg',
-        key
-    }
-}
+import {createRandomPin, pinTemplate} from "./Pin";
 
 export class PinList extends Component {
     currentLoadedPinCount = 0;
@@ -35,18 +11,37 @@ export class PinList extends Component {
     connectedCallback() {
         this.loadPinList(this.rowCount);
 
-        window.addEventListener('scroll', () => {
-            this.scrollEvent();
+        this.addOnScrollBottomEvent(() => {
+            if (!this.scrollEventUse) {
+                return;
+            }
+            this.loadPinList();
         });
     }
 
     pushPin(pin = createRandomPin(this.currentLoadedPinCount)) {
+        this.dispatchEvent(new CustomEvent('preLoadPinList'));
+
         const appendElement = ViewUtils.stringToElement(pinTemplate(pin));
         this.appendChild(appendElement);
-        appendElement.querySelector('.togglePin').addEventListener('click', async (e) => {
-            await this.pinToggleEvent(e.target, pin);
+
+        const togglePinElem = appendElement.querySelector('.togglePin');
+
+        this.state.user.bookMarks.forEach(bookMark => {
+            const url = parseInt(bookMark.url);
+
+            if (url === pin.key || url === pin.url * 1) {
+                togglePinElem.setAttribute('checked', 'checked');
+            }
         });
+
+        togglePinElem.addEventListener('click', (e) => {
+            this.pinToggleEvent(e.target, pin);
+        });
+
         this.currentLoadedPinCount++;
+
+        this.dispatchEvent(new CustomEvent('afterLoadPinList'));
     }
 
     loadPinList(loadCount = this.rowCount) {
@@ -61,32 +56,13 @@ export class PinList extends Component {
         this.innerHTML = '';
     }
 
-    scrollEvent() {
-        if (!this.scrollEventUse) {
-            return;
-        }
-
-        const {
-            scrollTop,
-            scrollHeight,
-            clientHeight
-        } = document.documentElement;
-
-        if (scrollTop + clientHeight >= scrollHeight - 5) {
-            this.loadPinList();
-        }
-    }
-
-    async pinToggleEvent(element, pin) {
-        const data = {
-            _id: localStorage.getItem('user_token'),
-            key: pin.key
-        }
+    pinToggleEvent(element, pin) {
+        const detailData = {detail: {element, pin}};
 
         if (element.checked) {
-            await addBookmark(data);
+            this.dispatchEvent(new CustomEvent('favButtonClicked', detailData));
         } else {
-            await removeBookmark(data);
+            this.dispatchEvent(new CustomEvent('cancelFavButtonClicked', detailData));
         }
     }
 }

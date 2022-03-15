@@ -13,9 +13,9 @@ document.querySelectorAll('.message a').forEach(tag => {
 document.querySelector('button[data-submit="signup"]').addEventListener('click', async event => {
     event.preventDefault();
 
-    const email = $('#signup-email').value;
-    const password = $('#signup-password').value;
-    const passwordConfirm = $('#signup-password-confirm').value;
+    const email = document.querySelector('#signup-email').value;
+    const password = document.querySelector('#signup-password').value;
+    const passwordConfirm = document.querySelector('#signup-password-confirm').value;
 
     if (password !== passwordConfirm)
         return alert('패스워드를 확인해주세요.');

@@ -1,7 +1,5 @@
 import {ViewUtils} from "../utils/ViewUtils";
 import {Component} from "../core/Component";
-import {getBookmarkList} from "../../api";
-import {AuthUtils} from "../utils/AuthUtils";
 
 function template() {
     return `
@@ -46,19 +44,11 @@ export class PinNav extends Component {
         this.appendChild(element);
 
         element.querySelector('[data-label="saved"]').addEventListener('click', async (e) => {
-            const bookMarks = await getBookmarkList({_id: AuthUtils.getToken()});
-
-            this.dispatchEvent(new CustomEvent('savedClicked', {
-                detail: {
-                    bookMarks
-                }
-            }));
+            this.dispatchEvent(new CustomEvent('savedClicked'));
         });
 
         element.querySelector('[data-label="explore"]').addEventListener('click', e => {
             this.dispatchEvent(new CustomEvent('exploreClicked'));
         });
-
-
     }
 }
