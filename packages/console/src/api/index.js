@@ -1,6 +1,6 @@
 import { BASE_URL } from '../utils/constants';
 
-const fetchFn = async (url, data, method) => {
+export const fetchData = async (fetchApi = '', url, data, method = 'POST') => {
   try {
     const config = {
       method: method,
@@ -11,26 +11,6 @@ const fetchFn = async (url, data, method) => {
     const parse = await response.json();
     return parse;
   } catch (err) {
-    console.log(err);
+    console.log(fetchApi + err);
   }
 };
-
-export async function login(url, data) {
-  return fetchFn(url, data, 'POST');
-}
-
-export async function signup(url, data) {
-  return fetchFn(url, data, 'POST');
-}
-
-export async function getBookmarkList(url, data) {
-  return fetchFn(url, data, 'POST');
-}
-
-export async function addBookmark(url, data) {
-  return fetchFn(url, data, 'POST');
-}
-
-export async function removeBookmark(url, data) {
-  return fetchFn(url, data, 'DELETE');
-}
