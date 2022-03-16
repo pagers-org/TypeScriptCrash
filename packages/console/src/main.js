@@ -5,7 +5,7 @@ import { storageManager } from './utils/storageManager';
 import { STORAGE_KEY_NAMES } from './utils/constants';
 
 (() => {
-  const isLogin = localStorage.getItem('user_token');
+  const isLogin = storageManager.getItemProps(STORAGE_KEY_NAMES.USER_TOKEN);
   if (isLogin !== null) return;
 
   location.replace('./login.html');
@@ -14,6 +14,7 @@ import { STORAGE_KEY_NAMES } from './utils/constants';
 let globalIndex = 0;
 const _id = storageManager.getItemProps(STORAGE_KEY_NAMES.USER_TOKEN);
 const $main = $('main');
+const $nav = $('nav');
 
 const createPin = () => {
   toggleLoading();
@@ -54,7 +55,7 @@ window.addEventListener('scroll', () => {
   loadMore();
 });
 
-$('nav').addEventListener('click', async event => {
+$nav.addEventListener('click', async event => {
   event.stopPropagation();
   if (!event.target.matches('input')) return;
 
@@ -103,7 +104,7 @@ const renderSavePage = async () => {
   $main.innerHTML = $content;
 };
 
-$('main').addEventListener('click', async event => {
+$main.addEventListener('click', async event => {
   event.stopPropagation();
   const targetAttrKey = event.target.getAttribute('key');
   const requestUrl = `/user/bookmark/${targetAttrKey}`;
@@ -132,5 +133,4 @@ $('main').addEventListener('click', async event => {
   }
 
   if (!event.target.matches('label[for^="heart"]')) return;
-  console.log('북마크에 저장되었습니다.');
 });
