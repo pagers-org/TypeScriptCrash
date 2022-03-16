@@ -1,7 +1,6 @@
 import { Component } from '../core/Component';
-import { Validator } from '../core/Validator';
 import { AuthUtils } from '../utils/AuthUtils';
-import { login, signup } from '../../api';
+import { UserApi } from '../../api/UserApi';
 
 const template = `
  <div class="login-wrapper">
@@ -42,9 +41,9 @@ export class LoginForm extends Component {
       },
       method: {
         toggleForm(e) {
-          e.preventDefault();
+          if (e) e.preventDefault();
 
-          document
+          this.$container
             .querySelectorAll('.forms')
             .forEach(form => form.classList.toggle('hidden'));
         },
@@ -53,47 +52,40 @@ export class LoginForm extends Component {
 
           const { email, password } = this.$data;
 
-          if (!Validator.isValidEmail(email)) {
-            return alert('옳지 않은 이메일 형식입니다.');
+          const { result, message, data } = await UserApi.login({
+            email,
+            password,
+          });
+
+          if (!result) {
+            alert(message);
+          } else {
+            const { _id, email: userEmail } = data;
+
+            alert(`환영합니다, ${userEmail}님!`);
+
+            AuthUtils.setToken(_id);
+
+            location.replace('/');
           }
-
-          const data = await login({ email, password });
-
-          if (!data.length) {
-            alert('이메일 또는 비밀번호를 확인하세요');
-            return;
-          }
-
-          const { _id, email: userEmail } = data[0];
-
-          alert(`환영합니다, ${userEmail}님!`);
-
-          AuthUtils.setToken(_id);
-
-          location.replace('/');
         },
         async joinButtonClicked(e) {
           e.preventDefault();
 
           const { signEmail, signPassword, signPasswordConfirm } = this.$data;
 
-          if (!Validator.isValidPassword(signPassword, signPasswordConfirm)) {
-            return alert('패스워드를 확인해주세요.');
-          }
-
-          if (!Validator.isValidEmail(signEmail)) {
-            return alert('옳지 않은 이메일 형식입니다.');
-          }
-
-          await signup({
-            email: signEmail,
-            password: signPassword,
-            status: 0,
+          const { result, message } = await UserApi.signup({
+            signEmail,
+            signPassword,
+            signPasswordConfirm,
           });
 
-          alert('회원가입이 완료되었습니다.\n 로그인해주세요.');
-
-          this.$method.toggleForm(e);
+          if (!result) {
+            alert(message);
+          } else {
+            alert('회원가입이 완료되었습니다.\n 로그인해주세요.');
+            this.$method.toggleForm.apply(this);
+          }
         },
       },
     });

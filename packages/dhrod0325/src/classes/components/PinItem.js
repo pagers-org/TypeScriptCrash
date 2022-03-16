@@ -1,16 +1,16 @@
 import { Component } from '../core/Component';
-import { addBookmark, removeBookmark } from '../../api';
 import { NAV_STATE } from '../common/Constant';
+import { BookmarkApi } from '../../api/BookmarkApi';
 
 const template = `
             <div class="pin">
                 <div class="button-wrapper">
                     <div class="anim-icon anim-icon-md heart">
-                        <input type="checkbox" id="heart" class="togglePin" @click="pinToggleEvent" m-attr-id="pinId">
-                        <label for="heart" class="pin-label" m-attr-for="pinId"></label>
+                        <input type="checkbox" class="togglePin" @click="pinToggleEvent" m-attr-id="pinId">
+                        <label class="pin-label" m-attr-for="pinId"></label>
                     </div>
                 </div>
-                <img src="" alt="" m-attr-src="pinSrc"/>
+                <img alt="" m-attr-src="pinSrc"/>
             </div>
         `;
 
@@ -64,7 +64,7 @@ export class PinItem extends Component {
       },
     };
 
-    await addBookmark(data);
+    await BookmarkApi.addBookmark(data);
 
     this.$state.user.bookMarks.push({
       url: pin.key,
@@ -80,7 +80,7 @@ export class PinItem extends Component {
       },
     };
 
-    await removeBookmark(data);
+    await BookmarkApi.removeBookmark(data);
 
     this.$state.user.bookMarks = this.$state.user.bookMarks.filter(bookMark => {
       const url = parseInt(bookMark.url);

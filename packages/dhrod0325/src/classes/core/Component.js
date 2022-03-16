@@ -1,5 +1,3 @@
-import { ViewUtils } from '../utils/ViewUtils';
-
 export class Component extends HTMLElement {
   $state;
 
@@ -33,19 +31,13 @@ export class Component extends HTMLElement {
 
   /**
    * setUp 메소드에서 호출
-   *
-   * @param __data
-   * @param __method
-   * @param __head
-   * @param __template
    */
   initialize({
     data: __data = {},
     method: __method = {},
-    head: __head,
     template: __template,
   }) {
-    this.$data = new Proxy(__data ?? {}, {
+    this.$data = new Proxy(__data, {
       set: (obj, prop, value) => {
         obj[prop] = value;
 
@@ -59,12 +51,12 @@ export class Component extends HTMLElement {
 
     this.$method = __method;
 
-    if (__head) {
-      document.title = __head;
-    }
-
     if (__template) {
-      this.$container = ViewUtils.stringToElement(__template);
+      const template = document.createElement('template');
+      template.innerHTML = __template;
+
+      this.$container = template.content.firstElementChild.cloneNode(true);
+
       this.replaceWith(this.$container);
     }
   }
