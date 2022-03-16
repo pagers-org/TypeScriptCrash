@@ -1,5 +1,5 @@
 import {Component} from "../core/Component";
-import {ViewUtils} from "../utils/ViewUtils";
+import {EVENT} from "../utils/Constant";
 
 const template = `
 <section class="loading">
@@ -23,13 +23,13 @@ const template = `
     </svg>
 </section>`;
 
-export class Loading extends Component {
+export class LoadingProgress extends Component {
     loadingBar;
 
-    render() {
-        this.appendChild(ViewUtils.stringToElement(template));
-        this.loadingBar = this.querySelector('.loading');
-        this.hide();
+    setUp() {
+        this.initialize({
+            template
+        });
     }
 
     show() {
@@ -39,4 +39,14 @@ export class Loading extends Component {
     hide() {
         this.loadingBar.classList.add('hidden');
     }
+
+    mounted() {
+        this.loadingBar = document.querySelector('.loading');
+        this.hide();
+
+        this.emitter.on(EVENT.LoadingProgress.SHOW, this.show.bind(this));
+        this.emitter.on(EVENT.LoadingProgress.HIDE, this.hide.bind(this));
+    }
 }
+
+window.customElements.define('loading-progress', LoadingProgress);

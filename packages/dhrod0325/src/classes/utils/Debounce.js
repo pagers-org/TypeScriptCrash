@@ -55,6 +55,6 @@ export class Debounce {
     }
 
     static debounce(callback, delay) {
-        return Debounce.throttle(delay, callback, false);
+        return this.throttle(delay, callback, false);
     }
 }

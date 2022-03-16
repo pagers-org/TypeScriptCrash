@@ -6,8 +6,9 @@ export class App {
         this.container = container;
     }
 
-    addComponent(componentElement, state = {}) {
+    addComponent(componentElement, {state, emitter}) {
         componentElement.setState(state);
+        componentElement.setEmitter(emitter);
 
         this.components.push(componentElement);
         this.container.appendChild(componentElement);

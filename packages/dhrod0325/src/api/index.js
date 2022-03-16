@@ -1,32 +1,33 @@
-const API_SERVER = 'http://localhost:3000';
+import {CONFIG} from "../classes/utils/Constant";
 
 async function request(url, data = {}, config = {
     method: 'POST',
     headers: new Headers({'content-type': 'application/json'}),
 }) {
     config.body = JSON.stringify(data);
-    const response = await fetch(`${API_SERVER}${url}`, config);
+
+    const response = await fetch(`${CONFIG.API_SERVER}${url}`, config);
     return await response.json();
 }
 
-export async function login(data) {
+export function login(data) {
     return request('/api/user/login', data);
 }
 
-export async function signup(data) {
+export function signup(data) {
     return request('/api/user', data);
 }
 
-export async function getBookmarkList(data) {
-    return request('/api/user/bookmark', data);
+export function getBookmarkList({_id}) {
+    return request('/api/user/bookmark', {_id});
 }
 
-export async function addBookmark(data) {
-    return request(`/api/user/bookmark/${data.key}`, data);
+export function addBookmark({key, _id}) {
+    return request(`/api/user/bookmark/${key}`, {_id});
 }
 
-export async function removeBookmark(data) {
-    return request(`/api/user/bookmark/${data.key}`, data, {
+export function removeBookmark({key, _id}) {
+    return request(`/api/user/bookmark/${key}`, {_id}, {
         method: 'DELETE',
         headers: new Headers({'content-type': 'application/json'}),
     });
