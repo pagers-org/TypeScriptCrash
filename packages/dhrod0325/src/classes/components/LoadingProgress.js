@@ -1,5 +1,5 @@
 import { Component } from '../core/Component';
-import { EVENT } from '../utils/Constant';
+import { EVENT } from '../common/Constant';
 
 const template = `
 <section class="loading">
@@ -24,8 +24,6 @@ const template = `
 </section>`;
 
 export class LoadingProgress extends Component {
-  loadingBar;
-
   setUp() {
     this.initialize({
       template,
@@ -33,15 +31,14 @@ export class LoadingProgress extends Component {
   }
 
   show() {
-    this.loadingBar.classList.remove('hidden');
+    this.$container.classList.remove('hidden');
   }
 
   hide() {
-    this.loadingBar.classList.add('hidden');
+    this.$container.classList.add('hidden');
   }
 
   mounted() {
-    this.loadingBar = document.querySelector('.loading');
     this.hide();
 
     this.$emitter.on(EVENT.LoadingProgress.SHOW, this.show.bind(this));

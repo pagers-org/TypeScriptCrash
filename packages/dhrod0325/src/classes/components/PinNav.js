@@ -1,5 +1,5 @@
 import { Component } from '../core/Component';
-import { EVENT } from '../utils/Constant';
+import { EVENT } from '../common/Constant';
 
 const template = `
     <header>
@@ -42,10 +42,10 @@ export class PinNav extends Component {
       template,
       method: {
         savedClicked() {
-          this.emitter.emit(EVENT.PinNav.SAVE_CLICKED);
+          this.$emitter.emit(EVENT.PinNav.SAVE_CLICKED);
         },
         exploreClicked() {
-          this.emitter.emit(EVENT.PinNav.EXPLORE_CLICKED);
+          this.$emitter.emit(EVENT.PinNav.EXPLORE_CLICKED);
         },
       },
     });

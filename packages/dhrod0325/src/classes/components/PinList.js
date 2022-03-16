@@ -1,50 +1,47 @@
 import { Component } from '../core/Component';
 import { Debounce } from '../utils/Debounce';
-import { ViewUtils } from '../utils/ViewUtils';
-import {
-  createRandomFoxImageUrl,
-  createRandomPin,
-  pinTemplate,
-} from '../utils/Pin';
-import { addBookmark, removeBookmark } from '../../api';
-import { EVENT } from '../utils/Constant';
+import { createRandomFoxImageUrl, createRandomPin } from '../utils/Pin';
+import { EVENT, NAV_STATE } from '../common/Constant';
 
-const STATE_EXPLORE = 'STATE_EXPLORE';
-const STATE_SAVED = 'STATE_SAVED';
+import './PinItem';
+
+const template = `
+<div class="pin-list"></div>
+`;
 
 export class PinList extends Component {
+  PIN_LOAD_COUNT = 10;
+
   currentLoadedPinCount = 0;
-  rowCount = 10;
-  navigate = STATE_EXPLORE;
   isPinLoading = false;
 
-  pushPin(pin = createRandomPin(this.currentLoadedPinCount)) {
-    this.$emitter.emit(EVENT.LoadingProgress.SHOW);
-
-    const appendElement = ViewUtils.stringToElement(pinTemplate(pin));
-    this.appendChild(appendElement);
-
-    const togglePinElem = appendElement.querySelector('.togglePin');
-
-    this.$state.user.bookMarks.forEach(bookMark => {
-      const url = Number(bookMark.url);
-      const { key: pinKey, url: pinUrl } = pin;
-
-      if (url === Number(pinKey) || url === Number(pinUrl)) {
-        togglePinElem.setAttribute('checked', 'checked');
-      }
+  setUp() {
+    this.initialize({
+      template,
     });
-
-    togglePinElem.addEventListener('click', e => {
-      this.pinToggleEvent(e.target, pin);
-    });
-
-    this.currentLoadedPinCount++;
-
-    this.$emitter.emit(EVENT.LoadingProgress.HIDE);
   }
 
-  loadPinList(loadCount = this.rowCount) {
+  mounted() {
+    this.loadPinList();
+
+    this.scrollBottomEvent();
+
+    this.$emitter.on(EVENT.PinNav.SAVE_CLICKED, this.loadFavorite.bind(this));
+    this.$emitter.on(EVENT.PinNav.EXPLORE_CLICKED, this.loadExplore.bind(this));
+  }
+
+  pushPin(pin = createRandomPin(this.currentLoadedPinCount)) {
+    const appendElement = document.createElement('pin-item');
+    appendElement.setPin(pin);
+    appendElement.setState(this.$state);
+    appendElement.setEmitter(this.$emitter);
+
+    this.$container.appendChild(appendElement);
+
+    this.currentLoadedPinCount++;
+  }
+
+  loadPinList(loadCount = this.PIN_LOAD_COUNT) {
     if (this.isPinLoading) return;
 
     this.isPinLoading = true;
@@ -54,23 +51,23 @@ export class PinList extends Component {
     for (let i = 0; i < loadCount; i++) {
       Debounce.debounce(() => {
         this.pushPin();
-        this.isPinLoading = false;
+
+        const isLast = i === loadCount - 1;
+
+        if (isLast) {
+          this.isPinLoading = false;
+          this.$emitter.emit(EVENT.LoadingProgress.HIDE);
+        }
       }, 500)();
     }
   }
 
   clear() {
-    this.innerHTML = '';
-  }
-
-  pinToggleEvent(element, pin) {
-    element.checked
-      ? this.favButtonClicked({ pin })
-      : this.cancelFavButtonClicked({ pin, element });
+    this.$container.innerHTML = '';
   }
 
   loadFavorite() {
-    this.navigate = STATE_SAVED;
+    this.$state.NAV_STATE = NAV_STATE.STATE_SAVED;
     this.clear();
 
     this.$state.user.bookMarks.forEach(bookMark => {
@@ -80,67 +77,19 @@ export class PinList extends Component {
   }
 
   loadExplore() {
-    this.navigate = STATE_EXPLORE;
+    this.$state.NAV_STATE = NAV_STATE.STATE_EXPLORE;
     this.clear();
 
     this.loadPinList();
-  }
-
-  async favButtonClicked({ pin }) {
-    const data = {
-      ...this.$state.user,
-      ...{
-        key: pin.key ? pin.key : pin.url,
-      },
-    };
-
-    await addBookmark(data);
-
-    this.$state.user.bookMarks.push({
-      url: pin.key,
-      _id: pin._id,
-    });
-  }
-
-  async cancelFavButtonClicked({ pin, element }) {
-    const data = {
-      ...this.$state.user,
-      ...{
-        key: pin.key ? pin.key : pin.url,
-      },
-    };
-
-    await removeBookmark(data);
-
-    this.$state.user.bookMarks = this.$state.user.bookMarks.filter(bookMark => {
-      const url = parseInt(bookMark.url);
-      const dataKey = parseInt(data.key);
-      const dataUrl = parseInt(data.url);
-
-      return url !== dataKey && url !== dataUrl;
-    });
-
-    if (this.navigate === STATE_SAVED) {
-      element.parentElement.parentElement.parentElement.remove();
-    }
-  }
-
-  mounted() {
-    this.loadPinList();
-
-    this.addOnScrollBottomEvent();
-
-    this.$emitter.on(EVENT.PinNav.SAVE_CLICKED, this.loadFavorite.bind(this));
-    this.$emitter.on(EVENT.PinNav.EXPLORE_CLICKED, this.loadExplore.bind(this));
   }
 
   disconnectedCallback() {
     window.removeEventListener('scroll', this.loadPinList);
   }
 
-  addOnScrollBottomEvent() {
+  scrollBottomEvent() {
     window.addEventListener('scroll', () => {
-      if (this.navigate === STATE_SAVED) {
+      if (this.$state.NAV_STATE === NAV_STATE.STATE_SAVED) {
         return;
       }
 

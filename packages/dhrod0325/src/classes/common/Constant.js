@@ -12,3 +12,8 @@ export const EVENT = {
     HIDE: 'LoadingProgress.HIDE',
   },
 };
+
+export const NAV_STATE = {
+  STATE_EXPLORE: 'STATE_EXPLORE',
+  STATE_SAVED: 'STATE_SAVED',
+};

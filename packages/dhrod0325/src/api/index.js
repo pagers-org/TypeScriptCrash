@@ -1,4 +1,4 @@
-import { CONFIG } from '../classes/utils/Constant';
+import { CONFIG } from '../classes/common/Constant';
 
 async function request(
   url,

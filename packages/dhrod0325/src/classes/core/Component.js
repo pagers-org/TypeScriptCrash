@@ -11,6 +11,8 @@ export class Component extends HTMLElement {
 
   $watchElements = {};
 
+  $container;
+
   isMounted = false;
 
   connectedCallback() {
@@ -62,8 +64,8 @@ export class Component extends HTMLElement {
     }
 
     if (__template) {
-      const element = ViewUtils.stringToElement(__template);
-      this.appendChild(element);
+      this.$container = ViewUtils.stringToElement(__template);
+      this.replaceWith(this.$container);
     }
   }
 
@@ -76,7 +78,11 @@ export class Component extends HTMLElement {
   }
 
   bindEvents() {
-    this.querySelectorAll('*').forEach(elem => {
+    if (!this.$container) {
+      return;
+    }
+
+    this.$container.querySelectorAll('*').forEach(elem => {
       elem.getAttributeNames().forEach(attrName => {
         const attributeValue = elem.getAttribute(attrName);
         if (attrName.startsWith('@')) {
