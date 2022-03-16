@@ -1,9 +1,9 @@
 const BASE_URL = 'http://localhost:3000/api';
 
-export async function requestData(resource, data) {
+export async function fetchData(resource, data, method) {
   try {
     const response = await fetch(BASE_URL + resource, {
-      method: 'POST',
+      method,
       headers: {
         'Content-Type': 'application/json',
       },
