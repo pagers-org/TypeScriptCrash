@@ -1,102 +1,114 @@
-import {ViewUtils} from "../utils/ViewUtils";
+import { ViewUtils } from '../utils/ViewUtils';
 
 export class Component extends HTMLElement {
-    state;
-    emitter;
+  $state;
 
-    $data;
-    $method;
+  $emitter;
 
-    isMounted = false;
+  $data;
 
-    connectedCallback() {
-        requestAnimationFrame(() => {
-            this.setUp();
+  $method;
 
-            this.render();
+  $watchElements = {};
 
-            this.bindEvents();
+  isMounted = false;
 
-            if (!this.isMounted) {
-                this.mounted();
+  connectedCallback() {
+    requestAnimationFrame(() => {
+      this.setUp();
 
-                this.isMounted = true;
-            }
-        });
-    }
+      this.render();
 
-    /**
-     * setUp 메소드에서 호출
-     *
-     * @param __data
-     * @param __method
-     * @param __head
-     * @param __template
-     */
-    initialize(
-        {
-            data: __data = {},
-            method: __method = {},
-            head: __head,
-            template: __template
-        }
-    ) {
-        this.$data = new Proxy(__data ?? {}, {
-            set: (obj, prop, value) => {
-                obj[prop] = value;
-                return true;
-            },
-        });
+      this.bindEvents();
 
-        this.$method = __method;
+      if (!this.isMounted) {
+        this.mounted();
 
-        if (__head) {
-            document.title = __head;
+        this.isMounted = true;
+      }
+    });
+  }
+
+  /**
+   * setUp 메소드에서 호출
+   *
+   * @param __data
+   * @param __method
+   * @param __head
+   * @param __template
+   */
+  initialize({
+    data: __data = {},
+    method: __method = {},
+    head: __head,
+    template: __template,
+  }) {
+    this.$data = new Proxy(__data ?? {}, {
+      set: (obj, prop, value) => {
+        obj[prop] = value;
+
+        if (this.$watchElements[prop]) {
+          this.$watchElements[prop].value = value;
         }
 
-        if (__template) {
-            const element = ViewUtils.stringToElement(__template);
-            this.appendChild(element);
+        return true;
+      },
+    });
+
+    this.$method = __method;
+
+    if (__head) {
+      document.title = __head;
+    }
+
+    if (__template) {
+      const element = ViewUtils.stringToElement(__template);
+      this.appendChild(element);
+    }
+  }
+
+  setUp() {
+    //OVERRIDE
+  }
+
+  render() {
+    //OVERRIDE
+  }
+
+  bindEvents() {
+    this.querySelectorAll('*').forEach(elem => {
+      elem.getAttributeNames().forEach(attrName => {
+        const attributeValue = elem.getAttribute(attrName);
+        if (attrName.startsWith('@')) {
+          const eventName = attrName.substring(1, attrName.length);
+          const method = this.$method[attributeValue].bind(this);
+          elem.addEventListener(eventName, method);
+        } else if (attrName === 'm-input-data') {
+          this.$watchElements[attributeValue] = elem;
+
+          elem.addEventListener('input', e => {
+            const { target } = e;
+            const key = target.getAttribute('m-input-data');
+            this.$data[key] = target.value;
+          });
         }
-    }
+      });
+    });
+  }
 
-    setUp() {
-    }
+  mounted() {
+    //OVERRIDE
+  }
 
-    render() {
-    }
+  disconnectedCallback() {
+    //OVERRIDE
+  }
 
-    bindEvents() {
-        this.querySelectorAll('*').forEach(elem => {
-            elem.getAttributeNames().forEach(attrName => {
-                const attributeValue = elem.getAttribute(attrName);
-                if (attrName.startsWith('@')) {
-                    const eventName = attrName.substring(1, attrName.length);
-                    const method = this.$method[attributeValue].bind(this);
-                    elem.addEventListener(eventName, method);
-                } else if (attrName === 'm-input-data') {
-                    elem.addEventListener('input', (e) => {
-                        const {target} = e;
-                        const key = target.getAttribute('m-input-data');
-                        this.$data[key] = target.value;
-                    });
-                }
-            });
-        });
-    }
+  setState(state) {
+    this.$state = state;
+  }
 
-    mounted() {
-
-    }
-
-    disconnectedCallback() {
-    }
-
-    setState(state) {
-        this.state = state;
-    }
-
-    setEmitter(emitter) {
-        this.emitter = emitter;
-    }
+  setEmitter(emitter) {
+    this.$emitter = emitter;
+  }
 }

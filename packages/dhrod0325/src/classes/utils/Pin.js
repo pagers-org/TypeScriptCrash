@@ -1,5 +1,5 @@
 export function pinTemplate(pin) {
-    return `
+  return `
             <div class="pin">
                 <div class="button-wrapper">
                     <div class="anim-icon anim-icon-md heart">
@@ -13,19 +13,19 @@ export function pinTemplate(pin) {
 }
 
 export function createRandomKey() {
-    return Math.floor(Math.random() * 123) + 1;
+  return Math.floor(Math.random() * 123) + 1;
 }
 
 export function createRandomFoxImageUrl(key) {
-    return `https://randomfox.ca/images/${key}.jpg`;
+  return `https://randomfox.ca/images/${key}.jpg`;
 }
 
 export function createRandomPin(pinId) {
-    const key = createRandomKey();
+  const key = createRandomKey();
 
-    return {
-        _id: pinId,
-        image: createRandomFoxImageUrl(key),
-        key
-    }
+  return {
+    _id: pinId,
+    image: createRandomFoxImageUrl(key),
+    key,
+  };
 }

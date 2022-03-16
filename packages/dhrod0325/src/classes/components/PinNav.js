@@ -1,5 +1,5 @@
-import {Component} from "../core/Component";
-import {EVENT} from "../utils/Constant";
+import { Component } from '../core/Component';
+import { EVENT } from '../utils/Constant';
 
 const template = `
     <header>
@@ -37,19 +37,19 @@ const template = `
 `;
 
 export class PinNav extends Component {
-    setUp() {
-        this.initialize({
-            template,
-            method: {
-                savedClicked() {
-                    this.emitter.emit(EVENT.PinNav.SAVE_CLICKED);
-                },
-                exploreClicked() {
-                    this.emitter.emit(EVENT.PinNav.EXPLORE_CLICKED);
-                }
-            }
-        })
-    }
+  setUp() {
+    this.initialize({
+      template,
+      method: {
+        savedClicked() {
+          this.emitter.emit(EVENT.PinNav.SAVE_CLICKED);
+        },
+        exploreClicked() {
+          this.emitter.emit(EVENT.PinNav.EXPLORE_CLICKED);
+        },
+      },
+    });
+  }
 }
 
 window.customElements.define('pin-nav', PinNav);

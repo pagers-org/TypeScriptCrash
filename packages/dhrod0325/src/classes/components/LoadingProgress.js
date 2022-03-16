@@ -1,5 +1,5 @@
-import {Component} from "../core/Component";
-import {EVENT} from "../utils/Constant";
+import { Component } from '../core/Component';
+import { EVENT } from '../utils/Constant';
 
 const template = `
 <section class="loading">
@@ -24,29 +24,29 @@ const template = `
 </section>`;
 
 export class LoadingProgress extends Component {
-    loadingBar;
+  loadingBar;
 
-    setUp() {
-        this.initialize({
-            template
-        });
-    }
+  setUp() {
+    this.initialize({
+      template,
+    });
+  }
 
-    show() {
-        this.loadingBar.classList.remove('hidden');
-    }
+  show() {
+    this.loadingBar.classList.remove('hidden');
+  }
 
-    hide() {
-        this.loadingBar.classList.add('hidden');
-    }
+  hide() {
+    this.loadingBar.classList.add('hidden');
+  }
 
-    mounted() {
-        this.loadingBar = document.querySelector('.loading');
-        this.hide();
+  mounted() {
+    this.loadingBar = document.querySelector('.loading');
+    this.hide();
 
-        this.emitter.on(EVENT.LoadingProgress.SHOW, this.show.bind(this));
-        this.emitter.on(EVENT.LoadingProgress.HIDE, this.hide.bind(this));
-    }
+    this.$emitter.on(EVENT.LoadingProgress.SHOW, this.show.bind(this));
+    this.$emitter.on(EVENT.LoadingProgress.HIDE, this.hide.bind(this));
+  }
 }
 
 window.customElements.define('loading-progress', LoadingProgress);
