@@ -1,5 +1,5 @@
 import '../assets/index.css';
-import { addBookmark, getBookmarkList, removeBookmark } from './api';
+import { fetchData } from './api';
 import { $, toggleLoading, debounce } from './helper/index.js';
 
 (() => {
@@ -11,6 +11,7 @@ import { $, toggleLoading, debounce } from './helper/index.js';
 
 let globalIndex = 0;
 const _id = localStorage.getItem('user_token');
+const $main = $('main');
 
 const createPin = () => {
   toggleLoading();
@@ -55,18 +56,17 @@ $('nav').addEventListener('click', async event => {
   event.stopPropagation();
   if (!event.target.matches('input')) return;
 
-  const $main = $('main');
   $main.innerHTML = '';
 
   if (event.target.matches('#explore')) {
-    renderExplorePage($main);
+    renderExplorePage();
   }
   if (event.target.matches('#saved')) {
-    renderSavePage($main);
+    renderSavePage();
   }
 });
 
-const renderExplorePage = async $main => {
+const renderExplorePage = async () => {
   $main.classList.remove('saved');
   $main.innerHTML = `
       <div class="container"></div>
@@ -77,9 +77,9 @@ const renderExplorePage = async $main => {
   loadMore();
 };
 
-const renderSavePage = async $main => {
+const renderSavePage = async () => {
   $main.classList.add('saved');
-  const result = await getBookmarkList('/user/bookmark', { _id });
+  const result = await fetchData('getBookmarkList', '/user/bookmark', { _id });
   const $content = `
     <div class="container">
     ${result
@@ -103,16 +103,29 @@ const renderSavePage = async $main => {
 
 $('main').addEventListener('click', async event => {
   event.stopPropagation();
-  const $main = $('main');
-  const requestUrl = `/user/bookmark/${event.target.getAttribute('key')}`;
-  if (event.target.getAttribute('key')?.length > 3) {
-    await removeBookmark(requestUrl, { _id });
-    renderSavePage($main);
+  const targetAttrKey = event.target.getAttribute('key');
+  const requestUrl = `/user/bookmark/${targetAttrKey}`;
+  if (targetAttrKey?.length > 3) {
+    await fetchData('removeBookmark', requestUrl, { _id }, 'DELETE');
+    renderSavePage();
   }
-  // 아래함수는 아직..작업중입니당
+  const result = await fetchData('getBookmarkList', '/user/bookmark', { _id });
+  const selectedImage = result.filter(item => {
+    return item.url === targetAttrKey;
+  });
+
   if (event.target.matches('input[id^="heart"]')) {
     if (event.target.checked) {
-      await addBookmark(requestUrl, { _id });
+      await fetchData('addBookmark', requestUrl, { _id });
+      return;
+    } else {
+      await fetchData(
+        'removeBookmark',
+        `/user/bookmark/${selectedImage[0]?._id}`,
+        { _id },
+        'DELETE',
+      );
+      return;
     }
   }
 
