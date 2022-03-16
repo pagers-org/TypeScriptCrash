@@ -97,6 +97,9 @@ export class Component extends HTMLElement {
             const key = target.getAttribute('m-input-data');
             this.$data[key] = target.value;
           });
+        } else if (attrName.startsWith('m-attr')) {
+          const mAttributeName = attrName.replaceAll('m-attr-', '');
+          elem.setAttribute(mAttributeName, this.$data[attributeValue]);
         }
       });
     });

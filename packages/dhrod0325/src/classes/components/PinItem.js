@@ -6,11 +6,11 @@ const template = `
             <div class="pin">
                 <div class="button-wrapper">
                     <div class="anim-icon anim-icon-md heart">
-                        <input type="checkbox" id="heart" class="togglePin" @click="pinToggleEvent">
-                        <label for="heart" class="pin-label"></label>
+                        <input type="checkbox" id="heart" class="togglePin" @click="pinToggleEvent" m-attr-id="pinId">
+                        <label for="heart" class="pin-label" m-attr-for="pinId"></label>
                     </div>
                 </div>
-                <img src="" alt=""/>
+                <img src="" alt="" m-attr-src="pinSrc"/>
             </div>
         `;
 
@@ -18,11 +18,15 @@ export class PinItem extends Component {
   pin;
 
   setUp() {
+    const pinSrc = this.pin.image;
+    const pinId = `heart-${this.pin._id}`;
+
     this.initialize({
-      data: {
-        name: 'test',
-      },
       template,
+      data: {
+        pinId,
+        pinSrc,
+      },
       method: {
         pinToggleEvent({ target }) {
           const { pin } = this;
@@ -36,16 +40,7 @@ export class PinItem extends Component {
   }
 
   mounted() {
-    const imgElem = this.$container.querySelector('img');
-    imgElem.src = this.pin.image;
-
-    const id = `heart${this.pin._id}`;
-
     const inputEl = this.$container.querySelector('.togglePin');
-    inputEl.setAttribute('id', id);
-
-    const labelEl = this.$container.querySelector('.pin-label');
-    labelEl.setAttribute('for', id);
 
     this.$state.user.bookMarks.forEach(bookMark => {
       const url = Number(bookMark.url);
