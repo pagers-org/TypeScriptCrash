@@ -1,11 +1,12 @@
 import '../assets/index.css';
-import { addBookmark, getBookmarkList } from './api/bookmark';
+import { addBookmark, getBookmarkList } from './api/index';
 import { $, toggleLoading, debounce } from './helper/index.js';
+import { getUserInfo } from './storage';
+
+const userId = getUserInfo();
 
 (() => {
-  const isLogin = localStorage.getItem('user_token');
-  if (isLogin !== null) return;
-
+  if (userId !== null) return;
   location.replace('./login.html');
 })();
 
@@ -70,16 +71,13 @@ $('nav').addEventListener('click', async event => {
 
   if (event.target.matches('#saved')) {
     $main.classList.add('saved');
-    const _id = localStorage.getItem('user_token');
-    const result = await getBookmarkList(
-      '/user/bookmark',
-      { _id },
-    );
+    const result = await getBookmarkList('/user/bookmark', { _id: userId });
     const $content = `
     <div class="container">
     ${result
         .map(
-          ({ _id, url }, index) => `
+          ({ _id, url }, index) =>
+            `
       <div class="pin">
         <div class="button-wrapper">
           <div class="anim-icon anim-icon-md heart">
@@ -99,12 +97,8 @@ $('nav').addEventListener('click', async event => {
 
 $('main').addEventListener('click', async event => {
   if (!event.target.matches('label[for^="heart"]')) return;
-  const _id = localStorage.getItem('user_token');
-  await addBookmark(
-    `/user/bookmark/${event.target.getAttribute(
-      'key',
-    )}`,
-    { _id },
-  );
+  await addBookmark(`/user/bookmark/${event.target.getAttribute('key')}`, {
+    _id: userId,
+  });
   console.log('북마크에 저장되었습니다.');
 });

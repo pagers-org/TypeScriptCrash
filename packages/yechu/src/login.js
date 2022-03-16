@@ -1,6 +1,8 @@
 import '../assets/page/login.css';
-import { login, signup } from './api/login.js';
+import { login, signup } from './api/index.js';
 import { $, $all } from './helper/index.js';
+import { REG_EMAIL } from './constant';
+import { setUserInfo } from './storage';
 
 $all('.message a').forEach(tag => {
   tag.addEventListener('click', () => {
@@ -18,9 +20,8 @@ $('button[data-submit="signup"]').addEventListener('click', async event => {
   const passwordConfirm = $('#signup-password-confirm').value;
 
   if (password !== passwordConfirm) return alert('패스워드를 확인해주세요.');
-  const regEmail =
-    /^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
-  if (!regEmail.test(email)) return alert('옳지 않은 이메일 형식입니다.');
+
+  if (!REG_EMAIL.test(email)) return alert('옳지 않은 이메일 형식입니다.');
 
   await signup('/user', {
     email,
@@ -43,6 +44,6 @@ $('button[data-submit="login"]').addEventListener('click', async event => {
   });
   const { _id, email: userEmail } = data[0];
   alert(`환영합니다, ${userEmail}님!`);
-  localStorage.setItem('user_token', _id);
+  setUserInfo(_id);
   location.replace('http://localhost:5510/');
 });
