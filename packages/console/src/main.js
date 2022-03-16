@@ -1,6 +1,8 @@
 import '../assets/index.css';
 import { fetchData } from './api';
 import { $, toggleLoading, debounce } from './helper/index.js';
+import { storageManager } from './utils/storageManager';
+import { STORAGE_KEY_NAMES } from './utils/constants';
 
 (() => {
   const isLogin = localStorage.getItem('user_token');
@@ -10,7 +12,7 @@ import { $, toggleLoading, debounce } from './helper/index.js';
 })();
 
 let globalIndex = 0;
-const _id = localStorage.getItem('user_token');
+const _id = storageManager.getItemProps(STORAGE_KEY_NAMES.USER_TOKEN);
 const $main = $('main');
 
 const createPin = () => {

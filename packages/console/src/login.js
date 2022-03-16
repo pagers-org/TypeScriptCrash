@@ -1,7 +1,8 @@
 import '../assets/page/login.css';
 import { fetchData } from './api/index.js';
 import { $, $all } from './helper/index.js';
-import { REGEX_EMAIL } from './utils/constants';
+import { REGEX_EMAIL, STORAGE_KEY_NAMES } from './utils/constants';
+import { storageManager } from './utils/storageManager';
 
 $all('.message a').forEach(tag => {
   tag.addEventListener('click', () => {
@@ -42,6 +43,6 @@ $('button[data-submit="login"]').addEventListener('click', async event => {
   });
   const { _id, email: userEmail } = data[0];
   alert(`환영합니다, ${userEmail}님!`);
-  localStorage.setItem('user_token', _id);
+  storageManager.setItemProps(STORAGE_KEY_NAMES.USER_TOKEN, _id);
   location.replace('http://localhost:5510/');
 });
