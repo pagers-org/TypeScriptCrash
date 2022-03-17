@@ -8,7 +8,7 @@ export default class LoginView {
     this.element = $('.app');
     this.template = template;
     this.element.innerHTML = this.template.initialize();
-    this.handleLoginButton();
+    this.bindEvents();
   }
 
   bindEvents() {
