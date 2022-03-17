@@ -24,17 +24,23 @@ const createPin = () => {
   const random = Math.floor(Math.random() * 123) + 1;
   image.src = `https://randomfox.ca/images/${random}.jpg`;
   buttonWrapper.setAttribute('class', 'button-wrapper');
-  buttonWrapper.innerHTML = `
-  <div class="anim-icon anim-icon-md heart">
-    <input type="checkbox" id="heart${globalIndex}" key=${random} />
-    <label for="heart${globalIndex}" key=${random}></label>
-  </div>
-  `;
+  buttonWrapper.innerHTML = createHeartElem(globalIndex, random, false);
+
   pin.classList.add('pin');
   pin.appendChild(buttonWrapper);
   pin.appendChild(image);
   toggleLoading();
   return pin;
+};
+
+const createHeartElem = (index, key, isChecked = false) => {
+  return `
+  <div class="anim-icon anim-icon-md heart">
+  <input type="checkbox" id="heart${index}" key=${key} ${
+    isChecked && 'checked'
+  }/>
+  <label for="heart${index}" key=${key}></label>
+</div>`;
 };
 
 const loadMore = debounce(() => {
@@ -90,10 +96,7 @@ const renderSavePage = async () => {
         ({ _id, url }, index) => `
       <div class="pin">
         <div class="button-wrapper">
-          <div class="anim-icon anim-icon-md heart">
-            <input type="checkbox" id="heart${index}" key=${_id} checked>
-            <label for="heart${index}" key=${_id}></label>
-          </div>
+        ${createHeartElem(index, _id, true)}
         </div><img src="https://randomfox.ca/images/${url}.jpg">
       </div>`,
       )
@@ -105,31 +108,32 @@ const renderSavePage = async () => {
 };
 
 $main.addEventListener('click', async event => {
-  event.stopPropagation();
   const targetAttrKey = event.target.getAttribute('key');
   const requestUrl = `/user/bookmark/${targetAttrKey}`;
   if (targetAttrKey?.length > 3) {
     await fetchData('removeBookmark', requestUrl, { _id }, 'DELETE');
     renderSavePage();
   }
-  const result = await fetchData('getBookmarkList', '/user/bookmark', { _id });
-  const selectedImage = result.filter(item => {
-    return item.url === targetAttrKey;
-  });
 
   if (event.target.matches('input[id^="heart"]')) {
     if (event.target.checked) {
       await fetchData('addBookmark', requestUrl, { _id });
       return;
-    } else {
-      await fetchData(
-        'removeBookmark',
-        `/user/bookmark/${selectedImage[0]?._id}`,
-        { _id },
-        'DELETE',
-      );
-      return;
     }
+
+    const result = await fetchData('getBookmarkList', '/user/bookmark', {
+      _id,
+    });
+    const selectedImage = result.filter(item => {
+      return item.url === targetAttrKey;
+    });
+    await fetchData(
+      'removeBookmark',
+      `/user/bookmark/${selectedImage[0]?._id}`,
+      { _id },
+      'DELETE',
+    );
+    return;
   }
 
   if (!event.target.matches('label[for^="heart"]')) return;
