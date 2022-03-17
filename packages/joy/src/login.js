@@ -1,14 +1,7 @@
 import '../assets/page/login.css';
-import { login, signup } from './api/index.js';
 import { $, $all } from './util/dom.js';
-
-$all('.message a').forEach((tag) => {
-  tag.addEventListener('click', () => {
-    $all('.forms').forEach((form) => {
-      form.classList.toggle('hidden');
-    });
-  });
-});
+import { MAIN_URL } from './constant/index.js';
+import { login, signup } from './api/index.js';
 
 $('button[data-submit="signup"]').addEventListener('click', async (event) => {
   event.preventDefault();
@@ -29,6 +22,7 @@ $('button[data-submit="signup"]').addEventListener('click', async (event) => {
   });
 
   alert('회원가입이 완료되었습니다.\n로그인해주세요.');
+  location.replace(`${MAIN_URL}/login.html`);
 });
 
 $('button[data-submit="login"]').addEventListener('click', async (event) => {
@@ -44,5 +38,5 @@ $('button[data-submit="login"]').addEventListener('click', async (event) => {
   const { _id, email: userEmail } = data[0];
   alert(`환영합니다, ${userEmail}님!`);
   localStorage.setItem('user_token', _id);
-  location.replace('http://localhost:5510/');
+  location.replace(MAIN_URL);
 });
