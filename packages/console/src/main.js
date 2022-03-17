@@ -1,18 +1,19 @@
 import '../assets/index.css';
 import { fetchData } from './api';
 import { $, toggleLoading, debounce } from './helper/index.js';
-import { storageManager } from './utils/storageManager';
+import StorageManager from './utils/storageClass';
 import { STORAGE_KEY_NAMES } from './utils/constants';
+const storageManager = new StorageManager(STORAGE_KEY_NAMES.USER_TOKEN);
 
 (() => {
-  const isLogin = storageManager.getItemProps(STORAGE_KEY_NAMES.USER_TOKEN);
+  const isLogin = storageManager.getItemProps();
   if (isLogin !== null) return;
 
   location.replace('./login.html');
 })();
 
 let globalIndex = 0;
-const _id = storageManager.getItemProps(STORAGE_KEY_NAMES.USER_TOKEN);
+const _id = storageManager.getItemProps();
 const $main = $('main');
 const $nav = $('nav');
 
