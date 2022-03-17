@@ -7,9 +7,7 @@ export class HttpClient {
 
   async request({ url, config }) {
     config = {
-      ...{
-        headers: new Headers({ 'content-type': 'application/json' }),
-      },
+      ...{ headers: new Headers({ 'content-type': 'application/json' }) },
       ...config,
     };
 
@@ -33,10 +31,7 @@ export class HttpClient {
 
     return this.request({
       url,
-      config: {
-        body,
-        method: 'POST',
-      },
+      config: { body, method: 'POST' },
     });
   }
 
@@ -45,10 +40,7 @@ export class HttpClient {
 
     return this.request({
       url,
-      config: {
-        body,
-        method: 'DELETE',
-      },
+      config: { body, method: 'DELETE' },
     });
   }
 }

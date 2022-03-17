@@ -1,4 +1,4 @@
-import { Validator, ApiResponse } from '../../core';
+import { apiFail, apiSuccess, Validator } from '../../core';
 
 export class UserApi {
   client;
@@ -9,7 +9,7 @@ export class UserApi {
 
   async login({ email, password }) {
     if (!Validator.isValidEmail(email)) {
-      return ApiResponse.fail('옳지 않은 이메일 형식입니다.');
+      return apiFail('옳지 않은 이메일 형식입니다.');
     }
 
     const data = await this.client.post({
@@ -18,19 +18,19 @@ export class UserApi {
     });
 
     if (!data.length) {
-      return ApiResponse.fail('이메일 또는 비밀번호를 확인하세요');
+      return apiFail('이메일 또는 비밀번호를 확인하세요');
     }
 
-    return ApiResponse.success(data[0]);
+    return apiSuccess(data[0]);
   }
 
   async signup({ signEmail, signPassword, signPasswordConfirm }) {
     if (!Validator.isValidPassword(signPassword, signPasswordConfirm)) {
-      return ApiResponse.fail('패스워드를 확인해주세요.');
+      return apiFail('패스워드를 확인해주세요.');
     }
 
     if (!Validator.isValidEmail(signEmail)) {
-      return ApiResponse.fail('옳지 않은 이메일 형식입니다.');
+      return apiFail('옳지 않은 이메일 형식입니다.');
     }
 
     const data = await this.client.post({
@@ -42,6 +42,6 @@ export class UserApi {
       },
     });
 
-    return ApiResponse.success(data);
+    return apiSuccess(data);
   }
 }

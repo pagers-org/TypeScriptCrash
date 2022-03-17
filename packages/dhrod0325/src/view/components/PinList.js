@@ -49,9 +49,7 @@ export class PinList extends Component {
           }
         });
       },
-      {
-        threshold: 0.7,
-      },
+      { threshold: 0.7 },
     );
   }
 

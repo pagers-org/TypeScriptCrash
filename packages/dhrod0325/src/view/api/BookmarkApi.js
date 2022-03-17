@@ -1,4 +1,4 @@
-import { ApiResponse } from '../../core';
+import { apiSuccess } from '../../core';
 
 export class BookmarkApi {
   client;
@@ -13,7 +13,7 @@ export class BookmarkApi {
       data: { _id },
     });
 
-    return ApiResponse.success(data);
+    return apiSuccess(data);
   }
 
   async add({ url, _id }) {
@@ -22,7 +22,7 @@ export class BookmarkApi {
       data: { _id },
     });
 
-    return ApiResponse.success(data);
+    return apiSuccess(data);
   }
 
   async remove({ url, _id }) {
@@ -31,6 +31,6 @@ export class BookmarkApi {
       data: { _id },
     });
 
-    return ApiResponse.success(data);
+    return apiSuccess(data);
   }
 }
