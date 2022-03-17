@@ -21,8 +21,8 @@ export default class LoginView {
   async handleClickLoginButton(event) {
     event.preventDefault();
 
-    const email = $('#login-email').value;
-    const password = $('#login-password').value;
+    const { value: email } = $('#login-email');
+    const { value: password } = $('#login-password');
 
     const data = await login(`${BASE_URL}/user/login`, {
       email,
