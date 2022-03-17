@@ -18,6 +18,8 @@ export default class MainView {
     this.template = template;
     this.initializeTemplate();
 
+    this._id = getLocalStorage(LOCAL_STORAGE_KEY.USER_TOKEN);
+
     this.globalIndex = 0;
 
     this.bindEvents();
@@ -30,14 +32,13 @@ export default class MainView {
   }
 
   initializeTemplate() {
-    this.loadMore();
     this.element.innerHTML = this.template.initialize();
+    this.loadMore();
     $('.saved').style.display = 'none';
   }
 
   checkLogin() {
-    const isLogin = getLocalStorage(LOCAL_STORAGE_KEY.USER_TOKEN);
-    if (isLogin !== null) return;
+    if (this._id !== null) return;
 
     location.replace('./login.html');
   }
@@ -68,9 +69,8 @@ export default class MainView {
   async renderBookmark() {
     const saved = $('.saved');
 
-    const _id = getLocalStorage(LOCAL_STORAGE_KEY.USER_TOKEN);
     const result = await getBookmarkList(`${BASE_URL}/user/bookmark`, {
-      _id,
+      _id: this._id,
     });
     const $content = this.template.getBookmarkTab(result);
 
@@ -118,10 +118,9 @@ export default class MainView {
 
   async handleClickBookmark(event) {
     if (!event.target.matches('label[for^="heart"]')) return;
-    const _id = getLocalStorage(LOCAL_STORAGE_KEY.USER_TOKEN);
     await addBookmark(
       `${BASE_URL}/user/bookmark/${event.target.getAttribute('key')}`,
-      { _id },
+      { _id: this._id },
     );
     console.log('북마크에 저장되었습니다.');
   }
