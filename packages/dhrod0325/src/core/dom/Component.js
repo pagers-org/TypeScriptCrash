@@ -1,4 +1,6 @@
 export class Component extends HTMLElement {
+  $container;
+
   $state;
 
   $emitter;
@@ -9,64 +11,47 @@ export class Component extends HTMLElement {
 
   $watchElements = {};
 
-  $container;
-
   isMounted = false;
 
   connectedCallback() {
-    requestAnimationFrame(() => {
-      this.setUp();
+    this.setUp();
 
-      this.render();
+    this.render();
 
-      this.bindEvents();
+    this.bindEvents();
 
-      if (!this.isMounted) {
-        this.mounted();
+    this.runMounted();
+  }
 
-        this.isMounted = true;
-      }
-    });
+  runMounted() {
+    if (this.isMounted) {
+      return;
+    }
+
+    this.mounted();
+
+    this.isMounted = true;
   }
 
   /**
    * setUp 메소드에서 호출
    */
-  initialize({
-    data: __data = {},
-    method: __method = {},
-    template: __template,
-  }) {
-    this.$data = new Proxy(__data, {
-      set: (obj, prop, value) => {
-        obj[prop] = value;
+  initialize({ data = {}, method = {}, template = '' }) {
+    this.$method = method;
 
-        if (this.$watchElements[prop]) {
-          this.$watchElements[prop].value = value;
-        }
+    this.$data = this.createDataProxy(data);
 
-        return true;
-      },
-    });
+    this.$container = this.createElementByTemplate(template);
 
-    this.$method = __method;
-
-    if (__template) {
-      const template = document.createElement('template');
-      template.innerHTML = __template;
-
-      this.$container = template.content.firstElementChild.cloneNode(true);
-
-      this.replaceWith(this.$container);
-    }
+    this.replaceWith(this.$container);
   }
 
   setUp() {
-    //OVERRIDE
+    //override
   }
 
   render() {
-    //OVERRIDE
+    //override
   }
 
   bindEvents() {
@@ -77,32 +62,25 @@ export class Component extends HTMLElement {
     this.$container.querySelectorAll('*').forEach(elem => {
       elem.getAttributeNames().forEach(attrName => {
         const attributeValue = elem.getAttribute(attrName);
-        if (attrName.startsWith('@')) {
-          const eventName = attrName.substring(1, attrName.length);
-          const method = this.$method[attributeValue].bind(this);
-          elem.addEventListener(eventName, method);
-        } else if (attrName === 'm-input-data') {
-          this.$watchElements[attributeValue] = elem;
+        const bindingArguments = { elem, attrName, attributeValue };
 
-          elem.addEventListener('input', e => {
-            const { target } = e;
-            const key = target.getAttribute('m-input-data');
-            this.$data[key] = target.value;
-          });
+        if (attrName.startsWith('@')) {
+          this.eventAttributeBind(bindingArguments);
+        } else if (attrName === 'm-input-data') {
+          this.inputAttributeBind(bindingArguments);
         } else if (attrName.startsWith('m-attr')) {
-          const mAttributeName = attrName.replaceAll('m-attr-', '');
-          elem.setAttribute(mAttributeName, this.$data[attributeValue]);
+          this.attrAttributeBind(bindingArguments);
         }
       });
     });
   }
 
   mounted() {
-    //OVERRIDE
+    //override
   }
 
   disconnectedCallback() {
-    //OVERRIDE
+    //override
   }
 
   setState(state) {
@@ -111,5 +89,65 @@ export class Component extends HTMLElement {
 
   setEmitter(emitter) {
     this.$emitter = emitter;
+  }
+
+  onChangeData(beforeObject, afterObject, key, value) {
+    this.setWatchElementValue(key, value);
+  }
+
+  createDataProxy(data) {
+    return new Proxy(data, {
+      set: (obj, prop, value) => {
+        if (obj[prop] === value) {
+          return true;
+        }
+
+        const beforeObject = { ...obj };
+
+        obj[prop] = value;
+
+        this.onChangeData(beforeObject, obj, prop, value);
+
+        return true;
+      },
+    });
+  }
+
+  createElementByTemplate(template) {
+    const element = document.createElement('template');
+    element.innerHTML = template;
+    return element.content.firstElementChild.cloneNode(true);
+  }
+
+  setWatchElementValue(key, value) {
+    const dataBindElement = this.$watchElements[key];
+
+    if (!dataBindElement) {
+      return;
+    }
+
+    dataBindElement.value = value;
+  }
+
+  eventAttributeBind({ elem, attrName, attributeValue }) {
+    const eventName = attrName.substring(1, attrName.length);
+    const method = this.$method[attributeValue].bind(this);
+
+    elem.addEventListener(eventName, method);
+  }
+
+  inputAttributeBind({ elem, attrName, attributeValue }) {
+    this.$watchElements[attributeValue] = elem;
+
+    elem.addEventListener('input', ({ target }) => {
+      const key = target.getAttribute(attrName);
+
+      this.$data[key] = target.value;
+    });
+  }
+
+  attrAttributeBind({ elem, attrName, attributeValue }) {
+    const mAttributeName = attrName.replaceAll('m-attr-', '');
+    elem.setAttribute(mAttributeName, this.$data[attributeValue]);
   }
 }
