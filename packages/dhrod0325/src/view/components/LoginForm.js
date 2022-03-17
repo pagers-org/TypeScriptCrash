@@ -1,6 +1,5 @@
-import { Component } from '../core/Component';
-import { AuthUtils } from '../utils/AuthUtils';
-import { UserApi } from '../../api/UserApi';
+import { Component } from '../../core';
+import { KEY_USER_TOKEN, storage, userApi } from '../index';
 
 const template = `
  <div class="login-wrapper">
@@ -52,7 +51,7 @@ export class LoginForm extends Component {
 
           const { email, password } = this.$data;
 
-          const { result, message, data } = await UserApi.login({
+          const { result, message, data } = await userApi.login({
             email,
             password,
           });
@@ -64,7 +63,7 @@ export class LoginForm extends Component {
 
             alert(`환영합니다, ${userEmail}님!`);
 
-            AuthUtils.setToken(_id);
+            storage.setItem(KEY_USER_TOKEN, _id);
 
             location.replace('/');
           }
@@ -74,7 +73,7 @@ export class LoginForm extends Component {
 
           const { signEmail, signPassword, signPasswordConfirm } = this.$data;
 
-          const { result, message } = await UserApi.signup({
+          const { result, message } = await userApi.signup({
             signEmail,
             signPassword,
             signPasswordConfirm,

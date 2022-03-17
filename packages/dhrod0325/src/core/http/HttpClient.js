@@ -1,21 +1,3 @@
-import { CONFIG } from '../common/Constant';
-
-export class ApiResponse {
-  constructor(result, message, data = {}) {
-    this.result = result;
-    this.message = message;
-    this.data = data;
-  }
-
-  static fail(message, data = {}) {
-    return new ApiResponse(false, message, data);
-  }
-
-  static success(data = {}, message = 'success') {
-    return new ApiResponse(true, message, data);
-  }
-}
-
 export class HttpClient {
   baseUrl;
 
@@ -70,5 +52,3 @@ export class HttpClient {
     });
   }
 }
-
-export const client = new HttpClient({ baseUrl: CONFIG.API_SERVER });

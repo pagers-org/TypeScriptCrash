@@ -1,22 +1,15 @@
 import '../assets/index.css';
 
-import './classes/components/PinList';
-import './classes/components/PinNav';
-import './classes/components/LoadingProgress';
+import { App, EventEmitter } from './core';
 
-import { App } from './classes/App';
-import { AuthUtils } from './classes/utils/AuthUtils';
-import { EventEmitter } from './classes/core/EventEmitter';
-import { HttpClient } from './classes/core/HttpClient';
-import { BookmarkApi } from './api/BookmarkApi';
+import { bookMarkApi, KEY_USER_TOKEN, storage } from './view';
 
-const _id = AuthUtils.getToken();
+const _id = storage.getItem(KEY_USER_TOKEN);
 
 if (!_id) {
   location.replace('./login.html');
 } else {
-  const bookMarks = await BookmarkApi.getBookmarkList({ _id });
-  const emitter = new EventEmitter();
+  const { data: bookMarks } = await bookMarkApi.list({ _id });
 
   const state = {
     user: {
@@ -25,20 +18,12 @@ if (!_id) {
     },
   };
 
+  const emitter = new EventEmitter();
   const componentParam = { state, emitter };
 
   const app = new App(document.querySelector('.app'));
 
-  const pinList = document.createElement('pin-list');
-  const pinNav = document.createElement('pin-nav');
-  const loadingProgress = document.createElement('loading-progress');
-
-  app.addComponent(pinNav, componentParam);
-  app.addComponent(pinList, componentParam);
-  app.addComponent(loadingProgress, componentParam);
+  app.addComponent(document.createElement('pin-nav'), componentParam);
+  app.addComponent(document.createElement('pin-list'), componentParam);
+  app.addComponent(document.createElement('loading-progress'), componentParam);
 }
-
-const client = new HttpClient({ baseUrl: 'http://localhost:3000' });
-client.post({ url: '/api/user/login' }).then(res => {
-  console.log(res);
-});

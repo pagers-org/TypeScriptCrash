@@ -1,8 +1,26 @@
-import { Component } from '../core/Component';
-import { createRandomFoxImageUrl, createRandomPin } from '../utils/PinUtils';
-import { EVENT, NAV_STATE } from '../common/Constant';
+import { Component, RandomUtils } from '../../core';
+import {
+  EVENT_PIN_NAV_EXPLORE_CLICKED,
+  EVENT_PIN_NAV_SAVE_CLICKED,
+  EVENT_PROGRESS_HIDE,
+  EVENT_PROGRESS_SHOW,
+  NAV_STATE_EXPLORE,
+  NAV_STATE_SAVED,
+} from '../constant/Constant';
 
-import './PinItem';
+function createRandomFoxImageUrl(key) {
+  return `https://randomfox.ca/images/${key}.jpg`;
+}
+
+function createRandomPin(pinId) {
+  const key = RandomUtils.nextInt(123);
+
+  return {
+    _id: pinId,
+    image: createRandomFoxImageUrl(key),
+    key,
+  };
+}
 
 const template = `
 <div class="pin-list"></div>
@@ -38,8 +56,11 @@ export class PinList extends Component {
   mounted() {
     this.loadPinList();
 
-    this.$emitter.on(EVENT.PinNav.SAVE_CLICKED, this.loadFavorite.bind(this));
-    this.$emitter.on(EVENT.PinNav.EXPLORE_CLICKED, this.loadExplore.bind(this));
+    this.$emitter.on(EVENT_PIN_NAV_SAVE_CLICKED, this.loadFavorite.bind(this));
+    this.$emitter.on(
+      EVENT_PIN_NAV_EXPLORE_CLICKED,
+      this.loadExplore.bind(this),
+    );
   }
 
   createPin(pin = createRandomPin(this.currentLoadedPinCount)) {
@@ -56,7 +77,7 @@ export class PinList extends Component {
   }
 
   loadPinList(loadCount = this.PIN_LOAD_COUNT) {
-    this.$emitter.emit(EVENT.LoadingProgress.SHOW);
+    this.$emitter.emit(EVENT_PROGRESS_SHOW);
 
     for (let i = 0; i < loadCount; i++) {
       const pinElem = this.createPin();
@@ -64,11 +85,10 @@ export class PinList extends Component {
       const isLast = i === loadCount - 1;
 
       if (isLast) {
-        this.$emitter.emit(EVENT.LoadingProgress.HIDE);
+        this.$emitter.emit(EVENT_PROGRESS_HIDE);
 
         setTimeout(() => {
-          const ee = pinElem.$container;
-          this.scrollObserver.observe(ee);
+          this.scrollObserver.observe(pinElem.$container);
         }, 20);
       }
     }
@@ -80,7 +100,7 @@ export class PinList extends Component {
   }
 
   loadFavorite() {
-    this.$state.NAV_STATE = NAV_STATE.STATE_SAVED;
+    this.$state.NAV_STATE = NAV_STATE_SAVED;
     this.clear();
 
     this.$state.user.bookMarks.forEach(bookMark => {
@@ -90,7 +110,7 @@ export class PinList extends Component {
   }
 
   loadExplore() {
-    this.$state.NAV_STATE = NAV_STATE.STATE_EXPLORE;
+    this.$state.NAV_STATE = NAV_STATE_EXPLORE;
     this.clear();
 
     this.loadPinList();

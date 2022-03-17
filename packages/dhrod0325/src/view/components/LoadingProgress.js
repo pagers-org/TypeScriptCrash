@@ -1,5 +1,5 @@
-import { Component } from '../core/Component';
-import { EVENT } from '../common/Constant';
+import { Component } from '../../core';
+import { EVENT_PROGRESS_HIDE, EVENT_PROGRESS_SHOW } from '../constant/Constant';
 
 const template = `
 <section class="loading">
@@ -41,8 +41,8 @@ export class LoadingProgress extends Component {
   mounted() {
     this.hide();
 
-    this.$emitter.on(EVENT.LoadingProgress.SHOW, this.show.bind(this));
-    this.$emitter.on(EVENT.LoadingProgress.HIDE, this.hide.bind(this));
+    this.$emitter.on(EVENT_PROGRESS_SHOW, this.show.bind(this));
+    this.$emitter.on(EVENT_PROGRESS_HIDE, this.hide.bind(this));
   }
 }
 

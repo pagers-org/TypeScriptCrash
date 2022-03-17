@@ -1,6 +1,5 @@
-import { Component } from '../core/Component';
-import { NAV_STATE } from '../common/Constant';
-import { BookmarkApi } from '../../api/BookmarkApi';
+import { Component } from '../../core';
+import { bookMarkApi, NAV_STATE_EXPLORE } from '../index';
 
 const template = `
             <div class="pin">
@@ -10,7 +9,7 @@ const template = `
                         <label class="pin-label" m-attr-for="pinId"></label>
                     </div>
                 </div>
-                <img alt="" m-attr-src="pinSrc"/>
+                <img alt="" src="" m-attr-src="pinSrc"/>
             </div>
         `;
 
@@ -64,7 +63,7 @@ export class PinItem extends Component {
       },
     };
 
-    await BookmarkApi.addBookmark(data);
+    await bookMarkApi.add(data);
 
     this.$state.user.bookMarks.push({
       url: pin.key,
@@ -80,7 +79,7 @@ export class PinItem extends Component {
       },
     };
 
-    await BookmarkApi.removeBookmark(data);
+    await bookMarkApi.remove(data);
 
     this.$state.user.bookMarks = this.$state.user.bookMarks.filter(bookMark => {
       const url = parseInt(bookMark.url);
@@ -90,7 +89,7 @@ export class PinItem extends Component {
       return url !== dataKey && url !== dataUrl;
     });
 
-    if (this.$state.NAV_STATE === NAV_STATE.STATE_SAVED) {
+    if (this.$state.NAV_STATE === NAV_STATE_EXPLORE) {
       target.parentElement.parentElement.parentElement.remove();
     }
   }

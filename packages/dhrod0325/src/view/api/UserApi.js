@@ -1,13 +1,18 @@
-import { Validator } from '../classes/core/Validator';
-import { ApiResponse, client } from '../classes/core/HttpClient';
+import { Validator, ApiResponse } from '../../core';
 
 export class UserApi {
-  static async login({ email, password }) {
+  client;
+
+  constructor(client) {
+    this.client = client;
+  }
+
+  async login({ email, password }) {
     if (!Validator.isValidEmail(email)) {
       return ApiResponse.fail('옳지 않은 이메일 형식입니다.');
     }
 
-    const data = await client.post({
+    const data = await this.client.post({
       url: '/api/user/login',
       data: { email, password },
     });
@@ -19,7 +24,7 @@ export class UserApi {
     return ApiResponse.success(data[0]);
   }
 
-  static async signup({ signEmail, signPassword, signPasswordConfirm }) {
+  async signup({ signEmail, signPassword, signPasswordConfirm }) {
     if (!Validator.isValidPassword(signPassword, signPasswordConfirm)) {
       return ApiResponse.fail('패스워드를 확인해주세요.');
     }
@@ -28,7 +33,7 @@ export class UserApi {
       return ApiResponse.fail('옳지 않은 이메일 형식입니다.');
     }
 
-    const data = await client.post({
+    const data = await this.client.post({
       url: '/api/user',
       data: {
         email: signEmail,
