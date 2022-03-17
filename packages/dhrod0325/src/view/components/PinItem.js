@@ -5,7 +5,7 @@ const template = `
             <div class="pin">
                 <div class="button-wrapper">
                     <div class="anim-icon anim-icon-md heart">
-                        <input type="checkbox" class="togglePin" @click="pinToggleEvent" m-attr-id="pinId">
+                        <input type="checkbox" class="togglePin" @click="pinToggleEvent" m-attr-id="pinId" m-attr-checked="isBookmark">
                         <label class="pin-label" m-attr-for="pinId"></label>
                     </div>
                 </div>
@@ -18,13 +18,15 @@ export class PinItem extends Component {
 
   setUp() {
     const pinSrc = this.pin.image;
-    const pinId = `heart-${this.pin._id}`;
+    const pinId = `heart-${this.pin.index}`;
+    const isBookmark = this.$state.user.isBookmarked(this.pin.url);
 
     this.initialize({
       template,
       data: {
         pinId,
         pinSrc,
+        isBookmark,
       },
       method: {
         pinToggleEvent({ target }) {
@@ -38,19 +40,6 @@ export class PinItem extends Component {
     });
   }
 
-  mounted() {
-    const inputEl = this.$container.querySelector('.togglePin');
-
-    this.$state.user.bookMarks.forEach(bookMark => {
-      const url = Number(bookMark.url);
-      const { key: pinKey, url: pinUrl } = this.pin;
-
-      if (url === Number(pinKey) || url === Number(pinUrl)) {
-        inputEl.setAttribute('checked', 'checked');
-      }
-    });
-  }
-
   setPin(pin) {
     this.pin = pin;
   }
@@ -58,37 +47,23 @@ export class PinItem extends Component {
   async favButtonClicked({ pin }) {
     const data = {
       ...this.$state.user,
-      ...{
-        key: pin.key ? pin.key : pin.url,
-      },
+      ...pin,
     };
 
     await bookMarkApi.add(data);
-
-    this.$state.user.bookMarks.push({
-      url: pin.key,
-      _id: pin._id,
-    });
+    this.$state.user.bookMarks.push(pin);
   }
 
   async cancelFavButtonClicked({ pin, target }) {
     const data = {
       ...this.$state.user,
-      ...{
-        key: pin.key ? pin.key : pin.url,
-      },
+      ...pin,
     };
 
     await bookMarkApi.remove(data);
+    this.$state.user.removeBookmark(data.url);
 
-    this.$state.user.bookMarks = this.$state.user.bookMarks.filter(bookMark => {
-      const url = parseInt(bookMark.url);
-      const dataKey = parseInt(data.key);
-      const dataUrl = parseInt(data.url);
-
-      return url !== dataKey && url !== dataUrl;
-    });
-
+    //TODO refactoring
     if (this.$state.NAV_STATE === NAV_STATE_EXPLORE) {
       target.parentElement.parentElement.parentElement.remove();
     }

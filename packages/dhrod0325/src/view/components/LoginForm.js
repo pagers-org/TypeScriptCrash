@@ -49,24 +49,19 @@ export class LoginForm extends Component {
         async loginButtonClicked(e) {
           e.preventDefault();
 
-          const { email, password } = this.$data;
-
-          const { result, message, data } = await userApi.login({
-            email,
-            password,
-          });
+          const { result, message, data } = await userApi.login(this.$data);
 
           if (!result) {
-            alert(message);
-          } else {
-            const { _id, email: userEmail } = data;
-
-            alert(`환영합니다, ${userEmail}님!`);
-
-            storage.setItem(KEY_USER_TOKEN, _id);
-
-            location.replace('/');
+            return alert(message);
           }
+
+          const { _id, email: userEmail } = data;
+
+          alert(`환영합니다, ${userEmail}님!`);
+
+          storage.setItem(KEY_USER_TOKEN, _id);
+
+          location.replace('/');
         },
         async joinButtonClicked(e) {
           e.preventDefault();
@@ -80,11 +75,12 @@ export class LoginForm extends Component {
           });
 
           if (!result) {
-            alert(message);
-          } else {
-            alert('회원가입이 완료되었습니다.\n 로그인해주세요.');
-            this.$method.toggleForm.apply(this);
+            return alert(message);
           }
+
+          alert('회원가입이 완료되었습니다.\n 로그인해주세요.');
+
+          this.$method.toggleForm.apply(this);
         },
       },
     });

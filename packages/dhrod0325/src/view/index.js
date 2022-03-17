@@ -11,6 +11,7 @@ export * from './components/LoginForm';
 export * from './components/PinList';
 export * from './components/PinNav';
 export * from './constant/Constant';
+export * from './lib/User';
 
 const client = new HttpClient({ baseUrl: API_SERVER });
 

@@ -2,20 +2,27 @@ import '../assets/index.css';
 
 import { App, EventEmitter } from './core';
 
-import { bookMarkApi, KEY_USER_TOKEN, storage } from './view';
+import { bookMarkApi, KEY_USER_TOKEN, storage, User } from './view';
 
 const _id = storage.getItem(KEY_USER_TOKEN);
 
 if (!_id) {
-  location.replace('./login.html');
+  redirectLoginPage();
 } else {
+  await render();
+}
+
+function redirectLoginPage() {
+  location.replace('./login.html');
+}
+
+async function render() {
   const { data: bookMarks } = await bookMarkApi.list({ _id });
 
+  const user = new User({ _id, bookMarks });
+
   const state = {
-    user: {
-      _id,
-      bookMarks,
-    },
+    user,
   };
 
   const emitter = new EventEmitter();

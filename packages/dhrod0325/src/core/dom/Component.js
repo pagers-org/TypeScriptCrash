@@ -148,6 +148,12 @@ export class Component extends HTMLElement {
 
   attrAttributeBind({ elem, attrName, attributeValue }) {
     const mAttributeName = attrName.replaceAll('m-attr-', '');
-    elem.setAttribute(mAttributeName, this.$data[attributeValue]);
+    if (mAttributeName === 'checked') {
+      if (this.$data[attributeValue]) {
+        elem.setAttribute(mAttributeName, 'checked');
+      }
+    } else {
+      elem.setAttribute(mAttributeName, this.$data[attributeValue]);
+    }
   }
 }

@@ -16,18 +16,18 @@ export class BookmarkApi {
     return ApiResponse.success(data);
   }
 
-  async add({ key, _id }) {
+  async add({ url, _id }) {
     const data = await this.client.post({
-      url: `/api/user/bookmark/${key}`,
+      url: `/api/user/bookmark/${url}`,
       data: { _id },
     });
 
     return ApiResponse.success(data);
   }
 
-  async remove({ key, _id }) {
+  async remove({ url, _id }) {
     const data = await this.client.delete({
-      url: `/api/user/bookmark/${key}`,
+      url: `/api/user/bookmark/${url}`,
       data: { _id },
     });
 

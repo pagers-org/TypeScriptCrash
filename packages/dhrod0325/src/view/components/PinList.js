@@ -4,21 +4,23 @@ import {
   EVENT_PIN_NAV_SAVE_CLICKED,
   EVENT_PROGRESS_HIDE,
   EVENT_PROGRESS_SHOW,
+  MAX_IMAGE_NUMBER,
   NAV_STATE_EXPLORE,
   NAV_STATE_SAVED,
 } from '../constant/Constant';
 
-function createRandomFoxImageUrl(key) {
-  return `https://randomfox.ca/images/${key}.jpg`;
+function createFoxImageUrl(url) {
+  return `https://randomfox.ca/images/${url}.jpg`;
 }
 
-function createRandomPin(pinId) {
-  const key = RandomUtils.nextInt(123);
+function createRandomPin(index) {
+  const url = RandomUtils.nextInt(MAX_IMAGE_NUMBER);
+  const image = createFoxImageUrl(url);
 
   return {
-    _id: pinId,
-    image: createRandomFoxImageUrl(key),
-    key,
+    index,
+    image,
+    url,
   };
 }
 
@@ -104,7 +106,7 @@ export class PinList extends Component {
     this.clear();
 
     this.$state.user.bookMarks.forEach(bookMark => {
-      bookMark.image = createRandomFoxImageUrl(bookMark.url);
+      bookMark.image = createFoxImageUrl(bookMark.url);
       this.createPin(bookMark);
     });
   }
