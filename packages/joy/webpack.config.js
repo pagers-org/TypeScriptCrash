@@ -44,6 +44,13 @@ module.exports = {
       template: path.resolve(__dirname, 'login.html'),
       favicon: './favicon.ico',
     }),
+    new HTMLWebpackPlugin({
+      hash: true,
+      filename: 'signup.html',
+      chunks: ['login'], // entry에서 해당 리스트만 포함
+      template: path.resolve(__dirname, 'signup.html'),
+      favicon: './favicon.ico',
+    }),
     new webpack.HotModuleReplacementPlugin(),
   ],
   module: {
