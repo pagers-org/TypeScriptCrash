@@ -1,10 +1,10 @@
 import "../assets/index.css";
 import { addBookmark, getBookmarkList } from "./api";
-import { $, toggleLoading, debounce } from "./helper/index.js";
+import { $, toggleLoading, debounce, getLocal } from "./helper/index.js";
 import { BASE_SERVER_URL, FOX_URL } from "./constant/url";
 
 (() => {
-  const isLogin = localStorage.getItem("user_token");
+  const isLogin = getLocal("user_token");
   if (isLogin !== null) return;
 
   location.replace("./login.html");
@@ -71,7 +71,7 @@ $("nav").addEventListener("click", async (event) => {
 
   if (event.target.matches("#saved")) {
     $main.classList.add("saved");
-    const _id = localStorage.getItem("user_token");
+    const _id = getLocal("user_token");
     const result = await getBookmarkList(
       `${BASE_SERVER_URL}/api/user/bookmark`,
       { _id }
@@ -100,7 +100,7 @@ $("nav").addEventListener("click", async (event) => {
 
 $("main").addEventListener("click", async (event) => {
   if (!event.target.matches('label[for^="heart"]')) return;
-  const _id = localStorage.getItem("user_token");
+  const _id = getLocal("user_token");
   await addBookmark(
     `${BASE_SERVER_URL}/api/user/bookmark/${event.target.getAttribute("key")}`,
     { _id }
