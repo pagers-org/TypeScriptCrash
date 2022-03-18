@@ -19,6 +19,7 @@ module.exports = {
     // 각 html에 필요한 entry 파일
     index: './src/main.js',
     login: './src/login.js',
+    signup: './src/signup.js',
   },
   output: {
     path: path.resolve(__dirname, 'public'),
@@ -47,7 +48,7 @@ module.exports = {
     new HTMLWebpackPlugin({
       hash: true,
       filename: 'signup.html',
-      chunks: ['login'], // entry에서 해당 리스트만 포함
+      chunks: ['signup'], // entry에서 해당 리스트만 포함
       template: path.resolve(__dirname, 'signup.html'),
       favicon: './favicon.ico',
     }),

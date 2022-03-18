@@ -1,31 +1,9 @@
 import '../assets/page/login.css';
-import { $, $all } from './util/dom.js';
-import { MAIN_URL } from './constant/index.js';
-import { login, signup } from './api/index.js';
+import { $, $btn_type } from './util/dom.js';
+// import { MAIN_URL } from './constant/index.js';
+import { login } from './api/index.js';
 
-$('button[data-submit="signup"]').addEventListener('click', async (event) => {
-  event.preventDefault();
-
-  const email = $('#signup-email').value;
-  const password = $('#signup-password').value;
-  const passwordConfirm = $('#signup-password-confirm').value;
-
-  if (password !== passwordConfirm) return alert('패스워드를 확인해주세요.');
-  const regEmail =
-    /^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
-  if (!regEmail.test(email)) return alert('옳지 않은 이메일 형식입니다.');
-
-  await signup({
-    email,
-    password,
-    status: 0,
-  });
-
-  alert('회원가입이 완료되었습니다.\n로그인해주세요.');
-  location.replace(`${MAIN_URL}/login.html`);
-});
-
-$('button[data-submit="login"]').addEventListener('click', async (event) => {
+$btn_type('login').addEventListener('click', async (event) => {
   event.preventDefault();
 
   const email = $('#login-email').value;
@@ -35,8 +13,10 @@ $('button[data-submit="login"]').addEventListener('click', async (event) => {
     email,
     password,
   });
+
   const { _id, email: userEmail } = data[0];
   alert(`환영합니다, ${userEmail}님!`);
+
   localStorage.setItem('user_token', _id);
-  location.replace(MAIN_URL);
+  location.replace('/');
 });
