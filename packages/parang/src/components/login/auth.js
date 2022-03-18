@@ -1,53 +1,131 @@
 import Client from '../../api';
-import { REGEXP_EMAIL } from '../../constants';
-import { $, $all } from '../../helper';
+import { EVENT_TYPE, FOX_EXPLORE_MAIN, HTTP_METHODS } from '../../constants';
+import {
+  $all,
+  $initValue,
+  $value,
+  isEmpty,
+  isEquals,
+  isValidEmail,
+  setUserToken,
+} from '../../helper';
+import AbstractComponent from '../abstract';
 
-export class Auth {
+export class Auth extends AbstractComponent {
   constructor() {
-    this.client = new Client({
-      headers: new Headers({ 'content-type': 'application/json' }),
+    super();
+    this.client = Client;
+
+    this.inputSelectors = [
+      '#signup-email',
+      '#signup-password',
+      '#signup-password-confirm',
+      '#login-email',
+      '#login-password',
+    ];
+  }
+
+  template() {
+    return `
+    <div class="app">
+      <div class="login-wrapper">
+        <div class="login-page">
+          <div class="container">
+            <form class="forms hidden">
+              <input type="text" id="signup-email" placeholder="이메일" />
+              <input type="password" id="signup-password" placeholder="비밀번호" />
+              <input type="password" id="signup-password-confirm" placeholder="비밀번호 확인" />
+              <button data-submit="signup">회원가입</button>
+              <p class="message">계정이 있으신가요? <a href="#">로그인하기</a></p>
+            </form>
+            <form class="forms">
+              <input type="text" id="login-email" placeholder="이메일" />
+              <input type="password" id="login-password" placeholder="비밀번호" />
+              <button data-submit="login">로그인</button>
+              <p class="message">계정이 없으신가요? <a href="#">회원가입하기</a></p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    `;
+  }
+
+  render() {
+    document.body.innerHTML = this.template();
+    this.$element = document.body.firstElementChild;
+  }
+
+  eventGroup() {
+    return [
+      { type: EVENT_TYPE.CLICK, callback: this.toggleForm.bind(this) },
+      { type: EVENT_TYPE.CLICK, callback: this.signup.bind(this) },
+      { type: EVENT_TYPE.CLICK, callback: this.login.bind(this) },
+    ];
+  }
+
+  toggleForm({ target }) {
+    if (!target.matches('a')) return;
+
+    $all('.forms').forEach(({ classList }) => {
+      $initValue(this.inputSelectors);
+      classList.toggle('hidden');
     });
+  }
 
-    $('.login-page').addEventListener('click', event => {
-      if (!event.target.matches('a')) return;
-      $all('.forms').forEach(({ classList }) => classList.toggle('hidden'));
-    });
+  async signup(event) {
+    event.preventDefault();
+    if (!event.target.matches('button[data-submit="signup"]')) return;
 
-    $('button[data-submit="signup"]').addEventListener('click', async event => {
-      event.preventDefault();
+    const [{ value: email }, { value: password }, { value: passwordConfirm }] =
+      $value(this.inputSelectors);
 
-      const email = $('#signup-email').value;
-      const password = $('#signup-password').value;
-      const passwordConfirm = $('#signup-password-confirm').value;
+    if (isEquals(password, passwordConfirm))
+      return alert('패스워드를 확인해주세요.');
+    if (!isValidEmail(email)) return alert('옳지 않은 이메일 형식입니다.');
 
-      if (password !== passwordConfirm)
-        return alert('패스워드를 확인해주세요.');
-      if (!REGEXP_EMAIL.test(email))
-        return alert('옳지 않은 이메일 형식입니다.');
+    const params = {
+      method: HTTP_METHODS.POST,
+      url: '/api/user',
+      body: { email, password },
+    };
 
-      await this.client.request('/api/user', {
-        email,
-        password,
-        status: 0,
-      });
-
+    try {
+      await this.client.request(params);
       alert('회원가입이 완료되었습니다.\n로그인해주세요.');
-    });
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      $initValue(this.inputSelectors);
+    }
+  }
 
-    $('button[data-submit="login"]').addEventListener('click', async event => {
-      event.preventDefault();
+  async login(event) {
+    event.preventDefault();
+    if (!event.target.matches('button[data-submit="login"]')) return;
 
-      const email = $('#login-email').value;
-      const password = $('#login-password').value;
+    const [{ value: email }, { value: password }] = $value(this.inputSelectors);
 
-      const data = await this.client.request('/api/user/login', {
-        email,
-        password,
-      });
-      const { _id, email: userEmail } = data[0];
-      alert(`환영합니다, ${userEmail}님!`);
-      localStorage.setItem('user_token', _id);
-      location.replace('http://localhost:5510/');
-    });
+    if (!isValidEmail(email)) return alert('옳지 않은 이메일 형식입니다.');
+
+    const params = {
+      method: HTTP_METHODS.POST,
+      url: '/api/user/login',
+      body: { email, password },
+    };
+
+    try {
+      const userData = await this.client.request(params);
+      if (isEmpty(userData)) throw new Error('해당 계정은 올바르지 않습니다.');
+      this.successLogin(userData[0]);
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+  successLogin({ _id, email }) {
+    alert(`환영합니다, ${email}님!`);
+    setUserToken(_id);
+    location.replace(FOX_EXPLORE_MAIN);
   }
 }
