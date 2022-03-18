@@ -16,3 +16,5 @@ export const EVENT_PROGRESS_SHOW = 'EVENT_PROGRESS_SHOW';
 export const EVENT_PROGRESS_HIDE = 'EVENT_PROGRESS_HIDE';
 
 export const MAX_IMAGE_NUMBER = 123;
+
+export const IMAGE_API_URL = 'https://randomfox.ca/images';

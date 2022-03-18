@@ -1,10 +1,10 @@
-import '../assets/page/login.css';
+import '/assets/page/login.css';
 
 import { App, EventEmitter } from './core';
 
 import './view';
 
-const app = new App(document.querySelector('.app'));
+const app = new App(document.querySelector('#app'));
 
 const state = {};
 const emitter = new EventEmitter();

@@ -1,4 +1,4 @@
-import '../assets/index.css';
+import '/assets/index.css';
 
 import { App, EventEmitter } from './core';
 
@@ -9,7 +9,7 @@ const _id = storage.getItem(KEY_USER_TOKEN);
 if (!_id) {
   redirectLoginPage();
 } else {
-  await render();
+  render().then();
 }
 
 function redirectLoginPage() {
@@ -18,6 +18,8 @@ function redirectLoginPage() {
 
 async function render() {
   const { data: bookMarks } = await bookMarkApi.list({ _id });
+
+  console.log(bookMarks);
 
   const user = new User({ _id, bookMarks });
 
@@ -28,7 +30,7 @@ async function render() {
   const emitter = new EventEmitter();
   const componentParam = { state, emitter };
 
-  const app = new App(document.querySelector('.app'));
+  const app = new App(document.querySelector('#app'));
 
   app.addComponent(document.createElement('pin-nav'), componentParam);
   app.addComponent(document.createElement('pin-list'), componentParam);

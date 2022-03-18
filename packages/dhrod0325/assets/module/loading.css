@@ -1,7 +1,7 @@
 .loading {
   transition: all ease-in-out .2s;
   opacity: 1;
-  position: absolute;
+  position: fixed;
   top: 0;
   right: 0;
   bottom: 0;

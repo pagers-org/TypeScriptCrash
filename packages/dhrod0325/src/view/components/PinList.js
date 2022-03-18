@@ -4,12 +4,13 @@ import {
   EVENT_PIN_NAV_SAVE_CLICKED,
   EVENT_PROGRESS_HIDE,
   EVENT_PROGRESS_SHOW,
+  IMAGE_API_URL,
   MAX_IMAGE_NUMBER,
   NAV_STATE,
 } from '../constant/Constant';
 
 function createFoxImageUrl(url) {
-  return `https://randomfox.ca/images/${url}.jpg`;
+  return `${IMAGE_API_URL}/${url}.jpg`;
 }
 
 function createRandomPin(index) {
