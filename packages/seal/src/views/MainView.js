@@ -9,7 +9,7 @@ import {
   RANDOM_IMAGE_URL,
 } from '../constant';
 import { debounce } from '../helper';
-import { $, toggleLoading } from '../helper/dom';
+import { $, toggleLoading, setDisplay } from '../helper/dom';
 import { getLocalStorage } from '../helper/localstorage';
 import { getRandomNumber } from '../helper/random';
 
@@ -90,15 +90,15 @@ export default class MainView {
 
     switch (tab) {
       case MAIN_VIEW_TAB.SAVED: {
-        saved.style.display = 'block';
-        container.style.display = 'none';
+        setDisplay(saved, 'block');
+        setDisplay(container, 'none');
 
         this.renderBookmark();
         break;
       }
       case MAIN_VIEW_TAB.EXPLORE: {
-        saved.style.display = 'none';
-        container.style.display = 'block';
+        setDisplay(saved, 'none');
+        setDisplay(container, 'block');
 
         this.globalIndex = 0;
         this.loadMore();
