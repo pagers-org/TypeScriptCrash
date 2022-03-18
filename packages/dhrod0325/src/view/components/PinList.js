@@ -5,8 +5,7 @@ import {
   EVENT_PROGRESS_HIDE,
   EVENT_PROGRESS_SHOW,
   MAX_IMAGE_NUMBER,
-  NAV_STATE_EXPLORE,
-  NAV_STATE_SAVED,
+  NAV_STATE,
 } from '../constant/Constant';
 
 function createFoxImageUrl(url) {
@@ -99,7 +98,7 @@ export class PinList extends Component {
   }
 
   loadFavorite() {
-    this.$state.NAV_STATE = NAV_STATE_SAVED;
+    this.$state.NAV_STATE = NAV_STATE.SAVED;
     this.clear();
 
     this.$state.user.bookMark.items.forEach(bookMark => {
@@ -109,7 +108,7 @@ export class PinList extends Component {
   }
 
   loadExplore() {
-    this.$state.NAV_STATE = NAV_STATE_EXPLORE;
+    this.$state.NAV_STATE = NAV_STATE.EXPLORE;
     this.clear();
 
     this.loadPinList();

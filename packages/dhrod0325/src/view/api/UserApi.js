@@ -25,7 +25,7 @@ export class UserApi {
   }
 
   async signup({ signEmail, signPassword, signPasswordConfirm }) {
-    if (!StringUtils.isEquals(signPassword, signPasswordConfirm)) {
+    if (signPassword !== signPasswordConfirm) {
       return apiFail('패스워드를 확인해주세요.');
     }
 
