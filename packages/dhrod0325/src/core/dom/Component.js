@@ -1,3 +1,5 @@
+import { ObjectUtils } from '../utils/ObjectUtils';
+
 export class Component extends HTMLElement {
   $container;
 
@@ -102,7 +104,7 @@ export class Component extends HTMLElement {
           return true;
         }
 
-        const beforeObject = { ...obj };
+        const beforeObject = ObjectUtils.deepCopy(obj);
 
         obj[prop] = value;
 

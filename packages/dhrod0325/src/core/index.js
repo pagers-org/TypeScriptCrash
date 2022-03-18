@@ -4,6 +4,7 @@ export * from './event/EventEmitter';
 export * from './http/HttpClient';
 export * from './http/ApiResponse';
 export * from './utils/RandomUtils';
-export * from './utils/Validator';
+export * from './utils/StringUtils';
+export * from './utils/ObjectUtils';
 export * from './storage/Storage';
 export * from './store/Store';

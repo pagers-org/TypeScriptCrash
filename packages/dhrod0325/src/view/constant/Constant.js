@@ -1,7 +1,7 @@
 export const API_SERVER = 'http://localhost:3000';
 
 export const NAV_STATE_EXPLORE = 'STATE_EXPLORE';
-export const NAV_STATE_SAVED = 'STATE_EXPLORE';
+export const NAV_STATE_SAVED = 'NAV_STATE_SAVED';
 
 export const KEY_USER_TOKEN = 'USER_TOKEN';
 

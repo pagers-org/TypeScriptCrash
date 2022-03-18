@@ -24,9 +24,7 @@ function createRandomPin(index) {
   };
 }
 
-const template = `
-<div class="pin-list"></div>
-`;
+const template = `<div class="pin-list"></div>`;
 
 export class PinList extends Component {
   PIN_LOAD_COUNT = 10;
@@ -86,10 +84,7 @@ export class PinList extends Component {
 
       if (isLast) {
         this.$emitter.emit(EVENT_PROGRESS_HIDE);
-
-        setTimeout(() => {
-          this.scrollObserver.observe(pinElem.$container);
-        }, 20);
+        this.scrollObserver.observe(pinElem.$container);
       }
     }
   }

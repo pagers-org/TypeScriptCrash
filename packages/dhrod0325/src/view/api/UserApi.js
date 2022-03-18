@@ -1,4 +1,4 @@
-import { apiFail, apiSuccess, Validator } from '../../core';
+import { apiFail, apiSuccess, StringUtils } from '../../core';
 
 export class UserApi {
   client;
@@ -8,7 +8,7 @@ export class UserApi {
   }
 
   async login({ email, password }) {
-    if (!Validator.isValidEmail(email)) {
+    if (!StringUtils.isEmail(email)) {
       return apiFail('옳지 않은 이메일 형식입니다.');
     }
 
@@ -25,11 +25,11 @@ export class UserApi {
   }
 
   async signup({ signEmail, signPassword, signPasswordConfirm }) {
-    if (!Validator.isValidPassword(signPassword, signPasswordConfirm)) {
+    if (!StringUtils.isEquals(signPassword, signPasswordConfirm)) {
       return apiFail('패스워드를 확인해주세요.');
     }
 
-    if (!Validator.isValidEmail(signEmail)) {
+    if (!StringUtils.isEmail(signEmail)) {
       return apiFail('옳지 않은 이메일 형식입니다.');
     }
 
