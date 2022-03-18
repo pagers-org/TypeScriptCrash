@@ -72,10 +72,10 @@ export default class MainView {
   async renderBookmark() {
     const saved = $('.saved');
 
-    const result = await getBookmarkList(`${BASE_URL}/user/bookmark`, {
+    const userBookmarks = await getBookmarkList(`${BASE_URL}/user/bookmark`, {
       _id: this._id,
     });
-    const $content = this.template.getBookmarkTab(result);
+    const $content = this.template.getBookmarkTab(userBookmarks);
 
     saved.innerHTML = $content;
   }
@@ -188,10 +188,10 @@ class Template {
     `;
   }
 
-  getBookmarkTab(result) {
+  getBookmarkTab(userBookmarks) {
     return `
       <div class="container">
-      ${result
+      ${userBookmarks
         .map(
           ({ _id, url }, index) => `
         <div class="pin">
