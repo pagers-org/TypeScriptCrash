@@ -1,6 +1,6 @@
 import "../assets/page/login.css";
 import { login, signup } from "./api/index.js";
-import { $, $all } from "./helper/index.js";
+import { $, $all, setLocal } from "./helper/index.js";
 import { BASE_CLIENT_URL, BASE_SERVER_URL } from "./constant/url";
 
 $all(".message a").forEach((tag) => {
@@ -44,6 +44,6 @@ $('button[data-submit="login"]').addEventListener("click", async (event) => {
   });
   const { _id, email: userEmail } = data[0];
   alert(`환영합니다, ${userEmail}님!`);
-  localStorage.setItem("user_token", _id);
+  setLocal("user_token", _id);
   location.replace(BASE_CLIENT_URL);
 });
