@@ -1,43 +1,34 @@
-import { BASE_URL } from '../constants';
+import { BASE_URL, IMAGE_API_URL } from '../constants';
 
 /**
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
  *
  */
-export default class Client {
-  constructor({ baseURL = BASE_URL, config }) {
-    this.baseURL = baseURL;
+class Client {
+  constructor() {
     this.config = {
-      mode: 'same-origin', // no-cors, cors, *same-origin
-      cache: 'default', // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: 'same-origin', // include, *same-origin, omit
-      redirect: 'follow', // manual, *follow, error
-      referrer: 'client', // no-referrer, *client
-      ...config,
+      headers: new Headers({ 'content-type': 'application/json' }),
     };
   }
 
   getImage(num) {
-    return fetch(`${this.baseURL}/${num}.jpg`);
+    return fetch(`${IMAGE_API_URL}/${num}.jpg`);
   }
 
-  async request({ url, body = {}, headers, method, init = false }) {
+  async request({ url: apiPath, body, method }) {
+    const requestURL = `${BASE_URL}${apiPath}`;
     const config = {
       ...this.config,
       method,
-      headers: new Headers(headers),
-      body: JSON.stringify(body),
     };
+
+    if (body) config.body = JSON.stringify(body);
 
     // 여기 에러 캐치는 request-response를 잡는 것
     try {
-      const response = await fetch(
-        `${this.baseURL}${url}`,
-        init ? this.config : config,
-      );
+      const response = await fetch(requestURL, config);
       return await this.parse(response);
     } catch (error) {
-      console.error(error);
       alert(error.message);
     }
   }
@@ -57,8 +48,9 @@ export default class Client {
       const data = status !== 204 ? await response.json() : null;
       return data;
     } catch (error) {
-      console.error(error);
-      return { status };
+      throw new Error('정보가 옳지 않습니다.');
     }
   }
 }
+
+export default new Client();
