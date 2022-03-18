@@ -1,4 +1,4 @@
-import { USER_TOKEN } from './constant';
+import { USER_TOKEN } from '../constant';
 
 export const setUserInfo = id => {
   try {
