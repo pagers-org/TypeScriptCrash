@@ -3,7 +3,9 @@ import { addBookmark, getBookmarkList } from './api/index';
 import { $, toggleLoading, debounce } from './helper/index.js';
 import { getUserInfo } from './storage';
 
-const userId = getUserInfo();
+function userId() {
+  return getUserInfo();
+}
 
 (() => {
   if (userId !== null) return;
