@@ -1,6 +1,7 @@
 import "../assets/index.css";
 import { addBookmark, getBookmarkList } from "./api";
 import { $, toggleLoading, debounce } from "./helper/index.js";
+import { BASE_SERVER_URL, FOX_URL } from "./constant/url";
 
 (() => {
   const isLogin = localStorage.getItem("user_token");
@@ -17,7 +18,7 @@ const createPin = () => {
   const buttonWrapper = document.createElement("div");
   const image = document.createElement("img");
   const random = Math.floor(Math.random() * 123) + 1;
-  image.src = `https://randomfox.ca/images/${random}.jpg`;
+  image.src = `${FOX_URL}/images/${random}.jpg`;
   buttonWrapper.setAttribute("class", "button-wrapper");
   buttonWrapper.innerHTML = `
   <div class="anim-icon anim-icon-md heart">
@@ -72,7 +73,7 @@ $("nav").addEventListener("click", async (event) => {
     $main.classList.add("saved");
     const _id = localStorage.getItem("user_token");
     const result = await getBookmarkList(
-      "http://localhost:3000/api/user/bookmark",
+      `${BASE_SERVER_URL}/api/user/bookmark`,
       { _id }
     );
     const $content = `
@@ -86,7 +87,7 @@ $("nav").addEventListener("click", async (event) => {
             <input type="checkbox" id="heart${index}" checked>
             <label for="heart${index}" key=${_id}></label>
           </div>
-        </div><img src="https://randomfox.ca/images/${url}.jpg">
+        </div><img src="${FOX_URL}/images/${url}.jpg">
       </div>`
       )
       .join("")}
@@ -101,9 +102,7 @@ $("main").addEventListener("click", async (event) => {
   if (!event.target.matches('label[for^="heart"]')) return;
   const _id = localStorage.getItem("user_token");
   await addBookmark(
-    `http://localhost:3000/api/user/bookmark/${event.target.getAttribute(
-      "key"
-    )}`,
+    `${BASE_SERVER_URL}/api/user/bookmark/${event.target.getAttribute("key")}`,
     { _id }
   );
   console.log("북마크에 저장되었습니다.");

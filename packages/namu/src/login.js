@@ -1,6 +1,7 @@
 import "../assets/page/login.css";
 import { login, signup } from "./api/index.js";
 import { $, $all } from "./helper/index.js";
+import { BASE_CLIENT_URL, BASE_SERVER_URL } from "./constant/url";
 
 $all(".message a").forEach((tag) => {
   tag.addEventListener("click", () => {
@@ -22,7 +23,7 @@ $('button[data-submit="signup"]').addEventListener("click", async (event) => {
     /^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
   if (!regEmail.test(email)) return alert("옳지 않은 이메일 형식입니다.");
 
-  await signup("http://localhost:3000/api/user", {
+  await signup(`${BASE_SERVER_URL}/api/user`, {
     email,
     password,
     status: 0,
@@ -37,12 +38,12 @@ $('button[data-submit="login"]').addEventListener("click", async (event) => {
   const email = $("#login-email").value;
   const password = $("#login-password").value;
 
-  const data = await login("http://localhost:3000/api/user/login", {
+  const data = await login(`${BASE_SERVER_URL}/api/user/login`, {
     email,
     password,
   });
   const { _id, email: userEmail } = data[0];
   alert(`환영합니다, ${userEmail}님!`);
   localStorage.setItem("user_token", _id);
-  location.replace("http://localhost:5510/");
+  location.replace(BASE_CLIENT_URL);
 });
