@@ -17,4 +17,13 @@ export const SUCCESS_MESSAGE = {
   SIGNUP: '회원가입이 완료되었습니다.\n로그인해주세요.',
 };
 
+export const MAIN_VIEW_TAB = {
+  EXPLORE: 'explore',
+  SAVED: 'saved',
+};
+
 export const MAX_IMAGE_NUMBER = 123;
+
+export const INFINITE_SCROLL_Y_AXIS_LOAD_LIMIT = 0.8;
+
+export const MAIN_EXPLORE_PAGE_PER_AMOUNT = 10;

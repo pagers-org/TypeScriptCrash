@@ -1,7 +1,10 @@
 import { addBookmark, getBookmarkList } from '../api';
 import {
   BASE_URL,
+  INFINITE_SCROLL_Y_AXIS_LOAD_LIMIT,
   LOCAL_STORAGE_KEY,
+  MAIN_EXPLORE_PAGE_PER_AMOUNT,
+  MAIN_VIEW_TAB,
   MAX_IMAGE_NUMBER,
   RANDOM_IMAGE_URL,
 } from '../constant';
@@ -59,7 +62,7 @@ export default class MainView {
     return debounce(() => {
       const container = $('.container');
       const pinList = [];
-      for (let i = 10; i > 0; i--) {
+      for (let i = MAIN_EXPLORE_PAGE_PER_AMOUNT; i > 0; i--) {
         pinList.push(this.createPin());
       }
       container.innerHTML += pinList.join('');
@@ -86,14 +89,14 @@ export default class MainView {
     const tab = event.target.id;
 
     switch (tab) {
-      case 'saved': {
+      case MAIN_VIEW_TAB.SAVED: {
         saved.style.display = 'block';
         container.style.display = 'none';
 
         this.renderBookmark();
         break;
       }
-      case 'explore': {
+      case MAIN_VIEW_TAB.EXPLORE: {
         saved.style.display = 'none';
         container.style.display = 'block';
 
@@ -111,7 +114,7 @@ export default class MainView {
 
     const { y, height } = loader.getBoundingClientRect();
 
-    if (-y < height * 0.8) return;
+    if (-y < height * INFINITE_SCROLL_Y_AXIS_LOAD_LIMIT) return;
 
     this.loadMore();
   }
