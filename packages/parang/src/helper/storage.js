@@ -1,4 +1,4 @@
-import { USER_TOKEN } from '../constants';
+const USER_TOKEN = 'USER_TOKEN';
 
 export const setUserToken = token => {
   try {
