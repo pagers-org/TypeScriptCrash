@@ -1,6 +1,5 @@
 import '../assets/page/login.css';
 import { $, $btn_type } from './util/dom.js';
-// import { MAIN_URL } from './constant/index.js';
 import { login } from './api/index.js';
 
 $btn_type('login').addEventListener('click', async (event) => {
