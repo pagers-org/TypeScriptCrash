@@ -12,17 +12,22 @@ export class HttpClient {
     };
 
     const callUrl = url.startsWith('http') ? url : `${this.baseUrl}${url}`;
-    const response = await fetch(callUrl, config);
 
-    return await response.json();
+    try {
+      const response = await fetch(callUrl, config);
+
+      return await response.json();
+    } catch (e) {
+      console.log(e);
+
+      return {};
+    }
   }
 
   get({ url }) {
     return this.request({
       url,
-      config: {
-        method: 'GET',
-      },
+      config: { method: 'GET' },
     });
   }
 

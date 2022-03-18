@@ -1,25 +1,35 @@
-export class User {
-  _id;
-  bookMarks;
+class Bookmark {
+  items;
 
-  constructor({ _id, bookMarks = [] }) {
-    this._id = _id;
-    this.bookMarks = bookMarks;
+  constructor(items) {
+    this.items = items;
   }
 
-  removeBookmark(url) {
-    this.bookMarks = this.bookMarks.filter(bookMark => {
-      return +url !== +bookMark.url;
-    });
+  add(bookmark) {
+    this.items = [...this.items, bookmark];
   }
 
-  isBookmarked(url) {
-    for (const bookmark of this.bookMarks) {
+  remove(url) {
+    this.items = [...this.items].filter(bookMark => +url !== +bookMark.url);
+  }
+
+  isMarked(url) {
+    for (const bookmark of this.items) {
       if (+url === +bookmark.url) {
         return true;
       }
     }
 
     return false;
+  }
+}
+
+export class User {
+  _id;
+  bookMark;
+
+  constructor({ _id, bookMarks = [] }) {
+    this._id = _id;
+    this.bookMark = new Bookmark(bookMarks);
   }
 }

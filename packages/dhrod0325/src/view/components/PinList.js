@@ -80,6 +80,10 @@ export class PinList extends Component {
     for (let i = 0; i < loadCount; i++) {
       const pinElem = this.createPin();
 
+      if (!(pinElem.$container instanceof HTMLElement)) {
+        continue;
+      }
+
       const isLast = i === loadCount - 1;
 
       if (isLast) {
@@ -98,7 +102,7 @@ export class PinList extends Component {
     this.$state.NAV_STATE = NAV_STATE_SAVED;
     this.clear();
 
-    this.$state.user.bookMarks.forEach(bookMark => {
+    this.$state.user.bookMark.items.forEach(bookMark => {
       bookMark.image = createFoxImageUrl(bookMark.url);
       this.createPin(bookMark);
     });

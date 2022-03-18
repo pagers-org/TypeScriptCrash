@@ -19,7 +19,7 @@ export class PinItem extends Component {
   setUp() {
     const pinSrc = this.pin.image;
     const pinId = `heart-${this.pin.index}`;
-    const isBookmark = this.$state.user.isBookmarked(this.pin.url);
+    const isBookmark = this.$state.user.bookMark.isMarked(this.pin.url);
 
     this.initialize({
       template,
@@ -51,7 +51,7 @@ export class PinItem extends Component {
     const data = { _id, url };
 
     await bookMarkApi.add(data);
-    this.$state.user.bookMarks.push(pin);
+    this.$state.user.bookMark.add(pin);
   }
 
   async cancelFavButtonClicked(pin) {
@@ -61,7 +61,7 @@ export class PinItem extends Component {
     const data = { _id, url };
 
     await bookMarkApi.remove(data);
-    this.$state.user.removeBookmark(url);
+    this.$state.user.bookMark.remove(url);
 
     if (this.$state.NAV_STATE === NAV_STATE_SAVED) {
       this.$container.remove();
