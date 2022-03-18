@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import { createHtmlPlugin } from 'vite-plugin-html';
+import mix from 'vite-plugin-mix';
 
 export default defineConfig({
   server: {
@@ -26,6 +27,9 @@ export default defineConfig({
           filename: 'login.html',
         },
       ],
+    }),
+    mix({
+      handler: '../server/main.ts',
     }),
   ],
 });

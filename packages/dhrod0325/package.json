@@ -1,15 +1,14 @@
 {
   "name": "@fecrash/dhrod0325",
   "version": "0.0.1",
-  "main": "webpack.config.js",
+  "main": "vite.config.js",
   "scripts": {
-    "watch:tsc": "tsc -w",
-    "watch:webpack": "webpack -w",
-    "build": "tsc && webpack",
-    "start": "webpack-dev-server",
+    "build": "vite build",
+    "start": "vite",
     "test": "tsc && webpack && cypress run --browser chrome"
   },
   "devDependencies": {
+    "@types/nedb": "^1.8.12",
     "@typescript-eslint/eslint-plugin": "^5.14.0",
     "@typescript-eslint/parser": "^5.14.0",
     "css-loader": "^6.5.1",
@@ -31,7 +30,10 @@
     "webpack-dev-server": "^4.7.3"
   },
   "dependencies": {
+    "express": "^4.17.3",
+    "nedb": "^1.8.0",
     "vite": "^2.8.6",
-    "vite-plugin-html": "^3.2.0"
+    "vite-plugin-html": "^3.2.0",
+    "vite-plugin-mix": "^0.3.1"
   }
 }
