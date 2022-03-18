@@ -1,12 +1,14 @@
 import '../assets/index.css';
 import { addBookmark, getBookmarkList } from './api/index';
 import { $, toggleLoading, debounce } from './helper/index.js';
-import { getUserInfo } from './storage';
+import { getUserInfo } from './helper/storage';
 
-const userId = getUserInfo();
+function getUserId() {
+  return getUserInfo();
+}
 
 (() => {
-  if (userId !== null) return;
+  if (getUserId() !== null) return;
   location.replace('./login.html');
 })();
 
@@ -75,9 +77,9 @@ $('nav').addEventListener('click', async event => {
     const $content = `
     <div class="container">
     ${result
-        .map(
-          ({ _id, url }, index) =>
-            `
+      .map(
+        ({ _id, url }, index) =>
+          `
       <div class="pin">
         <div class="button-wrapper">
           <div class="anim-icon anim-icon-md heart">
@@ -86,8 +88,8 @@ $('nav').addEventListener('click', async event => {
           </div>
         </div><img src="https://randomfox.ca/images/${url}.jpg">
       </div>`,
-        )
-        .join('')}
+      )
+      .join('')}
     </div>
     `;
 
@@ -98,7 +100,7 @@ $('nav').addEventListener('click', async event => {
 $('main').addEventListener('click', async event => {
   if (!event.target.matches('label[for^="heart"]')) return;
   await addBookmark(`/user/bookmark/${event.target.getAttribute('key')}`, {
-    _id: userId,
+    _id: getUserId(),
   });
   console.log('북마크에 저장되었습니다.');
 });
