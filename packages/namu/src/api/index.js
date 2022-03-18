@@ -1,7 +1,7 @@
 export async function login(url, data) {
   const config = {
-    method: 'POST',
-    headers: new Headers({ 'content-type': 'application/json' }),
+    method: "POST",
+    headers: new Headers({ "content-type": "application/json" }),
   };
   if (data) config.body = JSON.stringify(data);
   const response = await fetch(url, config);
@@ -11,8 +11,8 @@ export async function login(url, data) {
 
 export async function signup(url, data) {
   const config = {
-    method: 'POST',
-    headers: new Headers({ 'content-type': 'application/json' }),
+    method: "POST",
+    headers: new Headers({ "content-type": "application/json" }),
   };
   if (data) config.body = JSON.stringify(data);
   const response = await fetch(url, config);
@@ -22,8 +22,8 @@ export async function signup(url, data) {
 
 export async function getBookmarkList(url, data) {
   const config = {
-    method: 'POST',
-    headers: new Headers({ 'content-type': 'application/json' }),
+    method: "POST",
+    headers: new Headers({ "content-type": "application/json" }),
   };
   if (data) config.body = JSON.stringify(data);
   const response = await fetch(url, config);
@@ -33,8 +33,8 @@ export async function getBookmarkList(url, data) {
 
 export async function addBookmark(url, data) {
   const config = {
-    method: 'POST',
-    headers: new Headers({ 'content-type': 'application/json' }),
+    method: "POST",
+    headers: new Headers({ "content-type": "application/json" }),
   };
   if (data) config.body = JSON.stringify(data);
   const response = await fetch(url, config);
@@ -44,8 +44,8 @@ export async function addBookmark(url, data) {
 
 export async function removeBookmark(url, data) {
   const config = {
-    method: 'DELETE',
-    headers: new Headers({ 'content-type': 'application/json' }),
+    method: "DELETE",
+    headers: new Headers({ "content-type": "application/json" }),
   };
   if (data) config.body = JSON.stringify(data);
   const response = await fetch(url, config);
