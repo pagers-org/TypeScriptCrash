@@ -11,8 +11,9 @@ function toggleForm() {
 }
 
 $('.container').addEventListener('click', e => {
-  const link = e.target.tagName.toLowerCase();
-  if (link !== 'a') return;
+  const clickedElement = e.target.tagName.toLowerCase();
+  const messageLink = 'a';
+  if (clickedElement !== messageLink) return;
   toggleForm();
 });
 
@@ -48,14 +49,10 @@ $all('button').forEach(btn => {
     });
 
     alert('회원가입이 완료되었습니다.\n로그인해주세요.');
-    goLoginPage();
+    toggleForm();
   });
 });
 
 const goMainPage = () => {
   location.replace('http://localhost:5510/');
-};
-//TODO
-const goLoginPage = () => {
-  toggleForm();
 };
