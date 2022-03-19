@@ -1,4 +1,4 @@
-import { Component, RandomUtils } from '../../core';
+import { Component, RandomUtils } from "@/core";
 import {
   EVENT_PIN_NAV_EXPLORE_CLICKED,
   EVENT_PIN_NAV_SAVE_CLICKED,
@@ -7,20 +7,22 @@ import {
   IMAGE_API_URL,
   MAX_IMAGE_NUMBER,
   NAV_STATE,
-} from '../constant/Constant';
+  Pin,
+  PinItem
+} from "@/view";
 
-function createFoxImageUrl(url) {
+function createFoxImageUrl(url: number): string {
   return `${IMAGE_API_URL}/${url}.jpg`;
 }
 
-function createRandomPin(index) {
+function createRandomPin(index: string | number): Pin {
   const url = RandomUtils.nextInt(MAX_IMAGE_NUMBER);
   const image = createFoxImageUrl(url);
 
   return {
     index,
     image,
-    url,
+    url
   };
 }
 
@@ -31,11 +33,11 @@ export class PinList extends Component {
 
   currentLoadedPinCount = 0;
 
-  scrollObserver;
+  private scrollObserver: IntersectionObserver;
 
   setUp() {
     this.initialize({
-      template,
+      template
     });
 
     this.scrollObserver = new IntersectionObserver(
@@ -47,7 +49,7 @@ export class PinList extends Component {
           }
         });
       },
-      { threshold: 0.7 },
+      { threshold: 0.7 }
     );
   }
 
@@ -57,12 +59,12 @@ export class PinList extends Component {
     this.$emitter.on(EVENT_PIN_NAV_SAVE_CLICKED, this.loadFavorite.bind(this));
     this.$emitter.on(
       EVENT_PIN_NAV_EXPLORE_CLICKED,
-      this.loadExplore.bind(this),
+      this.loadExplore.bind(this)
     );
   }
 
-  createPin(pin = createRandomPin(this.currentLoadedPinCount)) {
-    const appendElement = document.createElement('pin-item');
+  createPin(pin: Pin = createRandomPin(this.currentLoadedPinCount)) {
+    const appendElement = <PinItem>document.createElement("pin-item");
     appendElement.setPin(pin);
     appendElement.setState(this.$state);
     appendElement.setEmitter(this.$emitter);
@@ -94,7 +96,7 @@ export class PinList extends Component {
   }
 
   clear() {
-    this.$container.innerHTML = '';
+    this.$container.innerHTML = "";
     this.scrollObserver.disconnect();
   }
 
@@ -102,8 +104,9 @@ export class PinList extends Component {
     this.$state.NAV_STATE = NAV_STATE.SAVED;
     this.clear();
 
-    this.$state.user.bookMark.items.forEach(bookMark => {
+    this.$state.user.bookMark.items.forEach((bookMark: Pin) => {
       bookMark.image = createFoxImageUrl(bookMark.url);
+
       this.createPin(bookMark);
     });
   }
@@ -116,4 +119,4 @@ export class PinList extends Component {
   }
 }
 
-window.customElements.define('pin-list', PinList);
+window.customElements.define("pin-list", PinList);

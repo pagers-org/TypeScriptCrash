@@ -1,5 +1,5 @@
 export class RandomUtils {
-  static nextInt(max) {
+  static nextInt(max:number) {
     return Math.floor(Math.random() * max) + 1;
   }
 }

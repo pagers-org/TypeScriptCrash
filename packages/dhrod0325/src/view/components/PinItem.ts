@@ -1,5 +1,5 @@
-import { Component } from '../../core';
-import { bookMarkApi, NAV_STATE } from '../index';
+import { Component } from "@/core";
+import { NAV_STATE } from "@/view";
 
 const template = `
   <div class="pin">
@@ -13,8 +13,14 @@ const template = `
   </div>
 `;
 
+export declare type Pin = {
+  index?: string | number;
+  image: string;
+  url: number;
+}
+
 export class PinItem extends Component {
-  pin;
+  pin: Pin;
 
   setUp() {
     const pinSrc = this.pin.image;
@@ -26,47 +32,40 @@ export class PinItem extends Component {
       data: {
         pinId,
         pinSrc,
-        isBookmark,
+        isBookmark
       },
       method: {
-        pinToggleEvent({ target }) {
+        pinToggleEvent({ target }: Event) {
+          // @ts-ignore
           const { pin } = this;
 
-          target.checked
-            ? this.favButtonClicked(pin)
-            : this.cancelFavButtonClicked(pin);
-        },
-      },
+          // @ts-ignore
+          target.checked ? this.favButtonClicked(pin) : this.cancelFavButtonClicked(pin);
+        }
+      }
     });
   }
 
-  setPin(pin) {
+  setPin(pin: Pin) {
     this.pin = pin;
   }
 
-  async favButtonClicked(pin) {
+  async favButtonClicked(pin: Pin) {
     const { url } = pin;
-    const { _id } = this.$state.user;
 
-    const data = { _id, url };
-
-    await bookMarkApi.add(data);
-    this.$state.user.bookMark.add(pin);
+    await this.$state.user.addBookMark(url, pin);
   }
 
-  async cancelFavButtonClicked(pin) {
+  async cancelFavButtonClicked(pin: Pin) {
     const { url } = pin;
-    const { _id } = this.$state.user;
 
-    const data = { _id, url };
-
-    await bookMarkApi.remove(data);
-    this.$state.user.bookMark.remove(url);
+    await this.$state.user.cancelBookMark(url);
 
     if (this.$state.NAV_STATE === NAV_STATE.SAVED) {
       this.$container.remove();
     }
   }
+
 }
 
-window.customElements.define('pin-item', PinItem);
+window.customElements.define("pin-item", PinItem);

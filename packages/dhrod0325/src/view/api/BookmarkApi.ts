@@ -1,34 +1,39 @@
-import { apiSuccess } from '../../core';
+import { apiSuccess, HttpClient } from "@/core";
+
+export declare type BookmarkParam = {
+  _id: string;
+  url?: number;
+}
 
 export class BookmarkApi {
-  client;
+  private client: HttpClient;
 
-  constructor(client) {
+  constructor(client: HttpClient) {
     this.client = client;
   }
 
-  async list({ _id }) {
+  async list({ _id }: BookmarkParam) {
     const data = await this.client.post({
       url: `/api/user/bookmark`,
-      data: { _id },
+      data: { _id }
     });
 
     return apiSuccess(data);
   }
 
-  async add({ url, _id }) {
+  async add({ url, _id }: BookmarkParam) {
     const data = await this.client.post({
       url: `/api/user/bookmark/${url}`,
-      data: { _id },
+      data: { _id }
     });
 
     return apiSuccess(data);
   }
 
-  async remove({ url, _id }) {
+  async remove({ url, _id }: BookmarkParam) {
     const data = await this.client.delete({
       url: `/api/user/bookmark/${url}`,
-      data: { _id },
+      data: { _id }
     });
 
     return apiSuccess(data);

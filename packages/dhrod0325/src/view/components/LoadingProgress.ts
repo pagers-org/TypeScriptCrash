@@ -1,5 +1,5 @@
-import { Component } from '../../core';
-import { EVENT_PROGRESS_HIDE, EVENT_PROGRESS_SHOW } from '../constant/Constant';
+import { Component } from "@/core";
+import { EVENT_PROGRESS_HIDE, EVENT_PROGRESS_SHOW } from "@/view";
 
 const template = `
 <section class="loading">
@@ -26,16 +26,16 @@ const template = `
 export class LoadingProgress extends Component {
   setUp() {
     this.initialize({
-      template,
+      template
     });
   }
 
   show() {
-    this.$container.classList.remove('hidden');
+    this.$container.classList.remove("hidden");
   }
 
   hide() {
-    this.$container.classList.add('hidden');
+    this.$container.classList.add("hidden");
   }
 
   mounted() {
@@ -46,4 +46,4 @@ export class LoadingProgress extends Component {
   }
 }
 
-window.customElements.define('loading-progress', LoadingProgress);
+window.customElements.define("loading-progress", LoadingProgress);
