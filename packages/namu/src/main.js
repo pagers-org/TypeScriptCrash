@@ -5,7 +5,7 @@ import {
   debounce,
   getLocal,
   postAsync,
-} from "./helper/index.js";
+} from "./helper/index.ts";
 import { BASE_SERVER_URL, FOX_URL } from "./constant/url";
 
 async function addBookmark(key, _id) {
