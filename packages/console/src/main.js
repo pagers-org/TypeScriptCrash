@@ -1,7 +1,7 @@
 import '../assets/index.css';
 import { fetchData } from './api';
 import { $, toggleLoading, debounce } from './helper/index.js';
-import StorageManager from './utils/StorageMap';
+import StorageManager from './utils/storageMap';
 import { STORAGE_KEY_NAMES } from './utils/constants';
 
 const storageMap = new StorageManager(STORAGE_KEY_NAMES.USER_TOKEN);

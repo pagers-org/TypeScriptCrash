@@ -2,7 +2,7 @@ import '../assets/page/login.css';
 import { fetchData } from './api/index.js';
 import { $, $all } from './helper/index.js';
 import { REGEX_EMAIL, STORAGE_KEY_NAMES } from './utils/constants';
-import StorageMap from './utils/StorageMap';
+import StorageMap from './utils/storageMap';
 
 const storageMap = new StorageMap(STORAGE_KEY_NAMES.USER_TOKEN);
 
