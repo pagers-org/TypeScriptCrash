@@ -1,56 +1,46 @@
-import { BASE_URL, IMAGE_API_URL } from '../constants';
+import { HTTP_METHODS, IMAGE_API_URL } from '../constants';
+import client from './config';
 
-/**
- * @see https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
- *
- */
-class Client {
-  constructor() {
-    this.config = {
-      headers: new Headers({ 'content-type': 'application/json' }),
-    };
-  }
+export const signup = async body => {
+  const response = await client.request({
+    method: HTTP_METHODS.POST,
+    url: '/api/user',
+    body,
+  });
 
-  getImage(num) {
-    return fetch(`${IMAGE_API_URL}/${num}.jpg`);
-  }
+  return response;
+};
 
-  async request({ url: apiPath, body, method }) {
-    const requestURL = `${BASE_URL}${apiPath}`;
-    const config = {
-      ...this.config,
-      method,
-    };
+export const login = async body => {
+  const response = await client.request({
+    method: HTTP_METHODS.POST,
+    url: '/api/user/login',
+    body,
+  });
 
-    if (body) config.body = JSON.stringify(body);
+  return response;
+};
 
-    // 여기 에러 캐치는 request-response를 잡는 것
-    try {
-      const response = await fetch(requestURL, config);
-      return await this.parse(response);
-    } catch (error) {
-      alert(error.message);
-    }
-  }
+export const getBookmarkList = async body => {
+  const response = await client.request({
+    method: HTTP_METHODS.POST,
+    url: '/api/user/bookmark',
+    body,
+  });
 
-  /**
-   * @TODO: fetch API 404 에러를 던지지 않으니까 먼저 체크해줘야 됨
-   * @see https://stackoverflow.com/questions/44019776/fetch-api-chrome-and-404-errors
-   * @see https://stackoverflow.com/questions/69874045/fetch-api-then-functions-runs-even-if-response-ok-is-false
-   *
-   * @param {*} response
-   */
-  async parse(response) {
-    // 여기는 의도적으로 낼 수 있는 에러
-    const { ok: isValidResponse, status } = response;
-    try {
-      if (!isValidResponse) throw new Error('invalid response');
-      const data = status !== 204 ? await response.json() : null;
-      return data;
-    } catch (error) {
-      throw new Error('정보가 옳지 않습니다.');
-    }
-  }
-}
+  return response;
+};
 
-export default new Client();
+export const setBookmark = async (key, body) => {
+  const response = client.request({
+    method: HTTP_METHODS.POST,
+    url: `/api/user/bookmark/${key}`,
+    body,
+  });
+
+  return response;
+};
+
+export const getFoxImages = async foxNumber => {
+  return fetch(`${IMAGE_API_URL}/${foxNumber}.jpg`);
+};
