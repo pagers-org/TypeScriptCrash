@@ -61,39 +61,45 @@ window.addEventListener('scroll', () => {
   loadMore();
 });
 
-const setInnerHtml = contents => {
+const setMainInnerHtml = contents => {
   const $main = $('main');
   $main.innerHTML = contents;
-};
-
-$('nav').addEventListener('click', async event => {
-  event.stopPropagation();
-  if (!event.target.matches('input')) return;
-
-  setInnerHtml('');
-
-  if (event.target.matches('#explore')) {
-    renderExplorePage();
-  }
-  if (event.target.matches('#saved')) {
-    renderSavePage();
-  }
-});
-
-const renderExplorePage = async () => {
-  mainAddRemoveClass(false, 'saved');
-  setInnerHtml(`
-      <div class="container"></div>
-      <div class="loader"></div>
-    `);
-  globalIndex = 0;
-  loadMore();
 };
 
 const mainAddRemoveClass = (isAdd, className) => {
   const $main = $('main');
   const method = isAdd ? 'add' : 'remove';
   $main.classList[method](className);
+};
+
+$('nav').addEventListener('click', async event => {
+  event.stopPropagation();
+  if (!event.target.matches('input')) return;
+
+  setMainInnerHtml('');
+  render(event, '#explore');
+  render(event, '#saved');
+});
+
+const render = (event, page) => {
+  if (event.target.matches(page)) {
+    switch (page) {
+      case '#explore':
+        return renderExplorePage();
+      case '#saved':
+        return renderSavePage();
+    }
+  }
+};
+
+const renderExplorePage = async () => {
+  mainAddRemoveClass(false, 'saved');
+  setMainInnerHtml(`
+      <div class="container"></div>
+      <div class="loader"></div>
+    `);
+  globalIndex = 0;
+  loadMore();
 };
 
 const renderSavePage = async () => {
@@ -114,7 +120,7 @@ const renderSavePage = async () => {
     </div>
     `;
 
-  setInnerHtml($content);
+  setMainInnerHtml($content);
 };
 
 $('main').addEventListener('click', async ({ target }) => {
