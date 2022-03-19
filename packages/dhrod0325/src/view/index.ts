@@ -12,6 +12,7 @@ export * from './components/PinList';
 export * from './components/PinNav';
 export * from './constant/Constant';
 export * from './model/User';
+export * from './model/Bookmark';
 
 const client = new HttpClient({ baseUrl: API_SERVER });
 

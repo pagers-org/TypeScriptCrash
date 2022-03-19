@@ -1,36 +1,10 @@
-import { bookMarkApi, Pin } from '@/view';
+import { bookMarkApi, BookmarkItem, Pin } from '@/view';
+import { Bookmark } from '@/view/model/Bookmark';
 
-export interface BookmarkItem {
+export declare type UserConstructor = {
   _id: string;
-  url: number;
-  image?: string;
-}
-
-export class Bookmark {
-  private items: Array<BookmarkItem>;
-
-  constructor(items: Array<BookmarkItem>) {
-    this.items = items;
-  }
-
-  add(bookmark: BookmarkItem) {
-    this.items = [...this.items, bookmark];
-  }
-
-  remove(url: number) {
-    this.items = [...this.items].filter(bookMark => +url !== +bookMark.url);
-  }
-
-  isMarked(url: number) {
-    for (const bookmark of this.items) {
-      if (+url === +bookmark.url) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-}
+  bookMarks: Array<BookmarkItem>;
+};
 
 export interface IUser {
   _id: string;
@@ -41,7 +15,7 @@ export class User implements IUser {
   _id: string;
   bookMark: Bookmark;
 
-  constructor({ _id, bookMarks = [] }: any) {
+  constructor({ _id, bookMarks = [] }: UserConstructor) {
     this._id = _id;
     this.bookMark = new Bookmark(bookMarks);
   }

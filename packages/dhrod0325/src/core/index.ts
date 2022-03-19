@@ -18,3 +18,5 @@ export * from './utils/RandomUtils';
 export * from './utils/StringUtils';
 export * from './utils/ObjectUtils';
 export * from './utils/DomUtils';
+
+export * from './types';

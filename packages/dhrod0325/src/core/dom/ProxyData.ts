@@ -1,4 +1,4 @@
-import { ObjectUtils } from '@/core';
+import { ObjectUtils, Value } from '@/core';
 
 export declare type ProxyCallbackData = {
   beforeObject?: unknown;
@@ -8,7 +8,7 @@ export declare type ProxyCallbackData = {
 };
 
 export class ProxyData {
-  constructor(data: any, callback: (args: ProxyCallbackData) => void) {
+  constructor(data: Value<any>, callback: (args: ProxyCallbackData) => void) {
     return new Proxy(data, {
       set: (obj, prop, value) => {
         if (obj[prop] === value) {
