@@ -1,6 +1,6 @@
 import '../assets/index.css';
-import { addBookmark, getBookmarkList } from './api';
-import { $, toggleLoading, debounce } from './util';
+import { addBookmark, getBookmarkList, removeBookmark } from './api';
+import { $, $all, toggleLoading, debounce } from './util';
 import { heartBtnWrapper, explore_tab, saved_tab } from './components';
 import { RANDOM_IMG_URL, RANDOM_IMG_MAX, RENDER_IMG_MAX } from './constant';
 
@@ -56,9 +56,7 @@ window.addEventListener('scroll', () => {
 //탭 전환
 $('nav').addEventListener('click', async (event) => {
   event.stopPropagation(); //이벤트 버블링 제거
-  console.log(event.target);
   if (!event.target.matches('input')) return;
-
   const $main = $('main');
   $main.innerHTML = '';
 
@@ -78,17 +76,34 @@ $('nav').addEventListener('click', async (event) => {
     const $content = saved_tab(result);
 
     $main.innerHTML = $content;
+
+    
   }
 });
 
 //북마크 선택
+//이벤트 위임
+//TODO 삭제, 저장 후 리렌더링
 $('main').addEventListener('click', async (event) => {
-  if (!event.target.matches('label[for^="heart"]')) return;
-  const _id = localStorage.getItem('user_token');
-  const _key = event.target.getAttribute('key');
-  await addBookmark({
-    _id,
-    _key,
-  });
-  console.log('북마크에 저장되었습니다.');
+  if (event.target.matches('label[for^="heart"]')) {
+    const selected_tab = Array.from($all('.item'))
+      .find((elem) => elem.querySelector('input').checked)
+      .querySelector('input').id;
+    const _id = localStorage.getItem('user_token');
+    const _key = event.target.getAttribute('key');
+
+    if (selected_tab === 'explore'){
+      await addBookmark({
+        _id,
+        _key,
+      });
+      alert('북마크에 저장되었습니다.');
+    } else if(selected_tab === 'saved'){
+      await removeBookmark({
+        _id,
+        _key,
+      });
+      alert('북마크가 삭제되었습니다.');
+    }
+  }
 });

@@ -1,3 +1,5 @@
+import { RANDOM_IMG_URL } from '../constant';
+
 //Explore - 북마크 설정
 export function heartBtnWrapper(globalIndex, random) {
   const buttonWrapper = document.createElement('div');
@@ -32,7 +34,7 @@ export function saved_tab(result) {
             <input type="checkbox" id="heart${index}" checked>
             <label for="heart${index}" key=${_id}></label>
           </div>
-        </div><img src="https://randomfox.ca/images/${url}.jpg">
+        </div><img src="${RANDOM_IMG_URL}/${url}.jpg">
       </div>`
       )
       .join('')}
