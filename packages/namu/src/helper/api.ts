@@ -1,30 +1,26 @@
 import { METHOD } from "../constant/api";
 
-const getConfig = (method: string, data: object) => {
+export async function postAsync(url: string, data: object) {
+  return getParsedData(url, getConfig(METHOD.POST, data));
+}
+
+export async function getAsync(url: string, data: object) {
+  return getParsedData(url, getConfig(METHOD.GET, data));
+}
+
+export async function deleteAsync(url: string, data: object) {
+  return getParsedData(url, getConfig(METHOD.DELETE, data));
+}
+
+function getConfig(method: string, data: object) {
   return {
     method: method,
     headers: new Headers({ "content-type": "application/json" }),
     body: data && JSON.stringify(data),
   };
-};
+}
 
-export const postAsync = async (url: string, data: object) => {
-  const config = getConfig(METHOD.POST, data);
+async function getParsedData(url: string, config: object) {
   const response = await fetch(url, config);
-  const parse = await response.json();
-  return parse;
-};
-
-export const getAsync = async (url: string, data: object) => {
-  const config = getConfig(METHOD.GET, data);
-  const response = await fetch(url, config);
-  const parse = await response.json();
-  return parse;
-};
-
-export const deleteAsync = async (url: string, data: object) => {
-  const config = getConfig(METHOD.DELETE, data);
-  const response = await fetch(url, config);
-  const parse = await response.json();
-  return parse;
-};
+  return await response.json();
+}
