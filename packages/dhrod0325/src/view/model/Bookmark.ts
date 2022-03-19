@@ -7,8 +7,12 @@ export interface BookmarkItem {
 export class Bookmark {
   private items: Array<BookmarkItem>;
 
-  constructor(items: Array<BookmarkItem>) {
+  constructor(items: Array<BookmarkItem> = []) {
     this.items = items;
+  }
+
+  addAll(bookmarkList: Array<BookmarkItem>): void {
+    this.items = [...this.items, ...bookmarkList];
   }
 
   add(bookmark: BookmarkItem): void {
@@ -17,6 +21,10 @@ export class Bookmark {
 
   remove(url: number): void {
     this.items = [...this.items].filter(bookMark => +url !== +bookMark.url);
+  }
+
+  clear() {
+    this.items = [];
   }
 
   isMarked(url: number): boolean {

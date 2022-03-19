@@ -3,7 +3,6 @@ import { Bookmark } from '@/view/model/Bookmark';
 
 export declare type UserConstructor = {
   _id: string;
-  bookMarks: Array<BookmarkItem>;
 };
 
 export interface IUser {
@@ -15,9 +14,9 @@ export class User implements IUser {
   _id: string;
   bookMark: Bookmark;
 
-  constructor({ _id, bookMarks = [] }: UserConstructor) {
+  constructor({ _id }: UserConstructor) {
     this._id = _id;
-    this.bookMark = new Bookmark(bookMarks);
+    this.bookMark = new Bookmark();
   }
 
   async cancelBookMark(url: number) {
@@ -32,5 +31,16 @@ export class User implements IUser {
 
     await bookMarkApi.add({ url, _id });
     this.bookMark.add(pin as BookmarkItem);
+  }
+
+  async loadBookMark() {
+    const { _id } = this;
+
+    const { data } = await bookMarkApi.list({ _id });
+
+    const bookmarkList = data as Array<BookmarkItem>;
+
+    this.bookMark.clear();
+    this.bookMark.addAll(bookmarkList);
   }
 }
