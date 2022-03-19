@@ -1,30 +1,15 @@
-import { Component, RandomUtils } from '@/core';
+import { Component } from '@/core';
 import {
+  createFoxImageUrl,
+  createRandomPin,
   EVENT_PIN_NAV_EXPLORE_CLICKED,
   EVENT_PIN_NAV_SAVE_CLICKED,
   EVENT_PROGRESS_HIDE,
   EVENT_PROGRESS_SHOW,
-  IMAGE_API_URL,
-  MAX_IMAGE_NUMBER,
   NAV_STATE,
   Pin,
   PinItem,
 } from '@/view';
-
-function createFoxImageUrl(url: number): string {
-  return `${IMAGE_API_URL}/${url}.jpg`;
-}
-
-function createRandomPin(index: string | number): Pin {
-  const url = RandomUtils.nextInt(MAX_IMAGE_NUMBER);
-  const image = createFoxImageUrl(url);
-
-  return {
-    index,
-    image,
-    url,
-  };
-}
 
 const template = `<div class="pin-list"></div>`;
 
@@ -107,7 +92,6 @@ export class PinList extends Component {
 
     this.$state.user.bookMark.items.forEach((bookMark: Pin) => {
       bookMark.image = createFoxImageUrl(bookMark.url);
-
       this.createPin(bookMark);
     });
   }

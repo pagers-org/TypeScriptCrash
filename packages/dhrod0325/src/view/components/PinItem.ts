@@ -36,7 +36,7 @@ export class PinItem extends Component {
     this.setMethod(this);
   }
 
-  setPin(pin: Pin) {
+  setPin(pin: Pin): void {
     this.pin = pin;
   }
 
@@ -56,7 +56,7 @@ export class PinItem extends Component {
     }
   }
 
-  pinToggleEvent({ target }: Event) {
+  pinToggleEvent({ target }: Event): void {
     const { pin } = this;
     (<HTMLInputElement>target)?.checked
       ? this.favButtonClicked(pin)

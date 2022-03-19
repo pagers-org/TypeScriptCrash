@@ -5,6 +5,7 @@ import {
   IEventEmitter,
   ProxyCallbackData,
   ProxyData,
+  Value,
 } from '@/core';
 
 interface IComponent {
@@ -20,11 +21,11 @@ interface IComponent {
 export class Component extends HTMLElement implements IComponent {
   $container: HTMLElement;
 
-  $state: any;
+  $state: Value<any>;
 
   $emitter: IEventEmitter;
 
-  $data: any;
+  $data: Value<any>;
 
   $method: object;
 

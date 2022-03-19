@@ -1,6 +1,6 @@
 import '/assets/index.css';
 import { App, Component, EventEmitter } from './core';
-import { bookMarkApi, KEY, storage, User } from './view';
+import { bookMarkApi, BookmarkItem, KEY, storage, User } from './view';
 
 try {
   const _id = storage.getItem(KEY.USER_TOKEN);
@@ -15,7 +15,9 @@ function redirectLoginPage() {
 }
 
 async function render(_id: string) {
-  const { data: bookMarks } = await bookMarkApi.list({ _id });
+  const { data } = await bookMarkApi.list({ _id });
+
+  const bookMarks = data as Array<BookmarkItem>;
 
   const user = new User({ _id, bookMarks });
 

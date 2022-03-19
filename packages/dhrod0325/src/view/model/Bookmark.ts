@@ -11,15 +11,15 @@ export class Bookmark {
     this.items = items;
   }
 
-  add(bookmark: BookmarkItem) {
+  add(bookmark: BookmarkItem): void {
     this.items = [...this.items, bookmark];
   }
 
-  remove(url: number) {
+  remove(url: number): void {
     this.items = [...this.items].filter(bookMark => +url !== +bookMark.url);
   }
 
-  isMarked(url: number) {
+  isMarked(url: number): boolean {
     for (const bookmark of this.items) {
       if (+url === +bookmark.url) {
         return true;
