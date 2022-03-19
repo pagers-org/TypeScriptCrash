@@ -1,6 +1,5 @@
 import "../assets/page/login.css";
-import { postAsync } from "./helper/api";
-import { $, $all, setLocal } from "./helper/index.js";
+import { $, $all, setLocal, postAsync } from "./helper/index.js";
 import { BASE_CLIENT_URL, BASE_SERVER_URL } from "./constant/url";
 
 async function login(email, password) {

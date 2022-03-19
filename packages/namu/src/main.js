@@ -1,6 +1,11 @@
 import "../assets/index.css";
-import { postAsync } from "./helper/api";
-import { $, toggleLoading, debounce, getLocal } from "./helper/index.js";
+import {
+  $,
+  toggleLoading,
+  debounce,
+  getLocal,
+  postAsync,
+} from "./helper/index.js";
 import { BASE_SERVER_URL, FOX_URL } from "./constant/url";
 
 async function addBookmark(key, _id) {
