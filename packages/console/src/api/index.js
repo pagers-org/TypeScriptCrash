@@ -8,7 +8,7 @@ export const fetchData = async (fetchApi = '', url, data, method = 'POST') => {
     };
     if (data) config.body = JSON.stringify(data);
     const response = await fetch(`${BASE_URL}${url}`, config);
-    const parse = await response.json();
+    const parse = response.json();
     return parse;
   } catch (err) {
     console.log(`${fetchApi}${err}`);
