@@ -1,21 +1,20 @@
 import '../assets/index.css';
 import { fetchData } from './api';
 import { $, toggleLoading, debounce } from './helper/index.js';
-import StorageManager from './utils/storageClass';
+import StorageManager from './utils/StorageMap';
 import { STORAGE_KEY_NAMES } from './utils/constants';
-const storageManager = new StorageManager(STORAGE_KEY_NAMES.USER_TOKEN);
+
+const storageMap = new StorageManager(STORAGE_KEY_NAMES.USER_TOKEN);
 
 (() => {
-  const isLogin = storageManager.getItemProps();
+  const isLogin = storageMap.getValue();
   if (isLogin !== null) return;
 
   location.replace('./login.html');
 })();
 
 let globalIndex = 0;
-const _id = storageManager.getItemProps();
-const $main = $('main');
-const $nav = $('nav');
+const _id = storageMap.getValue();
 
 const createPin = () => {
   toggleLoading();
@@ -62,11 +61,16 @@ window.addEventListener('scroll', () => {
   loadMore();
 });
 
-$nav.addEventListener('click', async event => {
+const setInnerHtml = contents => {
+  const $main = $('main');
+  $main.innerHTML = contents;
+};
+
+$('nav').addEventListener('click', async event => {
   event.stopPropagation();
   if (!event.target.matches('input')) return;
 
-  $main.innerHTML = '';
+  setInnerHtml('');
 
   if (event.target.matches('#explore')) {
     renderExplorePage();
@@ -77,18 +81,23 @@ $nav.addEventListener('click', async event => {
 });
 
 const renderExplorePage = async () => {
-  $main.classList.remove('saved');
-  $main.innerHTML = `
+  mainAddRemoveClass(false, 'saved');
+  setInnerHtml(`
       <div class="container"></div>
       <div class="loader"></div>
-    `;
-
+    `);
   globalIndex = 0;
   loadMore();
 };
 
+const mainAddRemoveClass = (isAdd, className) => {
+  const $main = $('main');
+  const method = isAdd ? 'add' : 'remove';
+  $main.classList[method](className);
+};
+
 const renderSavePage = async () => {
-  $main.classList.add('saved');
+  mainAddRemoveClass(true, 'saved');
   const result = await fetchData('getBookmarkList', '/user/bookmark', { _id });
   const $content = `
     <div class="container">
@@ -105,19 +114,19 @@ const renderSavePage = async () => {
     </div>
     `;
 
-  $main.innerHTML = $content;
+  setInnerHtml($content);
 };
 
-$main.addEventListener('click', async event => {
-  const targetAttrKey = event.target.getAttribute('key');
+$('main').addEventListener('click', async ({ target }) => {
+  const targetAttrKey = target.getAttribute('key');
   const requestUrl = `/user/bookmark/${targetAttrKey}`;
   if (targetAttrKey?.length > 3) {
     await fetchData('removeBookmark', requestUrl, { _id }, 'DELETE');
     renderSavePage();
   }
 
-  if (event.target.matches('input[id^="heart"]')) {
-    if (event.target.checked) {
+  if (target.matches('input[id^="heart"]')) {
+    if (target.checked) {
       await fetchData('addBookmark', requestUrl, { _id });
       return;
     }
@@ -137,5 +146,5 @@ $main.addEventListener('click', async event => {
     return;
   }
 
-  if (!event.target.matches('label[for^="heart"]')) return;
+  if (!target.matches('label[for^="heart"]')) return;
 });

@@ -11,6 +11,6 @@ export const fetchData = async (fetchApi = '', url, data, method = 'POST') => {
     const parse = await response.json();
     return parse;
   } catch (err) {
-    console.log(fetchApi + err);
+    console.log(`${fetchApi}${err}`);
   }
 };

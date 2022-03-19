@@ -1,4 +1,4 @@
-export default class StorageManager {
+export default class StorageMap {
   #key;
   #value;
   constructor(key) {
@@ -12,13 +12,12 @@ export default class StorageManager {
     this.#value = JSON.parse(value);
   }
 
-  setItemProps(value) {
+  setValue(value) {
     this.convertItemProps(value);
-    localStorage.removeItem(this.#key);
     localStorage.setItem(this.#key, this.#value);
   }
 
-  getItemProps() {
+  getValue() {
     const localStorageItem = localStorage.getItem(this.#key);
     if (localStorageItem) {
       try {
