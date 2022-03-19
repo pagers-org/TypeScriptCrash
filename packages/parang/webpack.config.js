@@ -17,7 +17,7 @@ module.exports = {
   target: ['es5', 'web'],
   entry: {
     // 각 html에 필요한 entry 파일
-    index: './src/index.js',
+    index: './src/pages/main.js',
     login: './src/pages/login.js',
   },
   output: {
