@@ -1,7 +1,17 @@
 import "../assets/index.css";
-import { addBookmark, getBookmarkList } from "./api";
+import { postAsync } from "./helper/api";
 import { $, toggleLoading, debounce, getLocal } from "./helper/index.js";
 import { BASE_SERVER_URL, FOX_URL } from "./constant/url";
+
+async function addBookmark(key, _id) {
+  await postAsync(`${BASE_SERVER_URL}/api/user/bookmark/${key}`, { _id });
+}
+
+async function getBookmarkList(_id) {
+  return await postAsync(`${BASE_SERVER_URL}/api/user/bookmark`, {
+    _id,
+  });
+}
 
 (() => {
   const isLogin = getLocal("user_token");
@@ -72,10 +82,7 @@ $("nav").addEventListener("click", async (event) => {
   if (event.target.matches("#saved")) {
     $main.classList.add("saved");
     const _id = getLocal("user_token");
-    const result = await getBookmarkList(
-      `${BASE_SERVER_URL}/api/user/bookmark`,
-      { _id }
-    );
+    const result = await getBookmarkList(_id);
     const $content = `
     <div class="container">
     ${result
@@ -101,9 +108,7 @@ $("nav").addEventListener("click", async (event) => {
 $("main").addEventListener("click", async (event) => {
   if (!event.target.matches('label[for^="heart"]')) return;
   const _id = getLocal("user_token");
-  await addBookmark(
-    `${BASE_SERVER_URL}/api/user/bookmark/${event.target.getAttribute("key")}`,
-    { _id }
-  );
+  await addBookmark(event.target.getAttribute("key"), _id);
+
   console.log("북마크에 저장되었습니다.");
 });
