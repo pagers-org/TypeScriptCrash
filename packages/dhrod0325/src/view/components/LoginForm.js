@@ -1,5 +1,5 @@
 import { Component } from '../../core';
-import { KEY_USER_TOKEN, storage, userApi } from '../index';
+import { KEY, storage, userApi } from '../index';
 
 const template = `
  <div class="login-wrapper">
@@ -55,13 +55,7 @@ export class LoginForm extends Component {
             return alert(message);
           }
 
-          const { _id, email: userEmail } = data;
-
-          alert(`환영합니다, ${userEmail}님!`);
-
-          storage.setItem(KEY_USER_TOKEN, _id);
-
-          location.replace('/');
+          this.successLogin(data);
         },
         async joinButtonClicked(e) {
           e.preventDefault();
@@ -78,12 +72,21 @@ export class LoginForm extends Component {
             return alert(message);
           }
 
-          alert('회원가입이 완료되었습니다.\n 로그인해주세요.');
-
-          this.$method.toggleForm.apply(this);
+          this.successJoin();
         },
       },
     });
+  }
+
+  successJoin() {
+    alert('회원가입이 완료되었습니다.\n 로그인해주세요.');
+    this.$method.toggleForm.apply(this);
+  }
+
+  successLogin({ _id, email }) {
+    alert(`환영합니다, ${email}님!`);
+    storage.setItem(KEY.USER_TOKEN, _id);
+    location.replace('/');
   }
 }
 

@@ -1,5 +1,5 @@
 import { Component } from '../../core';
-import { bookMarkApi, NAV_STATE_SAVED } from '../index';
+import { bookMarkApi, NAV_STATE } from '../index';
 
 const template = `
   <div class="pin">
@@ -63,7 +63,7 @@ export class PinItem extends Component {
     await bookMarkApi.remove(data);
     this.$state.user.bookMark.remove(url);
 
-    if (this.$state.NAV_STATE === NAV_STATE_SAVED) {
+    if (this.$state.NAV_STATE === NAV_STATE.SAVED) {
       this.$container.remove();
     }
   }

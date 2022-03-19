@@ -2,14 +2,14 @@ import '/assets/index.css';
 
 import { App, EventEmitter } from './core';
 
-import { bookMarkApi, KEY_USER_TOKEN, storage, User } from './view';
+import { bookMarkApi, KEY, storage, User } from './view';
 
-const _id = storage.getItem(KEY_USER_TOKEN);
+const _id = storage.getItem(KEY.USER_TOKEN);
 
 if (!_id) {
   redirectLoginPage();
 } else {
-  render().then();
+  render();
 }
 
 function redirectLoginPage() {

@@ -1,4 +1,6 @@
 export * from './dom/Component';
+export * from './dom/ElementBinder';
+export * from './dom/ProxyData';
 export * from './app/App';
 export * from './event/EventEmitter';
 export * from './http/HttpClient';
