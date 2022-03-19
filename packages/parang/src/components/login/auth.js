@@ -1,20 +1,20 @@
-import Client from '../../api';
-import { EVENT_TYPE, FOX_EXPLORE_MAIN, HTTP_METHODS } from '../../constants';
+import { login, signup } from '../../api';
+import { EVENT_TYPE, FOX_EXPLORE_MAIN } from '../../constants';
 import {
   $all,
   $initValue,
   $value,
   isEmpty,
-  isEquals,
   isValidEmail,
   setUserToken,
 } from '../../helper';
 import AbstractComponent from '../abstract';
 
-export class Auth extends AbstractComponent {
+export default class Auth extends AbstractComponent {
+  inputSelectors;
+
   constructor() {
     super();
-    this.client = Client;
 
     this.inputSelectors = [
       '#signup-email',
@@ -80,18 +80,11 @@ export class Auth extends AbstractComponent {
     const [{ value: email }, { value: password }, { value: passwordConfirm }] =
       $value(this.inputSelectors);
 
-    if (isEquals(password, passwordConfirm))
-      return alert('패스워드를 확인해주세요.');
+    if (password !== passwordConfirm) return alert('패스워드를 확인해주세요.');
     if (!isValidEmail(email)) return alert('옳지 않은 이메일 형식입니다.');
 
-    const params = {
-      method: HTTP_METHODS.POST,
-      url: '/api/user',
-      body: { email, password },
-    };
-
     try {
-      await this.client.request(params);
+      await signup({ email, password });
       alert('회원가입이 완료되었습니다.\n로그인해주세요.');
     } catch (error) {
       alert(error.message);
@@ -104,19 +97,15 @@ export class Auth extends AbstractComponent {
     event.preventDefault();
     if (!event.target.matches('button[data-submit="login"]')) return;
 
-    const [{ value: email }, { value: password }] = $value(this.inputSelectors);
+    const [_1, _2, _3, { value: email }, { value: password }] = $value(
+      this.inputSelectors,
+    );
 
     if (!isValidEmail(email)) return alert('옳지 않은 이메일 형식입니다.');
 
-    const params = {
-      method: HTTP_METHODS.POST,
-      url: '/api/user/login',
-      body: { email, password },
-    };
-
     try {
-      const userData = await this.client.request(params);
-      if (isEmpty(userData)) throw new Error('해당 계정은 올바르지 않습니다.');
+      const userData = await login({ email, password });
+      if (isEmpty(userData)) return alert('해당 계정은 올바르지 않습니다.');
       this.successLogin(userData[0]);
     } catch (error) {
       alert(error.message);
