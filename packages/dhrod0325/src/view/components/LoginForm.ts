@@ -1,5 +1,5 @@
-import { Component } from "@/core";
-import { KEY, storage, userApi } from "@/view";
+import { Component } from '@/core';
+import { KEY, storage, userApi } from '@/view';
 
 const template = `
  <div class="login-wrapper">
@@ -29,74 +29,66 @@ const template = `
 
 export class LoginForm extends Component {
   setUp() {
-    this.initialize({
-      template,
-      data: {
-        email: String,
-        password: String,
-        signEmail: String,
-        signPassword: String,
-        signPasswordConfirm: String
-      },
-      method: {
-        toggleForm(e: Event) {
-          if (e) e.preventDefault();
-
-          // @ts-ignore
-          this.toggleForm(e);
-        },
-        async loginButtonClicked(e: Event) {
-          e.preventDefault();
-
-          // @ts-ignore
-          const { result, message, data } = await userApi.login(this.$data);
-
-          if (!result) {
-            return alert(message);
-          }
-
-          // @ts-ignore
-          this.successLogin(data._id, data.email);
-        },
-        async joinButtonClicked(e: Event) {
-          e.preventDefault();
-
-          // @ts-ignore
-          const { signEmail, signPassword, signPasswordConfirm } = this.$data;
-
-          const { result, message } = await userApi.signup({
-            signEmail,
-            signPassword,
-            signPasswordConfirm
-          });
-
-          if (!result) {
-            return alert(message);
-          }
-
-          // @ts-ignore
-          this.successJoin();
-        }
-      }
+    this.setContainer(template);
+    this.setData({
+      email: String,
+      password: String,
+      signEmail: String,
+      signPassword: String,
+      signPasswordConfirm: String,
     });
+    this.setMethod(this);
   }
 
-  toggleForm() {
+  toggleForm(e: Event | null) {
+    if (e) e.preventDefault();
+
     this.$container
-      .querySelectorAll(".forms")
-      .forEach(form => form.classList.toggle("hidden"));
+      .querySelectorAll('.forms')
+      .forEach(form => form.classList.toggle('hidden'));
+  }
+
+  async loginButtonClicked(e: Event) {
+    e.preventDefault();
+
+    const { result, message, data } = await userApi.login(this.$data);
+
+    if (!result) {
+      return alert(message);
+    }
+
+    // @ts-ignore
+    this.successLogin(data._id, data.email);
+  }
+
+  async joinButtonClicked(e: Event) {
+    e.preventDefault();
+
+    const { signEmail, signPassword, signPasswordConfirm } = this.$data;
+
+    const { result, message } = await userApi.signup({
+      signEmail,
+      signPassword,
+      signPasswordConfirm,
+    });
+
+    if (!result) {
+      return alert(message);
+    }
+
+    this.successJoin();
   }
 
   successJoin(): void {
-    alert("회원가입이 완료되었습니다.\n 로그인해주세요.");
-    this.toggleForm.apply(this);
+    alert('회원가입이 완료되었습니다.\n 로그인해주세요.');
+    this.toggleForm(null);
   }
 
   successLogin(_id: string, email: string) {
     alert(`환영합니다, ${email}님!`);
     storage.setItem(KEY.USER_TOKEN, _id);
-    location.replace("/");
+    location.replace('/');
   }
 }
 
-window.customElements.define("login-form", LoginForm);
+window.customElements.define('login-form', LoginForm);

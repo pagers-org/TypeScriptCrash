@@ -1,5 +1,5 @@
-import { Component } from "@/core";
-import { NAV_STATE } from "@/view";
+import { Component } from '@/core';
+import { NAV_STATE } from '@/view';
 
 const template = `
   <div class="pin">
@@ -17,7 +17,7 @@ export declare type Pin = {
   index?: string | number;
   image: string;
   url: number;
-}
+};
 
 export class PinItem extends Component {
   pin: Pin;
@@ -27,23 +27,13 @@ export class PinItem extends Component {
     const pinId = `heart-${this.pin.index}`;
     const isBookmark = this.$state.user.bookMark.isMarked(this.pin.url);
 
-    this.initialize({
-      template,
-      data: {
-        pinId,
-        pinSrc,
-        isBookmark
-      },
-      method: {
-        pinToggleEvent({ target }: Event) {
-          // @ts-ignore
-          const { pin } = this;
-
-          // @ts-ignore
-          target.checked ? this.favButtonClicked(pin) : this.cancelFavButtonClicked(pin);
-        }
-      }
+    this.setContainer(template);
+    this.setData({
+      pinId,
+      pinSrc,
+      isBookmark,
     });
+    this.setMethod(this);
   }
 
   setPin(pin: Pin) {
@@ -66,6 +56,12 @@ export class PinItem extends Component {
     }
   }
 
+  pinToggleEvent({ target }: Event) {
+    const { pin } = this;
+    (<HTMLInputElement>target)?.checked
+      ? this.favButtonClicked(pin)
+      : this.cancelFavButtonClicked(pin);
+  }
 }
 
-window.customElements.define("pin-item", PinItem);
+window.customElements.define('pin-item', PinItem);

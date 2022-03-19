@@ -1,9 +1,9 @@
-import { Component, EventEmitter } from "@/core";
+import { Component, EventEmitter } from '@/core';
 
 export declare type ComponentRequireArgs = {
   state: any;
   emitter: EventEmitter;
-}
+};
 
 export class App {
   private container: Element | null;
@@ -12,7 +12,10 @@ export class App {
     this.container = container;
   }
 
-  addComponent(componentElement: Component, { state, emitter }: ComponentRequireArgs) {
+  addComponent(
+    componentElement: Component,
+    { state, emitter }: ComponentRequireArgs,
+  ) {
     componentElement.setState(state);
     componentElement.setEmitter(emitter);
 

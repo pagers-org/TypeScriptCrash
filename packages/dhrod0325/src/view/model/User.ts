@@ -1,4 +1,4 @@
-import { bookMarkApi, Pin } from "@/view";
+import { bookMarkApi, Pin } from '@/view';
 
 export interface BookmarkItem {
   _id: string;

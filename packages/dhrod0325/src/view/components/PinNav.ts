@@ -1,5 +1,8 @@
-import { Component } from "@/core";
-import { EVENT_PIN_NAV_EXPLORE_CLICKED, EVENT_PIN_NAV_SAVE_CLICKED } from "@/view";
+import { Component } from '@/core';
+import {
+  EVENT_PIN_NAV_EXPLORE_CLICKED,
+  EVENT_PIN_NAV_SAVE_CLICKED,
+} from '@/view';
 
 const template = `
 <header>
@@ -38,21 +41,17 @@ const template = `
 
 export class PinNav extends Component {
   setUp() {
-    this.initialize({
-      template,
-      method: {
-        savedClicked() {
-          // @ts-ignore
-          this.$emitter.emit(EVENT_PIN_NAV_SAVE_CLICKED);
-        },
-        exploreClicked() {
-          // @ts-ignore
-          this.$emitter.emit(EVENT_PIN_NAV_EXPLORE_CLICKED);
-        }
-      }
-    });
+    this.setContainer(template);
+    this.setMethod(this);
   }
 
+  savedClicked() {
+    this.$emitter.emit(EVENT_PIN_NAV_SAVE_CLICKED);
+  }
+
+  exploreClicked() {
+    this.$emitter.emit(EVENT_PIN_NAV_EXPLORE_CLICKED);
+  }
 }
 
-window.customElements.define("pin-nav", PinNav);
+window.customElements.define('pin-nav', PinNav);

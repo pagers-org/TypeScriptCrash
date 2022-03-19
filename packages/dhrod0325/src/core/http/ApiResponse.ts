@@ -2,11 +2,11 @@ export function apiResponse(result: boolean, message: string, data = {}) {
   return {
     result,
     message,
-    data
+    data,
   };
 }
 
-export function apiSuccess(data = {}, message: string = "success") {
+export function apiSuccess(data = {}, message = 'success') {
   return apiResponse(true, message, data);
 }
 

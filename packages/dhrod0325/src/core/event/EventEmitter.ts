@@ -8,8 +8,8 @@ export class EventEmitter extends EventTarget implements IEventEmitter {
   emit(eventName: string, data: any = {}) {
     this.dispatchEvent(
       new CustomEvent(eventName, {
-        detail: data
-      })
+        detail: data,
+      }),
     );
   }
 

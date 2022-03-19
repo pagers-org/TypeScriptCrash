@@ -1,11 +1,11 @@
-import { ObjectUtils } from "@/core";
+import { ObjectUtils } from '@/core';
 
 export declare type ProxyCallbackData = {
   beforeObject?: unknown;
   obj?: unknown;
   prop: string | symbol;
   value?: unknown;
-}
+};
 
 export class ProxyData {
   constructor(data: any, callback: (args: ProxyCallbackData) => void) {

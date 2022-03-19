@@ -1,4 +1,11 @@
-import { DomUtils, ElementBinder, IElementBinder, IEventEmitter, ProxyCallbackData, ProxyData } from "@/core";
+import {
+  DomUtils,
+  ElementBinder,
+  IElementBinder,
+  IEventEmitter,
+  ProxyCallbackData,
+  ProxyData,
+} from '@/core';
 
 interface IComponent {
   setUp(): void;
@@ -17,7 +24,7 @@ export class Component extends HTMLElement implements IComponent {
 
   $emitter: IEventEmitter;
 
-  $data: ProxyData;
+  $data: any;
 
   $method: object;
 
@@ -25,21 +32,10 @@ export class Component extends HTMLElement implements IComponent {
 
   private isMounted = false;
 
-  /**
-   * setUp 메소드에서 호출
-   */
-  initialize({ data = {}, method = {}, template = "" }) {
-    this.$method = method;
-
-    this.setContainer(template);
-
-    this.setData(new ProxyData(data, this.onDataChanged.bind(this)));
-
-    this.setElementBinder(new ElementBinder(this));
-  }
-
   connectedCallback() {
     this.setUp();
+
+    this.setUpDefault();
 
     this.render();
 
@@ -58,6 +54,16 @@ export class Component extends HTMLElement implements IComponent {
     this.isMounted = true;
   }
 
+  setUpDefault() {
+    if (!this.$data) {
+      this.setData(new ProxyData({}, this.onDataChanged.bind(this)));
+    }
+
+    if (!this.$elementBinder) {
+      this.setElementBinder(new ElementBinder(this));
+    }
+  }
+
   setUp(): void {
     //
   }
@@ -73,6 +79,10 @@ export class Component extends HTMLElement implements IComponent {
   //TODO Refactoring
   onDataChanged({ prop, value }: ProxyCallbackData): void {
     this.$elementBinder.setWatchElementValue(prop, value);
+  }
+
+  setMethod(method: object) {
+    this.$method = method;
   }
 
   setData(data: ProxyData): void {

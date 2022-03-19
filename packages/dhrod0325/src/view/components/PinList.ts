@@ -1,4 +1,4 @@
-import { Component, RandomUtils } from "@/core";
+import { Component, RandomUtils } from '@/core';
 import {
   EVENT_PIN_NAV_EXPLORE_CLICKED,
   EVENT_PIN_NAV_SAVE_CLICKED,
@@ -8,8 +8,8 @@ import {
   MAX_IMAGE_NUMBER,
   NAV_STATE,
   Pin,
-  PinItem
-} from "@/view";
+  PinItem,
+} from '@/view';
 
 function createFoxImageUrl(url: number): string {
   return `${IMAGE_API_URL}/${url}.jpg`;
@@ -22,7 +22,7 @@ function createRandomPin(index: string | number): Pin {
   return {
     index,
     image,
-    url
+    url,
   };
 }
 
@@ -36,10 +36,21 @@ export class PinList extends Component {
   private scrollObserver: IntersectionObserver;
 
   setUp() {
-    this.initialize({
-      template
-    });
+    this.setContainer(template);
+    this.createScrollObserver();
+  }
 
+  mounted() {
+    this.loadPinList();
+
+    this.$emitter.on(EVENT_PIN_NAV_SAVE_CLICKED, this.loadFavorite.bind(this));
+    this.$emitter.on(
+      EVENT_PIN_NAV_EXPLORE_CLICKED,
+      this.loadExplore.bind(this),
+    );
+  }
+
+  createScrollObserver() {
     this.scrollObserver = new IntersectionObserver(
       (entries, io) => {
         entries.forEach(entry => {
@@ -49,22 +60,12 @@ export class PinList extends Component {
           }
         });
       },
-      { threshold: 0.7 }
-    );
-  }
-
-  mounted() {
-    this.loadPinList();
-
-    this.$emitter.on(EVENT_PIN_NAV_SAVE_CLICKED, this.loadFavorite.bind(this));
-    this.$emitter.on(
-      EVENT_PIN_NAV_EXPLORE_CLICKED,
-      this.loadExplore.bind(this)
+      { threshold: 0.7 },
     );
   }
 
   createPin(pin: Pin = createRandomPin(this.currentLoadedPinCount)) {
-    const appendElement = <PinItem>document.createElement("pin-item");
+    const appendElement = <PinItem>document.createElement('pin-item');
     appendElement.setPin(pin);
     appendElement.setState(this.$state);
     appendElement.setEmitter(this.$emitter);
@@ -96,7 +97,7 @@ export class PinList extends Component {
   }
 
   clear() {
-    this.$container.innerHTML = "";
+    this.$container.innerHTML = '';
     this.scrollObserver.disconnect();
   }
 
@@ -119,4 +120,4 @@ export class PinList extends Component {
   }
 }
 
-window.customElements.define("pin-list", PinList);
+window.customElements.define('pin-list', PinList);

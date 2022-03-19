@@ -1,10 +1,10 @@
-import { Component } from "@/core";
+import { Component } from '@/core';
 
 export declare type ElementBindArg = {
   elem: HTMLElement;
   attrName: string;
   attributeValue: string;
-}
+};
 
 export interface IElementBinder {
   setWatchElementValue(key: string | symbol, value: any): void;
@@ -58,7 +58,7 @@ export class ElementBinder implements IElementBinder {
   inputAttributeBind({ elem, attrName, attributeValue }: ElementBindArg) {
     this.$watchElements[attributeValue] = elem;
 
-    elem.addEventListener("input", ({ target }) => {
+    elem.addEventListener('input', ({ target }) => {
       const key = (target as HTMLInputElement)?.getAttribute(attrName);
 
       if (key == null) {
@@ -70,10 +70,10 @@ export class ElementBinder implements IElementBinder {
   }
 
   attrAttributeBind({ elem, attrName, attributeValue }: ElementBindArg) {
-    const mAttributeName = attrName.replaceAll("m-attr-", "");
-    if (mAttributeName === "checked") {
+    const mAttributeName = attrName.replaceAll('m-attr-', '');
+    if (mAttributeName === 'checked') {
       if (this.$data[attributeValue]) {
-        elem.setAttribute(mAttributeName, "checked");
+        elem.setAttribute(mAttributeName, 'checked');
       }
     } else {
       elem.setAttribute(mAttributeName, this.$data[attributeValue]);
@@ -85,16 +85,20 @@ export class ElementBinder implements IElementBinder {
       return;
     }
 
-    (<HTMLElement>this.$container).querySelectorAll("*").forEach(elem => {
+    (<HTMLElement>this.$container).querySelectorAll('*').forEach(elem => {
       elem.getAttributeNames().forEach(attrName => {
         const attributeValue = elem.getAttribute(attrName);
-        const bindingArguments: ElementBindArg = { elem, attrName, attributeValue } as ElementBindArg;
+        const bindingArguments: ElementBindArg = {
+          elem,
+          attrName,
+          attributeValue,
+        } as ElementBindArg;
 
-        if (attrName.startsWith("@")) {
+        if (attrName.startsWith('@')) {
           this.eventAttributeBind(bindingArguments);
-        } else if (attrName === "m-input-data") {
+        } else if (attrName === 'm-input-data') {
           this.inputAttributeBind(bindingArguments);
-        } else if (attrName.startsWith("m-attr")) {
+        } else if (attrName.startsWith('m-attr')) {
           this.attrAttributeBind(bindingArguments);
         }
       });

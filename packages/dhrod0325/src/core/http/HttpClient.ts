@@ -1,23 +1,23 @@
 export declare type RequestArg = {
   url: string;
   config?: RequestInit;
-  data?: object
-}
+  data?: object;
+};
 
 export class HttpClient {
   private readonly baseUrl: string;
 
-  constructor({ baseUrl = "" } = {}) {
+  constructor({ baseUrl = '' } = {}) {
     this.baseUrl = baseUrl;
   }
 
   async request({ url, config }: RequestArg) {
     config = {
-      ...{ headers: new Headers({ "content-type": "application/json" }) },
-      ...config
+      ...{ headers: new Headers({ 'content-type': 'application/json' }) },
+      ...config,
     };
 
-    const callUrl = url.startsWith("http") ? url : `${this.baseUrl}${url}`;
+    const callUrl = url.startsWith('http') ? url : `${this.baseUrl}${url}`;
 
     try {
       const response = await fetch(callUrl, config);
@@ -30,7 +30,7 @@ export class HttpClient {
   get({ url }: RequestArg) {
     return this.request({
       url,
-      config: { method: "GET" }
+      config: { method: 'GET' },
     });
   }
 
@@ -39,7 +39,7 @@ export class HttpClient {
 
     return this.request({
       url,
-      config: { body, method: "POST" }
+      config: { body, method: 'POST' },
     });
   }
 
@@ -48,7 +48,7 @@ export class HttpClient {
 
     return this.request({
       url,
-      config: { body, method: "DELETE" }
+      config: { body, method: 'DELETE' },
     });
   }
 }
