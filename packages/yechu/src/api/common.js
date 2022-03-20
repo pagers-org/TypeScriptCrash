@@ -1,5 +1,4 @@
-const BASE_URL = 'http://localhost:3000/api';
-
+import { BASE_URL } from '../constatnt/index.js';
 export async function fetchData(resource, data, method) {
   try {
     const response = await fetch(BASE_URL + resource, {

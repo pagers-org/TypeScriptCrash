@@ -1,7 +1,7 @@
 import '../assets/page/login.css';
 import { login, signup } from './api/index.js';
 import { $all, $ } from './helper/index.js';
-import { REG_EMAIL, LOGIN } from './constant';
+import { REG_EMAIL, LOGIN } from './constatnt';
 import { setUserInfo } from './helper/storage';
 
 function toggleForm() {
