@@ -1,14 +1,10 @@
-import { ObjectUtils, Value } from '@/core';
-
-export declare type ProxyCallbackData = {
-  beforeObject?: unknown;
-  obj?: unknown;
-  prop: string | symbol;
-  value?: unknown;
-};
+import { ObjectUtils, ProxyDataCallbackArgs, Value } from '@/core';
 
 export class ProxyData {
-  constructor(data: Value<any>, callback: (args: ProxyCallbackData) => void) {
+  constructor(
+    data: Value<any>,
+    callback: (args: ProxyDataCallbackArgs) => void,
+  ) {
     return new Proxy(data, {
       set: (obj, prop, value) => {
         if (obj[prop] === value) {
@@ -19,7 +15,7 @@ export class ProxyData {
 
         obj[prop] = value;
 
-        const callbackArgs: ProxyCallbackData = {
+        const callbackArgs: ProxyDataCallbackArgs = {
           beforeObject,
           obj,
           prop,

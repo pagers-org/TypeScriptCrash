@@ -1,9 +1,4 @@
-import { Component, EventEmitter } from '@/core';
-
-export declare type ComponentRequireArgs = {
-  state: any;
-  emitter: EventEmitter;
-};
+import { Component, ComponentRequireArgs } from '@/core';
 
 export class App {
   private container: Element | null;

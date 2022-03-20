@@ -16,7 +16,7 @@ export class Bookmark {
   }
 
   add(bookmark: BookmarkItem): void {
-    this.items = [...this.items, bookmark];
+    this.items = [...this.items, { ...bookmark }];
   }
 
   remove(url: number): void {

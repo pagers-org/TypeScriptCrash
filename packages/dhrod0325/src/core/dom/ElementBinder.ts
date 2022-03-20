@@ -1,22 +1,5 @@
-import { Component } from '@/core';
-
-export declare type ElementBindArg = {
-  elem: HTMLElement;
-  attrName: string;
-  attributeValue: string;
-};
-
-export interface IElementBinder {
-  setWatchElementValue(key: string | symbol, value: any): void;
-
-  eventAttributeBind({ elem, attrName, attributeValue }: ElementBindArg): void;
-
-  inputAttributeBind({ elem, attrName, attributeValue }: ElementBindArg): void;
-
-  attrAttributeBind({ elem, attrName, attributeValue }: ElementBindArg): void;
-
-  bindEvents(): void;
-}
+import { Component, ElementBindArgs } from '@/core';
+import { IElementBinder } from '@/core/interfaces';
 
 export class ElementBinder implements IElementBinder {
   private readonly $context: Component;
@@ -48,14 +31,14 @@ export class ElementBinder implements IElementBinder {
     dataBindElement.value = value;
   }
 
-  eventAttributeBind({ elem, attrName, attributeValue }: ElementBindArg) {
+  eventAttributeBind({ elem, attrName, attributeValue }: ElementBindArgs) {
     const eventName = attrName.substring(1, attrName.length);
     const method = this.$method[attributeValue].bind(this.$context);
 
     elem.addEventListener(eventName, method);
   }
 
-  inputAttributeBind({ elem, attrName, attributeValue }: ElementBindArg) {
+  inputAttributeBind({ elem, attrName, attributeValue }: ElementBindArgs) {
     this.$watchElements[attributeValue] = elem;
 
     elem.addEventListener('input', ({ target }) => {
@@ -69,7 +52,7 @@ export class ElementBinder implements IElementBinder {
     });
   }
 
-  attrAttributeBind({ elem, attrName, attributeValue }: ElementBindArg) {
+  attrAttributeBind({ elem, attrName, attributeValue }: ElementBindArgs) {
     const mAttributeName = attrName.replaceAll('m-attr-', '');
     if (mAttributeName === 'checked') {
       if (this.$data[attributeValue]) {
@@ -88,11 +71,11 @@ export class ElementBinder implements IElementBinder {
     (<HTMLElement>this.$container).querySelectorAll('*').forEach(elem => {
       elem.getAttributeNames().forEach(attrName => {
         const attributeValue = elem.getAttribute(attrName);
-        const bindingArguments: ElementBindArg = {
+        const bindingArguments: ElementBindArgs = {
           elem,
           attrName,
           attributeValue,
-        } as ElementBindArg;
+        } as ElementBindArgs;
 
         if (attrName.startsWith('@')) {
           this.eventAttributeBind(bindingArguments);

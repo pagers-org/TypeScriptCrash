@@ -1,8 +1,4 @@
-export interface IEventEmitter {
-  emit(eventName: string, data?: any): void;
-
-  on(eventName: string, callback: EventListenerOrEventListenerObject): void;
-}
+import { IEventEmitter } from '@/core';
 
 export class EventEmitter extends EventTarget implements IEventEmitter {
   emit(eventName: string, data: any = {}) {

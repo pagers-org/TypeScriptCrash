@@ -1,8 +1,4 @@
-export declare type RequestArg = {
-  url: string;
-  config?: RequestInit;
-  data?: object;
-};
+import { HttpRequestArgs } from '@/core';
 
 export class HttpClient {
   private readonly baseUrl: string;
@@ -11,7 +7,7 @@ export class HttpClient {
     this.baseUrl = baseUrl;
   }
 
-  async request({ url, config }: RequestArg) {
+  async request({ url, config }: HttpRequestArgs) {
     config = {
       ...{ headers: new Headers({ 'content-type': 'application/json' }) },
       ...config,
@@ -27,14 +23,14 @@ export class HttpClient {
     }
   }
 
-  get({ url }: RequestArg) {
+  get({ url }: HttpRequestArgs) {
     return this.request({
       url,
       config: { method: 'GET' },
     });
   }
 
-  post({ url, data = {} }: RequestArg) {
+  post({ url, data = {} }: HttpRequestArgs) {
     const body = JSON.stringify(data);
 
     return this.request({
@@ -43,7 +39,7 @@ export class HttpClient {
     });
   }
 
-  delete({ url, data = {} }: RequestArg) {
+  delete({ url, data = {} }: HttpRequestArgs) {
     const body = JSON.stringify(data);
 
     return this.request({

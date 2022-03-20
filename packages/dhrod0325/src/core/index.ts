@@ -20,3 +20,4 @@ export * from './utils/ObjectUtils';
 export * from './utils/DomUtils';
 
 export * from './types';
+export * from './interfaces';

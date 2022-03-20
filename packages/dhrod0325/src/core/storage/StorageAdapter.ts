@@ -1,8 +1,4 @@
-export interface IStorage<Key, Value> {
-  getItem(key: Key): Value;
-
-  setItem(key: Key, value: Value): void;
-}
+import { IStorage } from '@/core';
 
 export class StorageAdapter<Key, Value> {
   private storage: IStorage<Key, Value>;

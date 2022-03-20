@@ -1,5 +1,6 @@
 import { Component } from '@/core';
 import { KEY, storage, userApi } from '@/view';
+import { LoginParam } from '@/view/api/UserApi';
 
 const template = `
  <div class="login-wrapper">
@@ -51,13 +52,14 @@ export class LoginForm extends Component {
   async loginButtonClicked(e: Event) {
     e.preventDefault();
 
-    const { result, message, data } = await userApi.login(this.$data);
+    const { result, message, data } = await userApi.login(
+      this.$data as LoginParam,
+    );
 
     if (!result) {
       return alert(message);
     }
 
-    // @ts-ignore
     this.successLogin(data._id, data.email);
   }
 

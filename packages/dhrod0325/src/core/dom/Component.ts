@@ -1,35 +1,26 @@
 import {
   DomUtils,
   ElementBinder,
+  IComponent,
   IElementBinder,
   IEventEmitter,
-  ProxyCallbackData,
   ProxyData,
+  ProxyDataCallbackArgs,
   Value,
 } from '@/core';
-
-interface IComponent {
-  setUp(): void;
-
-  render(): void;
-
-  bindEvents(): void;
-
-  runMounted(): void;
-}
 
 export class Component extends HTMLElement implements IComponent {
   $container: HTMLElement;
 
   $state: Value<any>;
 
-  $emitter: IEventEmitter;
-
   $data: Value<any>;
 
   $method: object;
 
   $elementBinder: IElementBinder;
+
+  $emitter: IEventEmitter;
 
   private isMounted = false;
 
@@ -78,7 +69,7 @@ export class Component extends HTMLElement implements IComponent {
   }
 
   //TODO Refactoring
-  onDataChanged({ prop, value }: ProxyCallbackData): void {
+  onDataChanged({ prop, value }: ProxyDataCallbackArgs): void {
     this.$elementBinder.setWatchElementValue(prop, value);
   }
 
