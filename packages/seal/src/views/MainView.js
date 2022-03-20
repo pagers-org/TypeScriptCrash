@@ -37,7 +37,7 @@ export default class MainView {
   initializeTemplate() {
     this.element.innerHTML = this.template.initialize();
     this.loadMore();
-    $('.saved').style.display = 'none';
+    setDisplay($('.saved'), 'none');
   }
 
   checkLogin() {
