@@ -1,7 +1,7 @@
 import '../assets/page/login.css';
 import { fetchData } from './api/index.js';
 import { $, $all } from './helper/index.js';
-import { REGEX_EMAIL, STORAGE_KEY_NAMES } from './utils/constants';
+import { REGEX_EMAIL, STORAGE_KEY_NAMES, HOST_URL } from './utils/constants';
 import StorageMap from './utils/storageMap';
 
 const storageMap = new StorageMap(STORAGE_KEY_NAMES.USER_TOKEN);
@@ -46,5 +46,5 @@ $('button[data-submit="login"]').addEventListener('click', async event => {
   const { _id, email: userEmail } = data[0];
   alert(`환영합니다, ${userEmail}님!`);
   storageMap.setValue(_id);
-  location.replace('http://localhost:5510/');
+  location.replace(HOST_URL);
 });

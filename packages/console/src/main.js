@@ -2,7 +2,7 @@ import '../assets/index.css';
 import { fetchData } from './api';
 import { $, toggleLoading, debounce } from './helper/index.js';
 import StorageManager from './utils/storageMap';
-import { STORAGE_KEY_NAMES } from './utils/constants';
+import { STORAGE_KEY_NAMES, FOX_IMAGES_URL } from './utils/constants';
 
 const storageMap = new StorageManager(STORAGE_KEY_NAMES.USER_TOKEN);
 
@@ -16,13 +16,22 @@ const storageMap = new StorageManager(STORAGE_KEY_NAMES.USER_TOKEN);
 let globalIndex = 0;
 const _id = storageMap.getValue();
 const $main = $('main');
+
+const NAV_MENU = ['saved', 'explore', 'profile'];
+
+NAV_MENU.forEach(item =>
+  $(`input[id^=${item}]`).addEventListener('click', event =>
+    render(event, `#${item}`),
+  ),
+);
+
 const createPin = () => {
   toggleLoading();
   const pin = document.createElement('div');
   const buttonWrapper = document.createElement('div');
   const image = document.createElement('img');
   const random = Math.floor(Math.random() * 123) + 1;
-  image.src = `https://randomfox.ca/images/${random}.jpg`;
+  image.src = `${FOX_IMAGES_URL}${random}.jpg`;
   buttonWrapper.setAttribute('class', 'button-wrapper');
   buttonWrapper.innerHTML = createHeartElem(globalIndex, random, false);
 
@@ -70,15 +79,6 @@ const mainAddOrRemoveClass = (isAdd, className) => {
   $main.classList[method](className);
 };
 
-$('nav').addEventListener('click', async event => {
-  event.stopPropagation();
-  if (!event.target.matches('input')) return;
-
-  setMainInnerHtml('');
-  render(event, '#explore');
-  render(event, '#saved');
-});
-
 const render = (event, page) => {
   if (event.target.matches(page)) {
     switch (page) {
@@ -86,11 +86,18 @@ const render = (event, page) => {
         return renderExplorePage();
       case '#saved':
         return renderSavePage();
+      case '#profile':
+        return renderProfilePage();
     }
   }
 };
 
-const renderExplorePage = async () => {
+const renderProfilePage = () => {
+  mainAddOrRemoveClass(false, 'saved');
+  setMainInnerHtml(`<h1>profile</h1>`);
+};
+
+const renderExplorePage = () => {
   mainAddOrRemoveClass(false, 'saved');
   setMainInnerHtml(`
       <div class="container"></div>
@@ -124,6 +131,7 @@ const renderSavePage = async () => {
 $main.addEventListener('click', async ({ target }) => {
   const targetAttrKey = target.getAttribute('key');
   const requestUrl = `/user/bookmark/${targetAttrKey}`;
+
   if (targetAttrKey?.length > 3) {
     await fetchData('removeBookmark', requestUrl, { _id }, 'DELETE');
     renderSavePage();
