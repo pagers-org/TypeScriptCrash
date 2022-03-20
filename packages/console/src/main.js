@@ -15,7 +15,7 @@ const storageMap = new StorageManager(STORAGE_KEY_NAMES.USER_TOKEN);
 
 let globalIndex = 0;
 const _id = storageMap.getValue();
-
+const $main = $('main');
 const createPin = () => {
   toggleLoading();
   const pin = document.createElement('div');
@@ -62,12 +62,10 @@ window.addEventListener('scroll', () => {
 });
 
 const setMainInnerHtml = contents => {
-  const $main = $('main');
   $main.innerHTML = contents;
 };
 
-const mainAddRemoveClass = (isAdd, className) => {
-  const $main = $('main');
+const mainAddOrRemoveClass = (isAdd, className) => {
   const method = isAdd ? 'add' : 'remove';
   $main.classList[method](className);
 };
@@ -93,7 +91,7 @@ const render = (event, page) => {
 };
 
 const renderExplorePage = async () => {
-  mainAddRemoveClass(false, 'saved');
+  mainAddOrRemoveClass(false, 'saved');
   setMainInnerHtml(`
       <div class="container"></div>
       <div class="loader"></div>
@@ -103,7 +101,7 @@ const renderExplorePage = async () => {
 };
 
 const renderSavePage = async () => {
-  mainAddRemoveClass(true, 'saved');
+  mainAddOrRemoveClass(true, 'saved');
   const result = await fetchData('getBookmarkList', '/user/bookmark', { _id });
   const $content = `
     <div class="container">
@@ -123,7 +121,7 @@ const renderSavePage = async () => {
   setMainInnerHtml($content);
 };
 
-$('main').addEventListener('click', async ({ target }) => {
+$main.addEventListener('click', async ({ target }) => {
   const targetAttrKey = target.getAttribute('key');
   const requestUrl = `/user/bookmark/${targetAttrKey}`;
   if (targetAttrKey?.length > 3) {
@@ -140,9 +138,7 @@ $('main').addEventListener('click', async ({ target }) => {
     const result = await fetchData('getBookmarkList', '/user/bookmark', {
       _id,
     });
-    const selectedImage = result.filter(item => {
-      return item.url === targetAttrKey;
-    });
+    const selectedImage = result.filter(item => item.url === targetAttrKey);
     await fetchData(
       'removeBookmark',
       `/user/bookmark/${selectedImage[0]?._id}`,
@@ -151,6 +147,4 @@ $('main').addEventListener('click', async ({ target }) => {
     );
     return;
   }
-
-  if (!target.matches('label[for^="heart"]')) return;
 });
