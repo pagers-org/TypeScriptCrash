@@ -1,6 +1,11 @@
 import '../assets/index.css';
 import { addBookmark, getBookmarkList, removeBookmark } from './api/index';
-import { MAX_IMG_COUNT, TAB_EXPLORE, TAB_SAVED } from './constatnt';
+import {
+  MAX_IMG_COUNT,
+  TAB_EXPLORE,
+  TAB_SAVED,
+  FOX_IMG_URL,
+} from './constatnt';
 import { $, toggleLoading, debounce } from './helper/index.js';
 import { getUserInfo } from './helper/storage';
 
@@ -21,19 +26,23 @@ const createPin = () => {
   const buttonWrapper = document.createElement('div');
   const image = document.createElement('img');
   const random = Math.floor(Math.random() * MAX_IMG_COUNT) + 1;
-  image.src = `https://randomfox.ca/images/${random}.jpg`;
+  image.src = `${FOX_IMG_URL}/${random}.jpg`;
   buttonWrapper.setAttribute('class', 'button-wrapper');
-  buttonWrapper.innerHTML = `
-  <div class="anim-icon anim-icon-md heart">
-    <input type="checkbox" id="heart${globalIndex}" />
-    <label for="heart${globalIndex}" key=${random}></label>
-  </div>
-  `;
+  buttonWrapper.innerHTML = HeartButton(globalIndex, random);
   pin.classList.add('pin');
   pin.appendChild(buttonWrapper);
   pin.appendChild(image);
   toggleLoading();
   return pin;
+};
+
+const HeartButton = (id, key, isSaved) => {
+  return `
+  <div class="anim-icon anim-icon-md heart">
+    <input type="checkbox" id="heart${id}" ${isSaved && 'checked'}/>
+    <label for="heart${id}" key=${isSaved ? key._id : key}></label>
+  </div>
+  `;
 };
 
 const loadMore = debounce(() => {
@@ -87,25 +96,22 @@ const changeTab = async tabName => {
     });
     const $content = `
     <div class="container">
-    ${result
-        .map(
-          ({ _id, url }, index) =>
-            `
-      <div class="pin">
-        <div class="button-wrapper">
-          <div class="anim-icon anim-icon-md heart">
-            <input type="checkbox" id="heart${index}" checked>
-            <label for="heart${index}" key=${_id}></label>
-          </div>
-        </div><img src="https://randomfox.ca/images/${url}.jpg">
-      </div>`,
-        )
-        .join('')}
+    ${result.map((item, index) => renderSavedPin(index, item)).join('')}
     </div>
     `;
 
     $main.innerHTML = $content;
   }
+};
+
+const renderSavedPin = (id, item) => {
+  return `
+  <div class="pin">
+        <div class="button-wrapper">
+          ${HeartButton(id, item, true)}
+        </div><img src="${FOX_IMG_URL}/${item.url}.jpg">
+      </div>
+  `;
 };
 
 $('main').addEventListener('click', async event => {
