@@ -1,5 +1,6 @@
 import '../assets/index.css';
-import { addBookmark, getBookmarkList } from './api/index';
+import { addBookmark, getBookmarkList, removeBookmark } from './api/index';
+import { MAX_IMG_COUNT, TAB_EXPLORE, TAB_SAVED } from './constatnt';
 import { $, toggleLoading, debounce } from './helper/index.js';
 import { getUserInfo } from './helper/storage';
 
@@ -19,7 +20,7 @@ const createPin = () => {
   const pin = document.createElement('div');
   const buttonWrapper = document.createElement('div');
   const image = document.createElement('img');
-  const random = Math.floor(Math.random() * 123) + 1;
+  const random = Math.floor(Math.random() * MAX_IMG_COUNT) + 1;
   image.src = `https://randomfox.ca/images/${random}.jpg`;
   buttonWrapper.setAttribute('class', 'button-wrapper');
   buttonWrapper.innerHTML = `
@@ -53,14 +54,20 @@ window.addEventListener('scroll', () => {
   loadMore();
 });
 
-$('nav').addEventListener('click', async event => {
+$('nav').addEventListener('click', event => {
   event.stopPropagation();
+
   if (!event.target.matches('input')) return;
 
+  const tabName = event.target.id;
+  changeTab(tabName);
+});
+
+const changeTab = async tabName => {
   const $main = $('main');
   $main.innerHTML = '';
 
-  if (event.target.matches('#explore')) {
+  if (tabName === TAB_EXPLORE) {
     $main.classList.remove('saved');
     $main.innerHTML = `
       <div class="container"></div>
@@ -69,17 +76,21 @@ $('nav').addEventListener('click', async event => {
 
     globalIndex = 0;
     loadMore();
+
+    return;
   }
 
-  if (event.target.matches('#saved')) {
+  if (tabName === TAB_SAVED) {
     $main.classList.add('saved');
-    const result = await getBookmarkList('/user/bookmark', { _id: userId });
+    const result = await getBookmarkList('/user/bookmark', {
+      _id: getUserId(),
+    });
     const $content = `
     <div class="container">
     ${result
-      .map(
-        ({ _id, url }, index) =>
-          `
+        .map(
+          ({ _id, url }, index) =>
+            `
       <div class="pin">
         <div class="button-wrapper">
           <div class="anim-icon anim-icon-md heart">
@@ -88,19 +99,32 @@ $('nav').addEventListener('click', async event => {
           </div>
         </div><img src="https://randomfox.ca/images/${url}.jpg">
       </div>`,
-      )
-      .join('')}
+        )
+        .join('')}
     </div>
     `;
 
     $main.innerHTML = $content;
   }
-});
+};
 
 $('main').addEventListener('click', async event => {
   if (!event.target.matches('label[for^="heart"]')) return;
-  await addBookmark(`/user/bookmark/${event.target.getAttribute('key')}`, {
+  const bookmarkId = event.target.getAttribute('key');
+  const selectedPin = event.target.closest('.pin');
+
+  const isSavedTab = $('main').classList.contains('saved');
+  if (!isSavedTab) {
+    await addBookmark(`/user/bookmark/${bookmarkId}`, {
+      _id: getUserId(),
+    });
+    console.log('북마크에 추가');
+    return;
+  }
+
+  await removeBookmark(`/user/bookmark/${bookmarkId}`, {
     _id: getUserId(),
   });
-  console.log('북마크에 저장되었습니다.');
+  selectedPin.style.display = 'none';
+  console.log('북마크에서 제거');
 });
