@@ -1,6 +1,10 @@
 import '../assets/page/login.css';
-import { login, signup } from './api/index.js';
+import { fetchData } from './api/index.js';
 import { $, $all } from './helper/index.js';
+import { REGEX_EMAIL, STORAGE_KEY_NAMES, HOST_URL } from './utils/constants';
+import StorageMap from './utils/storageMap';
+
+const storageMap = new StorageMap(STORAGE_KEY_NAMES.USER_TOKEN);
 
 $all('.message a').forEach(tag => {
   tag.addEventListener('click', () => {
@@ -18,11 +22,9 @@ $('button[data-submit="signup"]').addEventListener('click', async event => {
   const passwordConfirm = $('#signup-password-confirm').value;
 
   if (password !== passwordConfirm) return alert('패스워드를 확인해주세요.');
-  const regEmail =
-    /^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
-  if (!regEmail.test(email)) return alert('옳지 않은 이메일 형식입니다.');
+  if (!REGEX_EMAIL.test(email)) return alert('옳지 않은 이메일 형식입니다.');
 
-  await signup('http://localhost:3000/api/user', {
+  await fetchData('sign up', '/user', {
     email,
     password,
     status: 0,
@@ -37,12 +39,12 @@ $('button[data-submit="login"]').addEventListener('click', async event => {
   const email = $('#login-email').value;
   const password = $('#login-password').value;
 
-  const data = await login('http://localhost:3000/api/user/login', {
+  const data = await fetchData('login', '/user/login', {
     email,
     password,
   });
   const { _id, email: userEmail } = data[0];
   alert(`환영합니다, ${userEmail}님!`);
-  localStorage.setItem('user_token', _id);
-  location.replace('http://localhost:5510/');
+  storageMap.setValue(_id);
+  location.replace(HOST_URL);
 });
