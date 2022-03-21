@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Foxstagram</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
 </head>
 
@@ -13,6 +13,7 @@
   <div class="app">
     <header>
       <nav>
+        <!-- 나의 프로필 -->
         <!-- <div class="item">
           <input type="radio" name="menubtn" id="profile" checked />
           <label for="profile" data-label="profile">
@@ -27,6 +28,7 @@
           </label>
         </div> -->
 
+        <!-- 여우 사진 목록 -->
         <div class="item">
           <input type="radio" name="menubtn" id="explore" checked />
           <label for="explore" data-label="explore">
@@ -45,6 +47,7 @@
           </label>
         </div>
 
+        <!-- 여우 사진 북마크 -->
         <div class="item">
           <input type="radio" name="menubtn" id="saved" />
           <label for="saved" data-label="saved">
@@ -57,11 +60,14 @@
         </div>
       </nav>
     </header>
+
     <main>
       <div class="container"></div>
       <div class="loader"></div>
     </main>
   </div>
+
+  <!-- 로딩 svg -->
   <section class="loading hidden">
     <svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0" width="160px" height="20px" viewBox="0 0 128 16"
