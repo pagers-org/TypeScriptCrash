@@ -1,1 +1,8 @@
-### 첫 만남 회고
+pages
+  - main
+  - login
+
+components
+  - profile
+  - explore
+  - bookmark
