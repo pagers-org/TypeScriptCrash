@@ -11,7 +11,6 @@ const storageManager = new StorageManager(STORAGE_KEY_NAMES.USER_TOKEN);
 
   location.replace('./login.html');
 })();
-
 let globalIndex = 0;
 const _id = storageManager.getItemProps();
 const $main = $('main');
@@ -69,12 +68,27 @@ $nav.addEventListener('click', async event => {
   $main.innerHTML = '';
 
   if (event.target.matches('#explore')) {
-    renderExplorePage();
+    new RenderPage('#explore').explore();
   }
   if (event.target.matches('#saved')) {
-    renderSavePage();
+    new RenderPage('#saved').save();
   }
 });
+
+class RenderPage {
+  constructor(mathchName) {
+    this.mathchName = mathchName;
+  }
+}
+let matchesThis = {
+  explore() {
+    return renderExplorePage();
+  },
+  save() {
+    return renderSavePage();
+  },
+};
+Object.assign(RenderPage.prototype, matchesThis);
 
 const renderExplorePage = async () => {
   $main.classList.remove('saved');
