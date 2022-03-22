@@ -1,54 +1,46 @@
-export async function login(url, data) {
-  const config = {
-    method: 'POST',
-    headers: new Headers({ 'content-type': 'application/json' }),
-  };
-  if (data) config.body = JSON.stringify(data);
-  const response = await fetch(url, config);
-  const parse = await response.json();
-  return parse;
-}
+import { HTTP_METHODS, IMAGE_API_URL } from '../constants';
+import client from './config';
 
-export async function signup(url, data) {
-  const config = {
-    method: 'POST',
-    headers: new Headers({ 'content-type': 'application/json' }),
-  };
-  if (data) config.body = JSON.stringify(data);
-  const response = await fetch(url, config);
-  const parse = await response.json();
-  return parse;
-}
+export const signup = async body => {
+  const response = await client.request({
+    method: HTTP_METHODS.POST,
+    url: '/api/user',
+    body,
+  });
 
-export async function getBookmarkList(url, data) {
-  const config = {
-    method: 'POST',
-    headers: new Headers({ 'content-type': 'application/json' }),
-  };
-  if (data) config.body = JSON.stringify(data);
-  const response = await fetch(url, config);
-  const parse = await response.json();
-  return parse;
-}
+  return response;
+};
 
-export async function addBookmark(url, data) {
-  const config = {
-    method: 'POST',
-    headers: new Headers({ 'content-type': 'application/json' }),
-  };
-  if (data) config.body = JSON.stringify(data);
-  const response = await fetch(url, config);
-  const parse = await response.json();
-  return parse;
-}
+export const login = async body => {
+  const response = await client.request({
+    method: HTTP_METHODS.POST,
+    url: '/api/user/login',
+    body,
+  });
 
-export async function removeBookmark(url, data) {
-  const config = {
-    method: 'DELETE',
-    headers: new Headers({ 'content-type': 'application/json' }),
-  };
-  if (data) config.body = JSON.stringify(data);
-  const response = await fetch(url, config);
-  const parse = await response.json();
-  return parse;
-}
+  return response;
+};
+
+export const getBookmarkList = async body => {
+  const response = await client.request({
+    method: HTTP_METHODS.POST,
+    url: '/api/user/bookmark',
+    body,
+  });
+
+  return response;
+};
+
+export const setBookmark = async (key, body) => {
+  const response = client.request({
+    method: HTTP_METHODS.POST,
+    url: `/api/user/bookmark/${key}`,
+    body,
+  });
+
+  return response;
+};
+
+export const getFoxImages = async foxNumber => {
+  return fetch(`${IMAGE_API_URL}/${foxNumber}.jpg`);
+};
