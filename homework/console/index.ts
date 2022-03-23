@@ -10,9 +10,9 @@ interface ContactsInterface {
 
 type PhoneType = 'home' | 'office' | 'studio';
 
-interface IndexInterface {
-  [key: string]: { num: number };
-}
+type IndexInterface = {
+  [key in PhoneType]?: { num: number };
+};
 
 function fetchContacts(): Promise<ContactsInterface[]> {
   const contacts: ContactsInterface[] = [
@@ -84,7 +84,7 @@ class AddressBook {
     phoneType: PhoneType,
   ): ContactsInterface[] {
     return this.contacts.filter(
-      contact => contact.phones[phoneType].num === phoneNumber,
+      contact => contact.phones[phoneType]?.num === phoneNumber,
     );
   }
 
