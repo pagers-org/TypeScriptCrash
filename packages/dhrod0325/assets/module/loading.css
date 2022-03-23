@@ -1,0 +1,23 @@
+.loading {
+  transition: all ease-in-out .2s;
+  opacity: 1;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgb(255, 255, 255, 0.8);
+  z-index: 10;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  overflow: hidden !important;
+  touch-action: none;
+}
+
+.hidden {
+  opacity: 0;
+  visibility: hidden;
+}

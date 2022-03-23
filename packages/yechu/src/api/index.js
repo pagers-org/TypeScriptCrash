@@ -1,54 +1,21 @@
-export async function login(url, data) {
-  const config = {
-    method: 'POST',
-    headers: new Headers({ 'content-type': 'application/json' }),
-  };
-  if (data) config.body = JSON.stringify(data);
-  const response = await fetch(url, config);
-  const parse = await response.json();
-  return parse;
+import { fetchData } from './common';
+
+export async function getBookmarkList(resource, data) {
+  return await fetchData(resource, data, 'POST');
 }
 
-export async function signup(url, data) {
-  const config = {
-    method: 'POST',
-    headers: new Headers({ 'content-type': 'application/json' }),
-  };
-  if (data) config.body = JSON.stringify(data);
-  const response = await fetch(url, config);
-  const parse = await response.json();
-  return parse;
+export async function addBookmark(resource, data) {
+  return await fetchData(resource, data, 'POST');
 }
 
-export async function getBookmarkList(url, data) {
-  const config = {
-    method: 'POST',
-    headers: new Headers({ 'content-type': 'application/json' }),
-  };
-  if (data) config.body = JSON.stringify(data);
-  const response = await fetch(url, config);
-  const parse = await response.json();
-  return parse;
+export async function removeBookmark(resource, data) {
+  return await fetchData(resource, data, 'DELETE');
 }
 
-export async function addBookmark(url, data) {
-  const config = {
-    method: 'POST',
-    headers: new Headers({ 'content-type': 'application/json' }),
-  };
-  if (data) config.body = JSON.stringify(data);
-  const response = await fetch(url, config);
-  const parse = await response.json();
-  return parse;
+export async function login(resource, data) {
+  return await fetchData(resource, data, 'POST');
 }
 
-export async function removeBookmark(url, data) {
-  const config = {
-    method: 'DELETE',
-    headers: new Headers({ 'content-type': 'application/json' }),
-  };
-  if (data) config.body = JSON.stringify(data);
-  const response = await fetch(url, config);
-  const parse = await response.json();
-  return parse;
+export async function signup(resource, data) {
+  return await fetchData(resource, data, 'POST');
 }
