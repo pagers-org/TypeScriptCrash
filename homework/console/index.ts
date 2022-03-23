@@ -2,20 +2,20 @@
 // TODO: 아래 함수의 반환 타입을 지정해보세요.
 export {};
 
-interface IContacts {
+interface ContactsInterface {
   name: string;
   address: string;
-  phones: IndexType;
+  phones: IndexInterface;
 }
 
-type TypeOfPhone = 'home' | 'office' | 'studio';
+type PhoneType = 'home' | 'office' | 'studio';
 
-interface IndexType {
+interface IndexInterface {
   [key: string]: { num: number };
 }
 
-function fetchContacts(): Promise<IContacts[]> {
-  const contacts: IContacts[] = [
+function fetchContacts(): Promise<ContactsInterface[]> {
+  const contacts: ContactsInterface[] = [
     {
       name: 'Tony',
       address: 'Malibu',
@@ -58,34 +58,37 @@ function fetchContacts(): Promise<IContacts[]> {
 // main
 class AddressBook {
   // TODO: 아래 변수의 타입을 지정해보세요.
-  contacts: IContacts[] = [];
+  contacts: ContactsInterface[] = [];
 
   constructor() {
     this.fetchData();
   }
 
-  fetchData() {
+  fetchData(): void {
     fetchContacts().then(response => {
       this.contacts = response;
     });
   }
 
   /* TODO: 아래 함수들의 파라미터 타입과 반환 타입을 지정해보세요 */
-  findContactByName(name: string): IContacts[] {
+  findContactByName(name: string): ContactsInterface[] {
     return this.contacts.filter(contact => contact.name === name);
   }
 
-  findContactByAddress(address: string): IContacts[] {
+  findContactByAddress(address: string): ContactsInterface[] {
     return this.contacts.filter(contact => contact.address === address);
   }
 
-  findContactByPhone(phoneNumber: number, phoneType: TypeOfPhone): IContacts[] {
+  findContactByPhone(
+    phoneNumber: number,
+    phoneType: PhoneType,
+  ): ContactsInterface[] {
     return this.contacts.filter(
       contact => contact.phones[phoneType].num === phoneNumber,
     );
   }
 
-  addContact(contact: IContacts): void {
+  addContact(contact: ContactsInterface): void {
     this.contacts.push(contact);
   }
 
