@@ -79,9 +79,9 @@ class AddressBook {
     return this.contacts.filter(contact => contact.address === address);
   }
 
-  findContactByPhone(phoneNumber: number, phoneType: string): IContacts[] {
+  findContactByPhone(phoneNumber: number, phoneType: TypeOfPhone): IContacts[] {
     return this.contacts.filter(
-      contact => contact.phones[phoneType as TypeOfPhone].num === phoneNumber,
+      contact => contact.phones[phoneType].num === phoneNumber,
     );
   }
 

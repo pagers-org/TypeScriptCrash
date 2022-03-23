@@ -12,6 +12,7 @@ const storageMap = new StorageManager(STORAGE_KEY_NAMES.USER_TOKEN);
 
   location.replace('./login.html');
 })();
+
 let globalIndex = 0;
 const _id = storageMap.getValue();
 const $main = $('main');
