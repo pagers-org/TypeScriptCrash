@@ -510,3 +510,294 @@ getShoppingItemOption("name");
 
 // 가장 많이 사용되는 곳은 API의 호출 후 응답에 대한 규칙을 정의하는 곳이다.
 ```
+
+<br>
+
+## 타입 추론(Type Inference)
+```ts
+/* 타입 추론 기본 1 */
+
+// TypeScript Language Server가 타입 추론을 함
+let a;  // type: any
+let b = 10; // type: number
+let c = '10' // type: string
+
+// // return type: any
+// function getA(a) {
+//     return a;
+// }
+
+// // return type: number
+// function getB(b) {
+//     return b;
+// }
+
+// default 값 설정, return type: number
+function getA(a = 10) {
+    return a;
+}
+
+// default 값 설정 연산을 통한 타입 변경, return type: string
+function getB(a = 10) {
+    return c + a;
+}
+
+/* 타입 추론 기본 2 : 인터페이스와 제네릭을 이용한 타입 추론 방식 */
+// interface Dropdown<T> {
+//     value: T;
+//     title: string;
+// }
+
+// // type: string
+// let shoppingItem: Dropdown<string> = {
+//     value: 'abc',
+//     title: 'hello',
+// }
+
+/* 타입 추론 기본 3 : 복잡한 구조에서의 타입 추론 방식 */
+interface Dropdown<T> {
+    value: T;
+    title: string;
+}
+
+interface DetailedDropdown<K> extends Dropdown<K> {
+    description: string;
+    tag: K;
+}
+
+// type: string
+let detailedItem: DetailedDropdown<string> = {
+    title: 'abc',
+    description: 'ab',
+    value: 'a',
+    tag: 'a'
+}
+
+/* Best Common Type */
+let arr = [1, 2, true, true, 'a', 3];
+```
+
+<br>
+
+## 타입 단언(Type Assertion)
+```ts
+/* 타입 단언(type assertion) */
+// type: any의 경우 중간에 변수 할당을 한다면 타입 추론이 any로 고정된다.
+let a;
+a = 20;
+a = 'a'
+let b = a;  // type: string이 아니라 type: any임
+let c = a as string; // type: string으로 강제 추론하는 것(개발자가 더 타입을 확실하게 아니까 너는 이렇게 선언해라)
+
+// DOM API(웹 페이지의 태그 정보)를 조작할때 가장 많이 사용된다.
+
+// <div id="app" > hi < /div>
+
+let div = document.querySelector('div'); // div가 있다는 보장이 불가능함
+// 일반적으로 존재여부를 확인하고 아래 처럼 로직을 진행한다.
+if (div) {
+    div.innerText
+}
+
+// 타입 단언을 활용
+let div2 = document.querySelector('div') as HTMLDivElement;
+div2.innerText;
+```
+
+<br>
+
+## 타입 가드(Type Guard)
+```ts
+interface Developer {
+    name: string;
+    skill: string;
+}
+
+interface Person {
+    name: string;
+    age: number;
+}
+
+function introduce(): Developer | Person {
+    return {name: 'Tony', age: 33, skill: 'Iron Making'};
+}
+let tony = introduce();
+console.log(tony.skill);    // 에러 : skill, age는 공통된 속성이 아니므로 name만 접근 가능
+
+// 보장됨. 그러나 단언이 반복되면서 가독성이 떨어짐.
+if ((tony as Developer).skill) {
+    let skill = (tony as Developer).skill;
+    console.log(skill);
+} else if ((tony as Person).age) {
+    let age = (tony as Person).age;
+    console.log(age);
+}
+
+// 타입 가드 사용하기 : 아래 함수를 통과하고 나면 type을 체크할 수 있다.
+function isDeveloper(target: Developer | Person): target is Developer {
+    return (target as Developer).skill !== undefined;
+}
+
+if (isDeveloper(tony)) {
+    tony.skill;
+} else {
+    tony.age;
+}
+```
+
+<br>
+
+## 타입 호환(Type Compatibility)
+```ts
+/* 타입 호환 1 : 인터페이스, 클래스 */
+interface Developer {
+    name: string;
+    skill: string;
+}
+
+interface Person {
+    name: string;
+}
+
+let developer: Developer;
+let person: Person;
+// developer = person; // 에러 : 왼쪽에 있는 타입은 구조적으로 오른쪽보다 크기때문에 불가능함.
+person = developer; // 할당 대상 <= 할당자
+
+// 그렇다면?
+class Person {
+    name: string;
+}
+// developer = new Person(); // 에러 : 왼쪽에 있는 타입은 구조적으로 오른쪽보다 크기때문에 불가능함.
+
+/* 타입 호환 2 : 함수, 제네릭 */
+// 함수
+// 비교를 위해 함수 표현식으로 선언
+let add = function (a: number) { }
+let sum = function (a: number, b: number) { }
+
+sum = add;  // 에러 : 구조적으로 가능
+add = sum;  // 에러 : 구조적으로 불가능
+
+// 제네릭
+// 구조적인 타입의 차이가 없음
+interface Empty<T> {
+}
+let emptyOne: Empty<string>;
+let emptyTwo: Empty<number>;
+emptyOne = emptyTwo;
+emptyTwo = emptyOne;
+
+// 구조적인 타입의 차이가 생김 : 인터페이스 내부에서 변수에 타입을 할당하므로
+interface NotEmpty<T> {
+    data: T;
+}
+let notEmptyOne: NotEmpty<string>;
+let notEmptyTwo: NotEmpty<number>;
+notEmptyOne = notEmptyTwo;  // 불가능
+notEmptyTwo = notEmptyOne;  // 불가능
+```
+
+<br>
+
+## 유틸리티 타입(Utility Type)
+```ts
+/* Utility - Pick */
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  brand: string;
+  stock: number;
+}
+
+// 1. 상품 목록을 받아오기 위한 API 함수
+function fetchProducts(): Promise<Product> {
+  return new Promise<Product>((resolve) => {});
+}
+
+// 2. 특정 상품의 상세 정보를 불러오는 API 함수 : 특정 속성만 가져오는 경우 interface 전체의 속성을 필요로 하지 않는다.
+// Product !== {id, name, price}
+// function displayProductDetail(shoppingItem: {
+//   id: number;
+//   name: string;
+//   price: number;
+// }) {}
+
+// 두 가지 방법 1: 인터페이스 분리
+// interface ProductDetail {
+//   id: number;
+//   name: string;
+//   price: number;
+// }
+// function displayProductDetail(shoppingItem: ProductDetail) {}
+
+// 두 가지 방법 2: 유틸리티 타입 - Pick
+type ShoppingItem = Pick<Product, 'id' | 'name' | 'price'>;
+function displayProductDetail(shoppingItem: ShoppingItem) {}
+
+// 3. 특정 상품 정보를 업데이트(갱신)하는 함수
+// interface UpdateProduct {
+//   id?: number;   // ? 는 Optional로 any와 비슷하다. 있어도 그만, 없어도 그만.
+//   name?: string;
+//   price?: number;
+//   brand?: string;
+//   stock?: number;
+// }
+// function updateProductItem(productItem: UpdateProduct) {}
+type UpdateProduct = Partial<Product>;
+function updateProductItem(productItem: UpdateProduct) {} // 동일한 결과
+
+// 4. 유틸리티 타입 구현하기 - Partial
+interface UserProfile {
+  username: string;
+  email: string;
+  profilePhotoUrl: string;
+}
+// interface UserProfileUpdate {
+//   username?: string;
+//   email?: string;
+//   profilePhotoUrl?: string;
+// }
+
+// #1 첫번째 시도 - 옵셔널 사용, interface가 가지고 있는 각각의 키-밸류값을 가져온다.
+// type UserProfileUpdate = {
+//   username?: UserProfile['username'];
+//   email?: UserProfile['email'];
+//   profilePhotoUrl?: UserProfile['profilePhotoUrl'];
+// };
+
+// #2 두번째 시도 - 축약형 : 인덱스 오브 시그니쳐를 사용한다.
+// type UserProfileUpdate = {
+//   // for...in과 동일한 반복문으로 Mapped Type이라고도 함
+//   [p in 'username' | 'email' | 'profilePhotoUrl']?: UserProfile[p]; // Partial 처럼 동작하게 구현한 것이지, Partial이 아님
+// };
+// type UserProfileKeys = keyof UserProfile;    // p in ...과 동일한 형태임
+
+// #3 세번째 시도 - keyof 구문으로 변경하기
+type UserProfileUpdate = {
+  [p in keyof UserProfile]?: UserProfile[p]; // 기존 선언한 타입에 대해서만 강제성을 가짐
+};
+
+// #4 네번째 시도 - Partial 형태
+type Subset<T> = {
+  [p in keyof T]?: T[p]; // 제네릭으로 넘겨주는 타입에 따라 유동적일 수 있음. 이게 Partial임
+};
+```
+
+<br>
+
+## 맵드 타입(Mapped Type)
+```ts
+type Heroes = 'Hulk' | 'Capt' | 'Thor';
+// JavaScript의 for...in과 같음
+// 인터페이스와 같은 형태로 정의됨
+type HeroAges = { [K in Heroes]: number };
+const ages: HeroAges = {
+  Hulk: 33,
+  Capt: 100,
+  Thor: 1000,
+};
+```
+
+<br>
