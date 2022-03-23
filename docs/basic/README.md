@@ -217,3 +217,296 @@ function getTodo(todo: Todo) {}
 //     age: number;
 // }
 ```
+
+<br>
+
+## 타입 연산자(Union, Intersection)
+```ts
+//연산자 - Union Type
+
+// function logMessage(value: any) {
+//     console.log(value);
+// }
+// logMessage('hello');
+// logMessage(100);
+
+let seho: string | number | boolean;
+function logMessage(value: string | number) {
+    // 타입스크립트가 가지는 코드 추론 : Union Type의 특징 중 하나
+    if (typeof value === 'number') {
+        // 자동으로 number 관련 함수랑 매핑됨
+    }
+    if (typeof value === 'string') {
+        // 자동으로 string 관련 함수랑 매핑됨
+    }
+
+    throw new TypeError('value must be string or number');
+}
+logMessage('hello');
+logMessage(100);
+
+
+// Union의 특징
+interface Developer {
+    name: string;
+    skill: string;
+}
+
+interface Person {
+    name: string;
+    age: number;
+}
+
+function askSomeone(someone: Developer | Person) {
+    // 모든 속성을 전부 추론해줄 수 있을거라 생각했지만...
+    someone.name; // 추론으로는 공통적인 (name) 프로퍼티 밖에 접근하지 못함
+    // type-safe 하지 않은 상황이 올 수 있으므로 공통적인 속성-보장된 속성만 제공되는 것
+}
+
+/********************************************************************************/
+
+//연산자 - Intersection Type
+let kein: string | number | boolean;
+let capt: string & number & boolean;
+
+function askSomeone2(someone: Developer & Person) {
+    // 모든 속성을 전부 추론해준다.
+    someone.age;
+    someone.name;
+    someone.skill;
+}
+
+/********************************************************************************/
+// | 와 & 의 차이점
+
+// Developer의 규격
+askSomeone({ name: '개발자', skill: '타입스크립트' });
+// Person의 규격
+askSomeone({ name: '캡틴', age: 100 });
+
+// Developer + Person의 규격
+askSomeone2({ name: '개발자', skill: '타입스크립트', age: 100 });
+```
+
+<br>
+
+## enum
+```ts
+// enum : 특정 값들의 집합
+
+// 별도의 값을 정의하지 않으면 숫자로 취급
+enum Shoes {
+    Nike,
+    Adidas,
+}
+
+let myShoes = Shoes.Nike;
+console.log(myShoes); // 0
+
+// 문자 enum
+enum Shoes2 {
+    Nike = '나이키',
+    Adidas = '아디다스',
+}
+
+let myShoes2 = Shoes2.Nike;
+console.log(myShoes2); // 나이키
+
+// 이러면 확장성이 낮음 : enum을 활용해보자
+// function askQuestion(answer: string) {
+//     if (answer === 'yes') {
+//         console.log("정답입니다.");
+//     }
+//     if (answer === 'no') {
+//         console.log("오답입니다.");
+//     }
+// }
+
+// 드롭다운 형태에 자주 씀
+enum Answer {
+    Yes = "Y",
+    No = "N",
+}
+
+function askQuestion(answer: Answer) {
+    if (answer === Answer.Yes) {
+        console.log("정답입니다.");
+    }
+    if (answer === Answer.No) {
+        console.log("오답입니다.");
+    }
+}
+
+askQuestion(Answer.Yes);
+askQuestion('Yes');
+// askQuestion('예스');
+// askQuestion('y');
+// askQuestion('Yes');
+```
+
+<br>
+
+## 클래스(Class)
+```ts
+class Person2 {
+    // 멤버변수 정의
+    private name: string;   // 클래스 내부에서만 접근 가능
+    public age: number;     // 어디에서나 접근 가능
+    readonly log: string;   // 읽기만 가능, 값을 변경할 수 없음
+
+    constructor(name: string, age: number) {
+        this.name = name;
+        this.age = age;
+    }
+}
+
+// 리액트 예전 문법 - 클래스 기반 코드
+class App extends React.Component {
+
+}
+
+// 리액트 최신 문법 - 훅 기반의 함수영 코드
+function App() {
+    return <div>Heelo World < /div>
+}
+
+// 뷰 컴포지션 API
+new Vue({
+    el:'',
+    setup(){
+
+    }
+})
+```
+
+<br>
+
+## 제네릭(Generic)
+```ts
+/* 기본적인 제네릭 함수 */
+
+// // 파라미터를 그대로 돌려주는 함수
+// function logText(text) {
+//     console.log(text);
+//     return text;
+// }
+
+// logText(10);        // 숫자 10
+// logText('안녕');    // 문자열 안녕
+// logText(true);      // 진위값 true
+
+// // 제네릭 적용하기
+// function logtext<T>(text: T): T {
+//     console.log(text);
+//     return text;
+// }
+
+// logtext<number>(10);
+// logtext<string>('하이');
+// logtext<boolean>(true);
+
+/* 기존 타입 정의 방식과 제네릭의 차이점 - 함수 중복 선언의 단점 */
+// 코드가 동일한데 단순 타입이 다르다는 이유로 비슷한 함수를 늘려나가는건 매우 비효율적이다.
+// function logNumber(num: number) {
+//     console.log(num);
+//     return num;
+// }
+
+// function logText(text: string) {
+//     console.log(text);
+//     text.split('').reverse().join('');
+//     return text;
+// }
+
+// const num = logNumber(10);
+// logText('안녕');    // split으로 인해 문자열만 받을 수 있다.
+// logText(true);
+
+/* 기존 타입 정의 방식과 제네릭의 차이점 - 유니온 타입을 이용한 선언 방식의 문제점 */
+// function logText(text: string | number) {
+//     console.log(text);
+//     // string과 number에 공통으로 사용되는 API만 제공한다.
+//     return text;
+// }
+
+// logText(10);        // 숫자 10
+// const a = logText('안녕');    // 문자열 안녕
+// // a도 여전히 string과 number에 공통으로 사용되는 API만 제공된다.
+
+/* 제네릭의 장점과 타입 추론에서의 이점 */
+function logText<T>(text: T): T {
+    console.log(text);
+    return text;
+}
+
+// 1. 타입이 틀어지지 않게 잘 구성할 수 있다.
+// 2. 동일한 함수에 대해 분리가 가능하다.
+const str = logText<string>('안녕');
+str.split('');
+const login = logText<boolean>(true);
+login.valueOf();
+
+
+/* 인터페이스에 제네릭을 선언하는 방법 */
+// interface Dropdown {
+//     value: string;
+//     selected: boolean;
+// }
+
+// const obj: Dropdown = {value: 10, selected: false}; // 에러
+
+interface Dropdown2<T> {
+    value: T;
+    selected: boolean;
+}
+
+const obj2: Dropdown2<string> = {value: 'abc', selected: false};    // 정상
+const obj21: Dropdown2<number> = {value: 10, selected: false};    // 정상
+
+
+/* 제네릭의 타입 제한 */
+// 제네릭으로 받은 타입을 배열로 활용하겠다라고 제한
+// function logTextLength<T>(text: T[]): T[] {
+//     console.log(text.length);
+//     text.forEach(function (text) {
+//         console.log(text);
+//     });
+//     return text;
+// }
+
+// logTextLength<string>(['hi']);
+
+/* 제네릭의 타입 제한2 - 정의된 타입 이용하기 */
+interface LengthType {
+    length: number;
+}
+
+// 인터페이스를 상속하여 제네릭에 들어갈 수 있는 타입을 구분할 수 있다.
+function logTextLength<T extends LengthType>(text: T): T {
+    text.length;
+    return text;
+}
+
+logTextLength('a'); // 문자열은 기본적으로 length 함수가 제공됨
+logTextLength(10);  // 에러, 숫자에는 length가 적용되지 않음
+logTextLength({length: 10});  // 객체 내부에 length 프로퍼티가 있으므로 에러가 나지는 않음
+
+/* 제네릭의 타입 제한3 - keyof */
+interface ShoppingItem {
+    name: string;
+    price: number;
+    stock: number;
+}
+
+// extends : 기존에 정의된 인터페이스, 클래스, 타입 등을 확장하기 위해 사용한다.
+// keyof : 인터페이스의 한가지 속성만 받을 수 있게 제약을 걸겠다
+function getShoppingItemOption<T extends keyof ShoppingItem>(itemOption: T): T {
+    return itemOption;
+}
+
+// getShoppingItemOption(10);
+// getShoppingItemOption<string>('a');
+getShoppingItemOption("name");
+
+// 가장 많이 사용되는 곳은 API의 호출 후 응답에 대한 규칙을 정의하는 곳이다.
+```
