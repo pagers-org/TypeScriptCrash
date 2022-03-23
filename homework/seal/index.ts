@@ -81,15 +81,15 @@ class AddressBook {
   }
 
   /* TODO: 아래 함수들의 파라미터 타입과 반환 타입을 지정해보세요 */
-  findContactByName(name: string) {
+  findContactByName(name: string): Contact[] {
     return this.contacts.filter(contact => contact.name === name);
   }
 
-  findContactByAddress(address: string) {
+  findContactByAddress(address: string): Contact[] {
     return this.contacts.filter(contact => contact.address === address);
   }
 
-  findContactByPhone(phoneNumber: number, phoneType: PhoneType) {
+  findContactByPhone(phoneNumber: number, phoneType: PhoneType): Contact[] {
     return this.contacts.filter(
       contact => contact?.phones[phoneType]?.num === phoneNumber,
     );
@@ -99,11 +99,11 @@ class AddressBook {
     this.contacts.push(contact);
   }
 
-  displayListByName() {
+  displayListByName(): string[] {
     return this.contacts.map(contact => contact.name);
   }
 
-  displayListByAddress() {
+  displayListByAddress(): string[] {
     return this.contacts.map(contact => contact.address);
   }
   /* ------------------------------------------------ */
