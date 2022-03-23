@@ -78,13 +78,6 @@ const mainAddOrRemoveClass = (isAdd, className) => {
   $main.classList[method](className);
 };
 
-<<<<<<< HEAD
-  if (event.target.matches('#explore')) {
-    new RenderPage('#explore').explore();
-  }
-  if (event.target.matches('#saved')) {
-    new RenderPage('#saved').save();
-=======
 const render = (event, page) => {
   if (event.target.matches(page)) {
     switch (page) {
@@ -95,7 +88,6 @@ const render = (event, page) => {
       case '#profile':
         return renderProfilePage();
     }
->>>>>>> fc426c2d109dd576496940968553c2e4ef9df47b
   }
 };
 
@@ -104,30 +96,9 @@ const renderProfilePage = () => {
   setMainInnerHtml(`<h1>profile</h1>`);
 };
 
-<<<<<<< HEAD
-class RenderPage {
-  constructor(mathchName) {
-    this.mathchName = mathchName;
-  }
-}
-let matchesThis = {
-  explore() {
-    return renderExplorePage();
-  },
-  save() {
-    return renderSavePage();
-  },
-};
-Object.assign(RenderPage.prototype, matchesThis);
-
-const renderExplorePage = async () => {
-  $main.classList.remove('saved');
-  $main.innerHTML = `
-=======
 const renderExplorePage = () => {
   mainAddOrRemoveClass(false, 'saved');
   setMainInnerHtml(`
->>>>>>> fc426c2d109dd576496940968553c2e4ef9df47b
       <div class="container"></div>
       <div class="loader"></div>
     `);
