@@ -1,15 +1,17 @@
 // api
 // TODO: 아래 함수의 반환 타입을 지정해보세요.
 
+type Phone = number;
+
 interface Phones {
   home: {
-    num: number;
+    num: Phone;
   };
   office?: {
-    num: number;
+    num: Phone;
   };
   studio?: {
-    num: number;
+    num: Phone;
   };
 }
 
