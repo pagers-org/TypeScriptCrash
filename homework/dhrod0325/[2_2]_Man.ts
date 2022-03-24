@@ -1,6 +1,13 @@
-interface Control<ArgType, ResultType> {
-  getResult(arg: ArgType): ResultType;
-}
+const MSG = {
+  GameControl: {
+    START: '게임이 시작되었습니다',
+    PAUSE: '게임이 중지되었습니다',
+    STOP: '게임이 종료되었습니다',
+    ERROR: {
+      INVALID_STATE: '없는 state 입니다',
+    },
+  },
+};
 
 type GameState = 'start' | 'pause' | 'stop';
 
@@ -11,44 +18,40 @@ type Do = {
 
 type Sex = 'male' | 'female';
 
-type Man = {
+type ArgType = GameState | number | Man;
+
+type ResultType = string | number[];
+
+interface Control<ArgType, ResultType> {
+  display(arg: ArgType): ResultType;
+}
+
+interface Man {
   name: string;
   gender: Sex;
   age: number;
   isStudent?: boolean;
   doing?: Do[];
   hobby?: string[];
-};
-
-type ArgType = GameState | number | Man;
-
-type ResultType = string | number[];
+}
 
 class GameControl implements Control<GameState, string> {
-  getResult(state: GameState): string {
+  display(state: GameState): string {
     switch (state) {
       case 'start':
-        return '게임이 시작되었습니다';
+        return MSG.GameControl.START;
       case 'pause':
-        return '게임이 중지되었습니다';
+        return MSG.GameControl.PAUSE;
       case 'stop':
-        return '게임이 종료되었습니다';
+        return MSG.GameControl.STOP;
     }
 
-    throw new Error('없는 state 입니다');
+    throw new Error(MSG.GameControl.ERROR.INVALID_STATE);
   }
 }
 
 class StudyControl implements Control<number, number[]> {
   private studyResult: number[] = [];
-
-  private isPlus(num: number): boolean {
-    return num > 0;
-  }
-
-  private isMinus(num: number): boolean {
-    return !this.isPlus(num);
-  }
 
   private pushStudy(studyNum: number): void {
     this.studyResult.push(Math.abs(studyNum));
@@ -62,91 +65,115 @@ class StudyControl implements Control<number, number[]> {
     return this.studyResult.includes(Math.abs(studyNum));
   }
 
-  getResult(studyNum: number): number[] {
-    if (!this.isIncludeStudyNum(studyNum)) {
-      this.isPlus(studyNum) && this.pushStudy(studyNum);
+  public display(studyNum: number): number[] {
+    const isPlus = studyNum > 0;
+    const isIncludeStudyNum = this.isIncludeStudyNum(studyNum);
+
+    if (isIncludeStudyNum) {
+      !isPlus && this.popStudy();
     } else {
-      this.isMinus(studyNum) && this.popStudy();
+      isPlus && this.pushStudy(studyNum);
     }
 
     return this.studyResult;
   }
 }
 
-class ManControl implements Control<Man, string> {
+class ManWrapper {
+  private readonly man: Man;
+
   private result: string[] = [];
 
-  private getGender(gender: string): string {
-    return gender === 'female' ? '여성' : '남성';
+  constructor(man: Man) {
+    this.man = man;
   }
 
-  private getSchool(isStudent: boolean | undefined): string {
-    return isStudent ? '학교에 다니고 있어요 🤗' : '학생은 아니에요 🤣';
+  public getGender(): string {
+    return this.man.gender === 'female' ? '여성' : '남성';
   }
 
-  private getHobby(hobby: string[] | undefined): string {
-    if (!hobby) return '';
-
-    return hobby ? `취미는 ${hobby.join(',')}에요!` : '';
+  public getSchool(): string {
+    return this.man.isStudent
+      ? '학교에 다니고 있어요 🤗'
+      : '학생은 아니에요 🤣';
   }
 
-  private getDoing(doing: Do[] | undefined): string {
-    if (!doing) return '';
+  public getHobby(): string {
+    if (!this.man.hobby) return '';
+
+    return this.man.hobby ? `취미는 ${this.man.hobby.join(',')}에요!` : '';
+  }
+
+  public getDoing(): string {
+    if (!this.man.doing) return '';
 
     const result = [];
 
     result.push('현재 하고 있는 일은 이래요!\n');
-    result.push(doing.map(item => `${JSON.stringify(item)},\n`).join(''));
+    result.push('[\n');
+
+    result.push(
+      this.man.doing.map(item => `${JSON.stringify(item)},\n`).join(''),
+    );
+
+    result.push(']\n');
 
     return result.join(' ');
   }
 
-  private push(item: string | undefined): void {
+  private pushOnlyNotEmpty(item: string | undefined): void {
     if (!item || item?.length === 0) return;
     this.result.push(item);
   }
 
-  getResult(man: Man): string {
-    this.result = [];
+  public introduce(): string {
+    const { name, age }: Man = this.man;
 
-    const { name, gender, age, isStudent, doing, hobby }: Man = man;
+    const nameWithGenderAndAge = `저의 이름은 ${name}, ${this.getGender()}이고 ${age}이구`;
+    const school = this.getSchool();
+    const hobby = this.getHobby();
+    const doing = this.getDoing();
 
-    this.push(`저의 이름은 ${name}, ${this.getGender(gender)}이고 ${age}이구`);
-    this.push(this.getSchool(isStudent));
-    this.push(this.getHobby(hobby));
-    this.push(this.getDoing(doing));
+    this.pushOnlyNotEmpty(nameWithGenderAndAge);
+    this.pushOnlyNotEmpty(school);
+    this.pushOnlyNotEmpty(hobby);
+    this.pushOnlyNotEmpty(doing);
 
     return this.result.join(' ');
   }
 }
 
-const gameControl = new GameControl();
-const studyControl = new StudyControl();
-const manControl = new ManControl();
+class ManControl implements Control<Man, string> {
+  display(man: Man): string {
+    return new ManWrapper(man).introduce();
+  }
+}
 
 class ControlFactory {
+  static gameControl = new GameControl();
+  static studyControl = new StudyControl();
+  static manControl = new ManControl();
+
   static create(type: string): Control<ArgType, ResultType> {
     if (type === 'game') {
-      return gameControl;
+      return this.gameControl;
     } else if (type === 'study') {
-      return studyControl;
+      return this.studyControl;
     } else if (type === 'memory') {
-      return manControl;
+      return this.manControl;
     }
 
-    throw new Error('error!');
+    throw new Error();
   }
 }
 
 function control(type: string, arg: ArgType) {
-  const control = ControlFactory.create(type);
-  return control.getResult(arg);
+  return ControlFactory.create(type).display(arg);
 }
 
 console.log(control('game', 'start')); // "게임이 시작되었습니다!"
 console.log(control('game', 'pause')); // "게임이 시작되었습니다!"
 console.log(control('game', 'stop')); // "게임이 종료되었습니다!"
-
 console.log(control('study', +1)); // [1]
 console.log(control('study', +2)); // [1,2]
 console.log(control('study', -2)); // [1]
