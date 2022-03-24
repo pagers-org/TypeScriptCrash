@@ -40,36 +40,12 @@ class DivCalculator implements Calculator {
   }
 }
 
-class CalcCalculator implements Calculator {
-  public calc(...numbers: CalcValue[]): number {
-    const values = [...numbers];
-
-    OPERATIONS.forEach(operation => {
-      values.forEach((value, index) => {
-        if (value !== operation) return;
-
-        try {
-          const calcValue = this.calcByIndex(operation, values, index);
-
-          const indexAt = index - 1;
-
-          //계산 후 값을 삭제하고 그 자리를 계산된 값으로 교체함
-          this.removeValues(values, indexAt, 3);
-          this.insertValueAt(values, indexAt, calcValue);
-        } catch (e) {
-          console.log(e);
-        }
-      });
-    });
-
-    return (values.length > 0 && values[0]) as number;
-  }
-
-  private calcByIndex(
+class CalcUtils {
+  public static calcByIndex(
     operation: OperationType,
     values: CalcValue[],
     index: number,
-  ) {
+  ): number {
     const calculator = CalculatorFactory.createCalculator(<CalcType>operation);
 
     const prevIndex = index - 1;
@@ -85,12 +61,45 @@ class CalcCalculator implements Calculator {
     return calculator.calc(prevValue, nextValue);
   }
 
-  private removeValues(values: CalcValue[], at: number, to: number) {
+  public static removeValuesAtTo(
+    values: CalcValue[],
+    at: number,
+    to: number,
+  ): void {
     values.splice(at, to);
   }
 
-  private insertValueAt(values: CalcValue[], at: number, value: number) {
+  public static insertValueAt(
+    values: CalcValue[],
+    at: number,
+    value: number,
+  ): void {
     values.splice(at, 0, value);
+  }
+}
+
+class CalcCalculator implements Calculator {
+  public calc(...numbers: CalcValue[]): number {
+    const values = [...numbers];
+
+    OPERATIONS.forEach(operation => {
+      values.forEach((value, index) => {
+        if (value !== operation) return;
+
+        try {
+          const calcValue = CalcUtils.calcByIndex(operation, values, index);
+          const indexAt = index - 1;
+
+          //계산 후 값을 삭제하고 그 자리를 계산된 값으로 교체함
+          CalcUtils.removeValuesAtTo(values, indexAt, 3);
+          CalcUtils.insertValueAt(values, indexAt, calcValue);
+        } catch (e) {
+          console.log(e);
+        }
+      });
+    });
+
+    return (values.length > 0 && values[0]) as number;
   }
 }
 
@@ -115,7 +124,7 @@ class CalculatorFactory {
     };
   }
 
-  private static isCalcType(type: CalcType) {
+  private static isCalcType(type: CalcType): boolean {
     return Object.getOwnPropertyNames(this.calculators).includes(type);
   }
 
@@ -134,14 +143,8 @@ function calculate(
   num2: CalcValue,
   ...numbers: CalcValue[]
 ): number {
-  try {
-    const calculator = CalculatorFactory.createCalculator(type);
-    return calculator.calc(num1, num2, ...numbers);
-  } catch (e) {
-    console.log(e);
-  }
-
-  return 0;
+  const calculator = CalculatorFactory.createCalculator(type);
+  return calculator.calc(num1, num2, ...numbers);
 }
 
 console.log(calculate('+', 1, 3)); // 4
