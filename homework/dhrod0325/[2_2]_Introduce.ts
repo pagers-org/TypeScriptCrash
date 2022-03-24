@@ -111,11 +111,7 @@ class ManWrapper {
 
     result.push('현재 하고 있는 일은 이래요!\n');
     result.push('[\n');
-
-    result.push(
-      this.man.doing.map(item => `${JSON.stringify(item)},\n`).join(''),
-    );
-
+    result.push(JSON.stringify(this.man.doing));
     result.push(']\n');
 
     return result.join(' ');
