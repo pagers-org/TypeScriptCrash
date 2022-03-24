@@ -5,11 +5,14 @@ console.log(calculate('div', '5', '4')); // 1
 console.log(calculate('calc', 6, '-', 4, '*', 12, '/', 6, '+', 19)); // 17
 
 console.log(control('game', 'start')); // "게임이 시작되었습니다!"
-console.log(control('game', 'pause')); // "게임이 시작되었습니다!"
+console.log(control('game', 'pause')); // "게임이 중지되었습니다!"
 console.log(control('game', 'stop')); // "게임이 종료되었습니다!"
 console.log(control('study', +1)); // [1]
 console.log(control('study', +2)); // [1,2]
 console.log(control('study', -2)); // [1]
+// => 내용 추가(2022.03.24) : '동일한 원소가 없으면' +인 경우 push, '동일한 원소가 있으면' -인 경우 pop
+// =>                        '동일한 원소가 있으면' +인 경우 무시, '동일한 원소가 없으면' -인 경우 무시
+
 console.log(
   control('memory', {
     name: 'yuri',
