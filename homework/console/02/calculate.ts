@@ -1,23 +1,57 @@
-const addOperator: { [key: string]: (a: number, b?: number) => number } = {
-  '+': (a: number) => +a,
-  '-': (a: number) => -a,
-  // '*': (a: number) => * + a,
-  // '/': (a: number) => / + a,
+const addOperator: {
+  [key: string]: (a: number, b?: number, sum?: number) => number;
+} = {
   add: (a: number, b = 0) => a + b,
   sub: (a: number, b = 0) => a - b,
   mul: (a: number, b = 0) => a * b,
-  div: (a: number, b = 0) => a % b,
+  div: (a: number, b = 0) => a / b,
 };
+const convertedOperator: { [key: string]: string } = {
+  '*': 'mul',
+  '/': 'div',
+  '+': 'add',
+  '-': 'sub',
+};
+let temp = 0;
 
 const calculate = (operator: string, ...arg: (string | number)[]) => {
-  let result = 0;
+  let result: number | [] = 0;
   let argResult = +arg[0];
+
   if (operator === 'calc') {
     for (const i in arg) {
       if (typeof arg[i] === 'string') {
-        argResult += addOperator[arg[i]](+arg[+i + 1]);
+        if (arg[i] === '*') {
+          temp = addOperator[convertedOperator[arg[i]]](
+            +arg[+i - 1],
+            +arg[+i + 1],
+          );
+          arg.splice(+i - 1, +i, temp);
+        }
+        if (arg[i] === '/') {
+          temp = addOperator[convertedOperator[arg[i]]](
+            +arg[+i - 1],
+            +arg[+i + 1],
+          );
+          arg.splice(+i - 1, +i, temp);
+        }
+        if (arg[i] === '-') {
+          temp = addOperator[convertedOperator[arg[i]]](
+            +arg[+i - 1],
+            +arg[+i + 1],
+          );
+          arg.splice(+i - 1, +i, temp);
+        }
+        if (arg[i] === '+') {
+          temp = addOperator[convertedOperator[arg[i]]](
+            +arg[+i - 1],
+            +arg[+i + 1],
+          );
+          arg.splice(+i - 1, +i, temp);
+        }
       }
     }
+
     result = argResult;
   } else {
     argResult = 0;
