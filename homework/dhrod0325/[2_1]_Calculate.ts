@@ -40,48 +40,39 @@ class DivCalculator implements Calculator {
   }
 }
 
-class NumberUtils {
-  public static removeValuesAtTo(
-    values: number[],
-    at: number,
-    to: number,
-  ): void {
-    values.splice(at, to);
-  }
-
-  public static insertValueAt(
-    values: number[],
-    at: number,
-    value: number,
-  ): void {
-    values.splice(at, 0, value);
-  }
-}
-
 class CalcCalculator implements Calculator {
+  private values: CalcValue[] = [];
+
   public calc(...numbers: CalcValue[]): number {
-    const values = [...numbers];
+    this.values = <number[]>[...numbers];
 
     OPERATIONS.forEach(operation => {
-      values.forEach((value, index) => {
+      this.values.forEach((value, index) => {
         if (value !== operation) return;
 
         try {
-          const calcValue = this.calcByIndex(operation, values, index);
+          const calcValue = this.calcByIndex(operation, this.values, index);
           const indexAt = index - 1;
 
           //계산 후 값을 삭제하고 그 자리를 계산된 값으로 교체함
-          NumberUtils.removeValuesAtTo(<number[]>values, indexAt, 3);
-          NumberUtils.insertValueAt(<number[]>values, indexAt, calcValue);
+          this.removeValuesAtTo(indexAt, 3);
+          this.insertValueAt(indexAt, calcValue);
         } catch (e) {
           console.log(e);
         }
       });
     });
 
-    return (values.length > 0 && values[0]) as number;
+    return (this.values.length > 0 && this.values[0]) as number;
   }
 
+  private removeValuesAtTo(at: number, to: number): void {
+    this.values.splice(at, to);
+  }
+
+  private insertValueAt(at: number, value: number): void {
+    this.values.splice(at, 0, value);
+  }
   private calcByIndex(
     operation: OperationType,
     values: CalcValue[],
@@ -94,10 +85,6 @@ class CalcCalculator implements Calculator {
 
     const prevValue = values[prevIndex];
     const nextValue = values[nextIndex];
-
-    if (typeof prevValue !== 'number' || typeof nextValue !== 'number') {
-      throw new Error(ERROR_MSG.INVALID_VALUE(prevValue, nextValue, index));
-    }
 
     return calculator.calc(prevValue, nextValue);
   }
