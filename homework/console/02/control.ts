@@ -17,8 +17,8 @@ const convertGender: ConvertedGender = {
   female: '여성',
   male: '남성',
 };
-const arr: number[] = [];
 
+const arr: number[] = [];
 const control = (type: string, action: actionType) => {
   let gameStatus = '';
   let result: string | number[] = '';
@@ -26,13 +26,13 @@ const control = (type: string, action: actionType) => {
     switch (action) {
       case 'start':
         gameStatus = '게임이 시작되었습니다!';
-        return gameStatus;
+        break;
       case 'pause':
         gameStatus = '게임이 중지 되었습니다!';
-        return gameStatus;
+        break;
       case 'stop':
         gameStatus = '게임이 종료 되었습니다!';
-        return gameStatus;
+        break;
     }
     result = gameStatus;
   }
