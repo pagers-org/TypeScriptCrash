@@ -1,33 +1,39 @@
 let controlGameArray: number[] = [];
 
+type Gender = "female" | "male";
 type MemoryObject = {
   name: string;
-  gender: "female" | "male";
+  gender: Gender;
   age: number;
   isStudent: boolean;
   hobby?: string[];
-  doing?: object[];
+  doing?: Do[];
+};
+type Do = {
+  category: string;
+  content: string[];
 };
 
 type ControlType = "game" | "study" | "memory";
-function control(type: ControlType, t: object | string | number) {
+type ControlValueType = object | string | number;
+function control(type: ControlType, value: ControlValueType) {
   if (type === "game") {
-    if (typeof t === "string") {
-      if (t === "start") return "게임이 시작되었습니다!";
-      if (t === "pause") return "게임이 중지되었습니다!";
-      if (t === "stop") return "게임이 종료되었습니다!";
+    if (typeof value === "string") {
+      if (value === "start") return "게임이 시작되었습니다!";
+      if (value === "pause") return "게임이 중지되었습니다!";
+      if (value === "stop") return "게임이 종료되었습니다!";
     }
   }
 
   if (type === "study") {
-    if (typeof t === "number") {
-      if (controlGameArray.includes(Math.abs(t))) {
-        if (t < 0)
+    if (typeof value === "number") {
+      if (controlGameArray.includes(Math.abs(value))) {
+        if (value < 0)
           controlGameArray = [
-            ...controlGameArray.filter((x) => x !== Math.abs(t)),
+            ...controlGameArray.filter((x) => x !== Math.abs(value)),
           ];
       } else {
-        if (t > 0) controlGameArray.push(t);
+        if (value > 0) controlGameArray.push(value);
       }
     }
 
@@ -35,9 +41,9 @@ function control(type: ControlType, t: object | string | number) {
   }
 
   if (type === "memory") {
-    if (typeof t === "object") {
-      const memory = t as MemoryObject;
-      let resultString: string[] = [];
+    if (typeof value === "object") {
+      const memory = value as MemoryObject;
+      const resultString: string[] = [];
 
       resultString.push(`저의 이름은 ${memory.name}, `);
       resultString.push(`${memory.gender === "female" ? "여성" : "남성"}이고 `);
@@ -78,8 +84,6 @@ function calculate(type: MethodType, ...args: any[]) {
     let result = 0;
     let i = 0;
     while (args.length > 1) {
-      console.log(args);
-
       if (args.find((x) => x === "*")) {
         i = args.findIndex((x) => x === "*");
         result = args[i - 1] * args[i + 1];
