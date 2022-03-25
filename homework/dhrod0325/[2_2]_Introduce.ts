@@ -146,20 +146,14 @@ class ManControl implements Control<Man, string> {
 }
 
 class ControlFactory {
-  static gameControl = new GameControl();
-  static studyControl = new StudyControl();
-  static manControl = new ManControl();
+  static controls = {
+    game: new GameControl(),
+    study: new StudyControl(),
+    memory: new ManControl(),
+  };
 
   static create(type: ContolType): Control<ArgType, ResultType> {
-    if (type === 'game') {
-      return this.gameControl;
-    } else if (type === 'study') {
-      return this.studyControl;
-    } else if (type === 'memory') {
-      return this.manControl;
-    }
-
-    throw new Error();
+    return this.controls[type];
   }
 }
 
