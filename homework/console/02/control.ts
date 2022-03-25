@@ -54,7 +54,7 @@ const control = (type: GameType, params: paramsType) => {
     if (IS_POSITIVE_NUMBER) {
       arr.push(+paramNumber);
     } else {
-      arr = arr.filter(item => item !== Math.abs(Number(paramNumber)));
+      arr = arr.filter(item => item !== Math.abs(paramNumber));
       return arr;
     }
     result = arr;
