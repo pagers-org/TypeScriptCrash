@@ -16,6 +16,10 @@ type paramsType = MemoryInterface | string | number;
 
 type Gender = 'female' | 'male';
 
+type GameType = 'game' | 'study' | 'memory';
+
+type GameStatusType = 'start' | 'pause' | 'stop';
+
 const convertGender: ConvertedGender = {
   female: '여성',
   male: '남성',
@@ -26,10 +30,6 @@ const GAME_MESSAGE = {
   PAUSE: '게임이 중지되었습니다!',
   STOP: '게임이 종료되었습니다!',
 };
-
-type GameType = 'game' | 'study' | 'memory';
-
-type GameStatusType = 'start' | 'pause' | 'stop';
 
 let arr: number[] = [];
 
