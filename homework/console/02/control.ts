@@ -12,7 +12,7 @@ interface MemoryInterface {
 }
 type ConvertedGender = { [key: string]: string };
 
-type actionType = MemoryInterface | string | number;
+type paramsType = MemoryInterface | string | number;
 
 type GameStatus = 'start' | 'pause' | 'stop';
 
@@ -27,41 +27,41 @@ const GAME_MESSAGE = {
   STOP: '게임이 종료되었습니다!',
 };
 type GameType = 'game' | 'study' | 'memory';
-const arr: number[] = [];
-const control = (type: GameType, action: actionType) => {
+let arr: number[] = [];
+
+const getGameStatus: { [key: string]: string } = {
+  start: GAME_MESSAGE.START,
+  pause: GAME_MESSAGE.PAUSE,
+  stop: GAME_MESSAGE.STOP,
+};
+
+const control = (type: GameType, params: paramsType) => {
   let gameStatus = '';
   let result: string | number[] = '';
 
   if (type === 'game') {
-    switch (action as GameStatus) {
-      case 'start':
-        gameStatus = GAME_MESSAGE.START;
-        break;
-      case 'pause':
-        gameStatus = GAME_MESSAGE.PAUSE;
-        break;
-      case 'stop':
-        gameStatus = GAME_MESSAGE.STOP;
-        break;
-    }
+    gameStatus = getGameStatus[<string>params];
     result = gameStatus;
   }
 
   if (type === 'study') {
-    const IS_POSITIVE_NUMBER = action > 0;
-    const IN_STUDY = arr.includes(+action);
+    const paramNumber = <number>params;
+    const IS_POSITIVE_NUMBER = paramNumber > 0;
+    const IN_STUDY = arr.includes(paramNumber);
     const NOT_IN_STUDY = !IN_STUDY;
 
+    if (!NOT_IN_STUDY) return;
     if (IS_POSITIVE_NUMBER) {
-      NOT_IN_STUDY && arr.push(+action);
+      arr.push(+paramNumber);
     } else {
-      NOT_IN_STUDY && arr.pop();
+      arr = arr.filter(item => item !== Math.abs(Number(paramNumber)));
+      return arr;
     }
     result = arr;
   }
 
   if (type === 'memory') {
-    const memory = <MemoryInterface>action;
+    const memory = <MemoryInterface>params;
     result = `저의 이름은 ${memory.name}, ${convertGender[memory.gender]}이고 ${
       memory.age
     }이에요! ${
@@ -82,6 +82,7 @@ console.log(control('game', 'stop')); // "게임이 종료되었습니다!"
 console.log(control('study', +1)); // [1]
 console.log(control('study', +2)); // [1,2]
 console.log(control('study', -2)); // [1]
+
 console.log(
   control('memory', {
     name: 'yuri',
