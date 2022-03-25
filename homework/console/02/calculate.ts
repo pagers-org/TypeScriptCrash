@@ -1,66 +1,78 @@
-const addOperator: {
+interface addOperatorInterface {
   [key: string]: (a: number, b?: number, sum?: number) => number;
-} = {
+}
+type CalculateType = (string | number)[];
+
+const addOperator: addOperatorInterface = {
   add: (a: number, b = 0) => a + b,
   sub: (a: number, b = 0) => a - b,
   mul: (a: number, b = 0) => a * b,
   div: (a: number, b = 0) => a / b,
 };
+
 const convertedOperator: { [key: string]: string } = {
   '*': 'mul',
   '/': 'div',
   '+': 'add',
   '-': 'sub',
 };
-let temp = 0;
 
-const calculate = (operator: string, ...arg: (string | number)[]) => {
+const calculate = (operator: string, ...args: CalculateType): number => {
+  let subSum = 0;
   let result: number | [] = 0;
-  let argResult = +arg[0];
+  const calculateElem = [...args];
+  let initialValue = +args[0];
   let count = 0;
   if (operator === 'calc') {
-    while (arg.length > 3) {
-      if (arg[count] === '*') {
-        temp = addOperator[convertedOperator[arg[count]]](
-          +arg[+count - 1],
-          +arg[+count + 1],
+    while (calculateElem.length > 3) {
+      if (calculateElem[count] === '*') {
+        subSum = addOperator[convertedOperator[calculateElem[count]]](
+          Number(calculateElem[+count - 1]),
+          Number(calculateElem[+count + 1]),
         );
-        arg.splice(+count - 1, +count, temp);
+        calculateElem.splice(+count - 1, +count, subSum);
       }
-      if (arg[count] === '/') {
-        temp = addOperator[convertedOperator[arg[count]]](
-          +arg[+count - 1],
-          +arg[+count + 1],
+      if (calculateElem[count] === '/') {
+        subSum = addOperator[convertedOperator[calculateElem[count]]](
+          Number(calculateElem[+count - 1]),
+          Number(calculateElem[+count + 1]),
         );
-        arg.splice(+count - 1, +count, temp);
+        calculateElem.splice(+count - 1, +count, subSum);
       }
-      if (arg[count] === '-') {
-        temp = addOperator[convertedOperator[arg[count]]](
-          +arg[+count - 1],
-          +arg[+count + 1],
+      if (calculateElem[count] === '-') {
+        subSum = addOperator[convertedOperator[calculateElem[count]]](
+          Number(calculateElem[+count - 1]),
+          Number(calculateElem[+count + 1]),
         );
-        arg.splice(+count - 1, +count, temp);
+        calculateElem.splice(+count - 1, +count, subSum);
       }
-      if (arg[count] === '+') {
-        temp = addOperator[convertedOperator[arg[count]]](
-          +arg[+count - 1],
-          +arg[+count + 1],
+      if (calculateElem[count] === '+') {
+        subSum = addOperator[convertedOperator[calculateElem[count]]](
+          Number(calculateElem[+count - 1]),
+          Number(calculateElem[+count + 1]),
         );
-        arg.splice(+count - 1, +count, temp);
+        calculateElem.splice(+count - 1, +count, subSum);
       }
 
       count++;
     }
 
-    temp = addOperator[convertedOperator[arg[1]]](+arg[0], +arg[2]);
-    arg.splice(+count - 1, +count, temp);
-    result = temp;
-  } else {
-    argResult = 0;
-    argResult = addOperator[operator](+arg[0], +arg[1]);
-    result = argResult;
+    subSum = addOperator[convertedOperator[calculateElem[1]]](
+      Number(calculateElem[0]),
+      Number(calculateElem[2]),
+    );
+    calculateElem.splice(+count - 1, +count, subSum);
+    result = subSum;
+    return ~~result;
   }
-  return result;
+
+  initialValue = 0;
+  initialValue = addOperator[operator](
+    Number(calculateElem[0]),
+    Number(calculateElem[1]),
+  );
+  result = initialValue;
+  return ~~result;
 };
 
 console.log(calculate('add', 1, 3)); // 4
