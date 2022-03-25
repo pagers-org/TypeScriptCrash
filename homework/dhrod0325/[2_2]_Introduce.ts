@@ -3,18 +3,25 @@ const MSG = {
     START: '게임이 시작되었습니다',
     PAUSE: '게임이 중지되었습니다',
     STOP: '게임이 종료되었습니다',
-    ERROR: {
-      INVALID_STATE: '없는 state 입니다',
-    },
   },
 };
 
 type GameState = 'start' | 'pause' | 'stop';
 
+type GameStateMap = { [key in GameState]: string };
+
+const gameStateMap: GameStateMap = {
+  start: MSG.GameControl.START,
+  pause: MSG.GameControl.PAUSE,
+  stop: MSG.GameControl.STOP,
+};
+
 type Do = {
   category: string;
   content: string[];
 };
+
+type ContolType = 'game' | 'study' | 'memory';
 
 type Sex = 'male' | 'female';
 
@@ -37,16 +44,7 @@ interface Man {
 
 class GameControl implements Control<GameState, string> {
   display(state: GameState): string {
-    switch (state) {
-      case 'start':
-        return MSG.GameControl.START;
-      case 'pause':
-        return MSG.GameControl.PAUSE;
-      case 'stop':
-        return MSG.GameControl.STOP;
-    }
-
-    throw new Error(MSG.GameControl.ERROR.INVALID_STATE);
+    return gameStateMap[state];
   }
 }
 
@@ -57,8 +55,10 @@ class StudyControl implements Control<number, number[]> {
     this.studyResult.push(Math.abs(studyNum));
   }
 
-  private popStudy(): void {
-    this.studyResult.pop();
+  private removeStudy(studyNum: number): void {
+    this.studyResult = [...this.studyResult].filter(
+      num => num !== Math.abs(studyNum),
+    );
   }
 
   private isIncludeStudyNum(studyNum: number) {
@@ -70,7 +70,7 @@ class StudyControl implements Control<number, number[]> {
     const isIncludeStudyNum = this.isIncludeStudyNum(studyNum);
 
     if (isIncludeStudyNum) {
-      !isPlus && this.popStudy();
+      !isPlus && this.removeStudy(studyNum);
     } else {
       isPlus && this.pushStudy(studyNum);
     }
@@ -150,7 +150,7 @@ class ControlFactory {
   static studyControl = new StudyControl();
   static manControl = new ManControl();
 
-  static create(type: string): Control<ArgType, ResultType> {
+  static create(type: ContolType): Control<ArgType, ResultType> {
     if (type === 'game') {
       return this.gameControl;
     } else if (type === 'study') {
@@ -163,7 +163,7 @@ class ControlFactory {
   }
 }
 
-function control(type: string, arg: ArgType) {
+function control(type: ContolType, arg: ArgType) {
   return ControlFactory.create(type).display(arg);
 }
 
