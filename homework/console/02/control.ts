@@ -11,53 +11,64 @@ interface MemoryInterface {
   hobby?: string[];
 }
 type ConvertedGender = { [key: string]: string };
+
 type actionType = MemoryInterface | string | number;
+
+type GameStatus = 'start' | 'pause' | 'stop';
 
 const convertGender: ConvertedGender = {
   female: '여성',
   male: '남성',
 };
 
+const GAME_MESSAGE = {
+  START: '게임이 시작되었습니다!',
+  PAUSE: '게임이 중지되었습니다!',
+  STOP: '게임이 종료되었습니다!',
+};
+type GameType = 'game' | 'study' | 'memory';
 const arr: number[] = [];
-const control = (type: string, action: actionType) => {
+const control = (type: GameType, action: actionType) => {
   let gameStatus = '';
   let result: string | number[] = '';
+
   if (type === 'game') {
-    switch (action) {
+    switch (action as GameStatus) {
       case 'start':
-        gameStatus = '게임이 시작되었습니다!';
+        gameStatus = GAME_MESSAGE.START;
         break;
       case 'pause':
-        gameStatus = '게임이 중지 되었습니다!';
+        gameStatus = GAME_MESSAGE.PAUSE;
         break;
       case 'stop':
-        gameStatus = '게임이 종료 되었습니다!';
+        gameStatus = GAME_MESSAGE.STOP;
         break;
     }
     result = gameStatus;
   }
 
   if (type === 'study') {
-    if (action > 0) {
-      !arr.includes(+action) && arr.push(+action);
+    const IS_POSITIVE_NUMBER = action > 0;
+    const IN_STUDY = arr.includes(+action);
+    const NOT_IN_STUDY = !IN_STUDY;
+
+    if (IS_POSITIVE_NUMBER) {
+      NOT_IN_STUDY && arr.push(+action);
     } else {
-      !arr.includes(+action) && arr.pop();
+      NOT_IN_STUDY && arr.pop();
     }
     result = arr;
   }
 
-  if (
-    type === 'memory' &&
-    typeof action !== 'string' &&
-    typeof action !== 'number'
-  ) {
-    result = `저의 이름은 ${action.name}, ${convertGender[action.gender]}이고 ${
-      action.age
+  if (type === 'memory') {
+    const memory = <MemoryInterface>action;
+    result = `저의 이름은 ${memory.name}, ${convertGender[memory.gender]}이고 ${
+      memory.age
     }이에요! ${
-      action.isStudent ? '학교에 다니고 있어요🤗' : '학생은 아니에요🤣'
+      memory.isStudent ? '학교에 다니고 있어요🤗' : '학생은 아니에요🤣'
     } ${
-      action.doing
-        ? '현재 하고 있는 일은 이래요!' + JSON.stringify(action.doing)
+      memory.doing
+        ? '현재 하고 있는 일은 이래요!' + JSON.stringify(memory.doing)
         : ''
     }`;
   }
