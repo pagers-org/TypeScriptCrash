@@ -74,7 +74,6 @@ const genderState = (gender: string) => {
   return `남성`;
 };
 const hobbyState = (hobby: string[]) => {
-  console.log(hobby, '허비');
   const result = hobby.reduce((prev, curr) => prev + ', ' + curr);
   return `취미는 ${result}에요!`;
 };
