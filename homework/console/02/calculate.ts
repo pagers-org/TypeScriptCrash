@@ -17,42 +17,44 @@ let temp = 0;
 const calculate = (operator: string, ...arg: (string | number)[]) => {
   let result: number | [] = 0;
   let argResult = +arg[0];
-
+  let count = 0;
   if (operator === 'calc') {
-    for (const i in arg) {
-      if (typeof arg[i] === 'string') {
-        if (arg[i] === '*') {
-          temp = addOperator[convertedOperator[arg[i]]](
-            +arg[+i - 1],
-            +arg[+i + 1],
-          );
-          arg.splice(+i - 1, +i, temp);
-        }
-        if (arg[i] === '/') {
-          temp = addOperator[convertedOperator[arg[i]]](
-            +arg[+i - 1],
-            +arg[+i + 1],
-          );
-          arg.splice(+i - 1, +i, temp);
-        }
-        if (arg[i] === '-') {
-          temp = addOperator[convertedOperator[arg[i]]](
-            +arg[+i - 1],
-            +arg[+i + 1],
-          );
-          arg.splice(+i - 1, +i, temp);
-        }
-        if (arg[i] === '+') {
-          temp = addOperator[convertedOperator[arg[i]]](
-            +arg[+i - 1],
-            +arg[+i + 1],
-          );
-          arg.splice(+i - 1, +i, temp);
-        }
+    while (arg.length > 3) {
+      if (arg[count] === '*') {
+        temp = addOperator[convertedOperator[arg[count]]](
+          +arg[+count - 1],
+          +arg[+count + 1],
+        );
+        arg.splice(+count - 1, +count, temp);
       }
+      if (arg[count] === '/') {
+        temp = addOperator[convertedOperator[arg[count]]](
+          +arg[+count - 1],
+          +arg[+count + 1],
+        );
+        arg.splice(+count - 1, +count, temp);
+      }
+      if (arg[count] === '-') {
+        temp = addOperator[convertedOperator[arg[count]]](
+          +arg[+count - 1],
+          +arg[+count + 1],
+        );
+        arg.splice(+count - 1, +count, temp);
+      }
+      if (arg[count] === '+') {
+        temp = addOperator[convertedOperator[arg[count]]](
+          +arg[+count - 1],
+          +arg[+count + 1],
+        );
+        arg.splice(+count - 1, +count, temp);
+      }
+
+      count++;
     }
 
-    result = argResult;
+    temp = addOperator[convertedOperator[arg[1]]](+arg[0], +arg[2]);
+    arg.splice(+count - 1, +count, temp);
+    result = temp;
   } else {
     argResult = 0;
     argResult = addOperator[operator](+arg[0], +arg[1]);
