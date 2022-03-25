@@ -21,7 +21,7 @@ const arr: number[] = [];
 
 const control = (type: string, action: actionType) => {
   let gameStatus = '';
-  let result: string | number[] | MemoryInterface = '';
+  let result: string | number[] = '';
   if (type === 'game') {
     switch (action) {
       case 'start':
