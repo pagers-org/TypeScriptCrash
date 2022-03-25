@@ -1,16 +1,16 @@
-type OperationType = '+' | '-' | '*' | '/';
-
-type CalcType = 'add' | 'sub' | 'mul' | 'div' | 'calc' | OperationType;
-
-type CalcValue = string | number;
-
-const OPERATIONS: OperationType[] = ['*', '/', '-', '+'];
-
 const ERROR_MSG = {
   INVALID_TYPE: (TYPE: string) => `유효하지 않은 TYPE : [${TYPE}] 입니다`,
   INVALID_VALUE: (prevValue: unknown, nextValue: unknown, index: number) =>
     `잘못된 값입니다 prevValue : ${prevValue} nextValue : ${nextValue} index: ${index}`,
 };
+
+type OperationType = '+' | '-' | '*' | '/';
+
+const OPERATIONS: OperationType[] = ['*', '/', '-', '+'];
+
+type CalcType = 'add' | 'sub' | 'mul' | 'div' | 'calc' | OperationType;
+
+type CalcValue = string | number;
 
 interface Calculator {
   calc(num1: CalcValue, num2: CalcValue, ...args: CalcValue[]): number;
@@ -40,8 +40,49 @@ class DivCalculator implements Calculator {
   }
 }
 
-class CalcUtils {
-  public static calcByIndex(
+class NumberUtils {
+  public static removeValuesAtTo(
+    values: number[],
+    at: number,
+    to: number,
+  ): void {
+    values.splice(at, to);
+  }
+
+  public static insertValueAt(
+    values: number[],
+    at: number,
+    value: number,
+  ): void {
+    values.splice(at, 0, value);
+  }
+}
+
+class CalcCalculator implements Calculator {
+  public calc(...numbers: CalcValue[]): number {
+    const values = [...numbers];
+
+    OPERATIONS.forEach(operation => {
+      values.forEach((value, index) => {
+        if (value !== operation) return;
+
+        try {
+          const calcValue = this.calcByIndex(operation, values, index);
+          const indexAt = index - 1;
+
+          //계산 후 값을 삭제하고 그 자리를 계산된 값으로 교체함
+          NumberUtils.removeValuesAtTo(<number[]>values, indexAt, 3);
+          NumberUtils.insertValueAt(<number[]>values, indexAt, calcValue);
+        } catch (e) {
+          console.log(e);
+        }
+      });
+    });
+
+    return (values.length > 0 && values[0]) as number;
+  }
+
+  private calcByIndex(
     operation: OperationType,
     values: CalcValue[],
     index: number,
@@ -59,47 +100,6 @@ class CalcUtils {
     }
 
     return calculator.calc(prevValue, nextValue);
-  }
-
-  public static removeValuesAtTo(
-    values: CalcValue[],
-    at: number,
-    to: number,
-  ): void {
-    values.splice(at, to);
-  }
-
-  public static insertValueAt(
-    values: CalcValue[],
-    at: number,
-    value: number,
-  ): void {
-    values.splice(at, 0, value);
-  }
-}
-
-class CalcCalculator implements Calculator {
-  public calc(...numbers: CalcValue[]): number {
-    const values = [...numbers];
-
-    OPERATIONS.forEach(operation => {
-      values.forEach((value, index) => {
-        if (value !== operation) return;
-
-        try {
-          const calcValue = CalcUtils.calcByIndex(operation, values, index);
-          const indexAt = index - 1;
-
-          //계산 후 값을 삭제하고 그 자리를 계산된 값으로 교체함
-          CalcUtils.removeValuesAtTo(values, indexAt, 3);
-          CalcUtils.insertValueAt(values, indexAt, calcValue);
-        } catch (e) {
-          console.log(e);
-        }
-      });
-    });
-
-    return (values.length > 0 && values[0]) as number;
   }
 }
 
