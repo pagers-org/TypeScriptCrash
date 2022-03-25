@@ -10,11 +10,9 @@ interface MemoryInterface {
   doing?: DoingInterface[];
   hobby?: string[];
 }
-type ConvertedGender = { [key: string]: string };
+type ConvertedGender = { [key in Gender]: string };
 
 type paramsType = MemoryInterface | string | number;
-
-type GameStatus = 'start' | 'pause' | 'stop';
 
 type Gender = 'female' | 'male';
 
@@ -70,9 +68,9 @@ const control = (type: GameType, params: paramsType) => {
   if (type === 'memory') {
     const memory = <MemoryInterface>params;
 
-    result = `저의 이름은 ${memory.name}, ${convertGender[memory.gender]}이고 ${
-      memory.age
-    }이에요! ${
+    result = `저의 이름은 ${memory.name}, ${
+      convertGender[memory.gender as Gender]
+    }이고 ${memory.age}이에요! ${
       memory.isStudent ? '학교에 다니고 있어요🤗' : '학생은 아니에요🤣'
     } ${
       memory.doing
