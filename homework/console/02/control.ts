@@ -16,6 +16,8 @@ type paramsType = MemoryInterface | string | number;
 
 type GameStatus = 'start' | 'pause' | 'stop';
 
+type Gender = 'female' | 'male';
+
 const convertGender: ConvertedGender = {
   female: '여성',
   male: '남성',
@@ -26,7 +28,11 @@ const GAME_MESSAGE = {
   PAUSE: '게임이 중지되었습니다!',
   STOP: '게임이 종료되었습니다!',
 };
+
 type GameType = 'game' | 'study' | 'memory';
+
+type GameStatusType = 'start' | 'pause' | 'stop';
+
 let arr: number[] = [];
 
 const getGameStatus: { [key: string]: string } = {
@@ -40,7 +46,8 @@ const control = (type: GameType, params: paramsType) => {
   let result: string | number[] = '';
 
   if (type === 'game') {
-    gameStatus = getGameStatus[<string>params];
+    console.log(params);
+    gameStatus = getGameStatus[(<string>params) as GameStatusType];
     result = gameStatus;
   }
 
@@ -62,6 +69,7 @@ const control = (type: GameType, params: paramsType) => {
 
   if (type === 'memory') {
     const memory = <MemoryInterface>params;
+
     result = `저의 이름은 ${memory.name}, ${convertGender[memory.gender]}이고 ${
       memory.age
     }이에요! ${
