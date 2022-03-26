@@ -53,11 +53,10 @@ const control = (type: GameType, params: paramsType) => {
     const paramNumber = <number>params;
     const IS_POSITIVE_NUMBER = paramNumber > 0;
     const IN_STUDY = arr.includes(paramNumber);
-    const NOT_IN_STUDY = !IN_STUDY;
 
-    if (!NOT_IN_STUDY) return;
+    if (IN_STUDY) return;
     if (IS_POSITIVE_NUMBER) {
-      arr.push(+paramNumber);
+      arr.push(paramNumber);
     } else {
       arr = arr.filter(item => item !== Math.abs(paramNumber));
       return arr;

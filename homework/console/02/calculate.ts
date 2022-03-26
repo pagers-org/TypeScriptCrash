@@ -27,31 +27,31 @@ const calculate = (operator: string, ...args: CalculateType): number => {
     while (calculateElem.length > 3) {
       if (calculateElem[count] === '*') {
         subSum = addOperator[convertedOperator[calculateElem[count]]](
-          Number(calculateElem[+count - 1]),
-          Number(calculateElem[+count + 1]),
+          Number(calculateElem[count - 1]),
+          Number(calculateElem[count + 1]),
         );
         calculateElem.splice(+count - 1, +count, subSum);
       }
       if (calculateElem[count] === '/') {
         subSum = addOperator[convertedOperator[calculateElem[count]]](
-          Number(calculateElem[+count - 1]),
-          Number(calculateElem[+count + 1]),
+          Number(calculateElem[count - 1]),
+          Number(calculateElem[count + 1]),
         );
-        calculateElem.splice(+count - 1, +count, subSum);
+        calculateElem.splice(count - 1, count, subSum);
       }
       if (calculateElem[count] === '-') {
         subSum = addOperator[convertedOperator[calculateElem[count]]](
-          Number(calculateElem[+count - 1]),
-          Number(calculateElem[+count + 1]),
+          Number(calculateElem[count - 1]),
+          Number(calculateElem[count + 1]),
         );
-        calculateElem.splice(+count - 1, +count, subSum);
+        calculateElem.splice(count - 1, count, subSum);
       }
       if (calculateElem[count] === '+') {
         subSum = addOperator[convertedOperator[calculateElem[count]]](
-          Number(calculateElem[+count - 1]),
-          Number(calculateElem[+count + 1]),
+          Number(calculateElem[count - 1]),
+          Number(calculateElem[count + 1]),
         );
-        calculateElem.splice(+count - 1, +count, subSum);
+        calculateElem.splice(count - 1, count, subSum);
       }
 
       count++;
@@ -61,7 +61,7 @@ const calculate = (operator: string, ...args: CalculateType): number => {
       Number(calculateElem[0]),
       Number(calculateElem[2]),
     );
-    calculateElem.splice(+count - 1, +count, subSum);
+    calculateElem.splice(count - 1, count, subSum);
     result = subSum;
     return ~~result;
   }
