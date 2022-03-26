@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "strict": true,
+    "outDir": "dist",
+    "sourceMap": true,
+    "typeRoots": ["./node_modules/@types", "./types"],
+    "lib": ["ES2015", "DOM"]
+  }
+}
