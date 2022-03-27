@@ -6,3 +6,9 @@
 - 일관성 있게 작성하기(Contact[] or Array<Contact>)
 - 옵셔널 체이닝
 - 함수 반환 타입 명시 or not
+
+## 2회차
+- 일관성 !!
+- 전역변수 지양
+- Math.floor() 보다는 Math.trunc()
+- 제네릭의 사용 
