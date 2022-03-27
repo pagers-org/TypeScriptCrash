@@ -38,7 +38,7 @@ function startApp() {
 }
 
 async function setup() {
-  const data = await api.fetchCovidSummary();
+  const data = await api.getCovidSummary();
 
   components.forEach(component => component.setup(data));
 }

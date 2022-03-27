@@ -21,7 +21,7 @@ export type Country = {
   Cases: string;
 };
 
-export type CountryTotalCounterProp =
+export type TotalCounterProp =
   | 'TotalDeaths'
   | 'TotalConfirmed'
   | 'TotalRecovered';
@@ -36,8 +36,4 @@ export type Global = {
   Date: Date;
 };
 
-export const totalDataTypes = [
-  'TotalDeaths',
-  'TotalConfirmed',
-  'TotalRecovered',
-];
+export type ApiCountryInfoType = 'confirmed' | 'deaths' | 'recovered';

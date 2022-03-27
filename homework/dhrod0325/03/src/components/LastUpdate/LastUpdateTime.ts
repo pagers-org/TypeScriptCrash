@@ -3,17 +3,23 @@ import { Summary } from '../../types';
 import { $, getDateString } from '../../lib/utils';
 
 export class LastUpdateTime implements Component {
-  private readonly $lastUpdatedTime: HTMLElement;
+  private readonly SELECTOR_ID = '.last-updated-time';
+
+  private readonly $container: HTMLElement;
 
   constructor() {
-    this.$lastUpdatedTime = $('.last-updated-time');
+    this.$container = $(this.SELECTOR_ID);
   }
 
   public setup(data: Summary): void {
     this.update(data);
   }
 
-  private update(data: Summary) {
-    this.$lastUpdatedTime.innerText = getDateString(data.Date);
+  public setHtml(html: string): void {
+    this.$container.innerText = html;
+  }
+
+  private update(data: Summary): void {
+    this.setHtml(getDateString(data.Date));
   }
 }

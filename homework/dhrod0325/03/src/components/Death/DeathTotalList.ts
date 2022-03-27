@@ -6,6 +6,8 @@ import { api } from '../../lib/api';
 import { useSpinner } from '../Helper/Spinner';
 
 export class DeathTotalList implements Component {
+  private readonly SPINNER_ID = 'deaths-spinner';
+
   private readonly $total: DeathTotal;
   private readonly $list: DeathList;
 
@@ -14,18 +16,18 @@ export class DeathTotalList implements Component {
     this.$list = new DeathList();
   }
 
-  setup(data: Summary): void {
+  public setup(data: Summary): void {
     this.$total.loadData(data);
   }
 
-  public async loadData(selectedId: string | undefined) {
+  public async loadData(selectedId: string) {
     this.$list.clear();
 
-    await useSpinner(this.$list.$container, 'deaths-spinner', async () => {
-      const deathResponse = await api.fetchCountryInfo(selectedId, 'deaths');
+    await useSpinner(this.$list.container(), this.SPINNER_ID, async () => {
+      const data = await api.getDeaths(selectedId);
 
-      this.$list.loadData(deathResponse);
-      this.$total.setHtmlByFirstCountry(deathResponse);
+      this.$list.loadData(data);
+      this.$total.setHtmlByFirstCountry(data);
     });
   }
 }

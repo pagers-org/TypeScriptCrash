@@ -3,23 +3,29 @@ import { $, sortedData } from '../../lib/utils';
 import { createRecoveredListItem } from '../../lib/template';
 
 export class RecoveredList {
-  readonly $container: HTMLElement;
+  private readonly CONTAINER_SELECTOR = '.recovered-list';
+
+  private readonly $container: HTMLElement;
 
   constructor() {
-    this.$container = $('.recovered-list');
+    this.$container = $(this.CONTAINER_SELECTOR);
   }
 
-  setItems(data?: Country[]) {
+  public container() {
+    return this.$container;
+  }
+
+  public setItems(data?: Country[]): void {
     if (!data) return;
 
-    const sorted = sortedData(data);
-
-    sorted.forEach(value => {
-      this.$container.appendChild(createRecoveredListItem(value));
-    });
+    sortedData(data).forEach(value => this.addItem(value));
   }
 
-  clear() {
+  public clear(): void {
     this.$container.innerHTML = '';
+  }
+
+  public addItem(value: Country): void {
+    this.$container.appendChild(createRecoveredListItem(value));
   }
 }

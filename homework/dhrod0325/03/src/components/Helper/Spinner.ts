@@ -8,11 +8,11 @@ export class Spinner {
     this.$spinner = this.create(spinnerId);
   }
 
-  public show() {
+  public show(): void {
     this.$container.appendChild(this.$spinner);
   }
 
-  public hide() {
+  public hide(): void {
     this.$container.removeChild(this.$spinner);
   }
 
@@ -24,7 +24,7 @@ export class Spinner {
     await this.hide();
   }
 
-  create(id: string) {
+  create(id: string): HTMLElement {
     function createWrapper() {
       const wrapperDiv = document.createElement('div');
       wrapperDiv.setAttribute('id', id);
@@ -53,12 +53,11 @@ export class Spinner {
   }
 }
 
-export const useSpinner = async (
+export const useSpinner = (
   $container: HTMLElement,
   spinnerId: string,
   callback: () => void,
 ) => {
   const spinner = new Spinner($container, spinnerId);
-
-  return await spinner.spin(callback);
+  return spinner.spin(callback);
 };

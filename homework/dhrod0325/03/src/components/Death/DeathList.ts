@@ -3,27 +3,33 @@ import { Country } from '../../types';
 import { createDeathTotalListItem } from '../../lib/template';
 
 export class DeathList {
-  readonly $container: HTMLElement;
+  private readonly CONTAINER_SELECTOR = '.deaths-list';
+
+  private readonly $container: HTMLElement;
 
   constructor() {
-    this.$container = $('.deaths-list');
+    this.$container = $(this.CONTAINER_SELECTOR);
+  }
+
+  public container() {
+    return this.$container;
+  }
+
+  public clear(): void {
+    this.$container.innerHTML = '';
   }
 
   public async loadData(data?: Country[]) {
     this.setItems(data);
   }
 
-  private setItems(data?: Country[]) {
+  private setItems(data?: Country[]): void {
     if (!data) return;
 
-    const sorted = sortedData(data);
-
-    sorted.forEach(country => {
-      this.$container.appendChild(createDeathTotalListItem(country));
-    });
+    sortedData(data).forEach(country => this.addItem(country));
   }
 
-  public clear() {
-    this.$container.innerHTML = '';
+  private addItem(country: Country): void {
+    this.$container.appendChild(createDeathTotalListItem(country));
   }
 }

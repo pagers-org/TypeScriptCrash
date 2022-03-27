@@ -1,24 +1,27 @@
 import { Country, Summary } from '../../types';
-import { $, calcTotalCountData } from '../../lib/utils';
+import { $, calcTotalDeaths } from '../../lib/utils';
 
 export class DeathTotal {
-  private $container: HTMLElement;
+  private readonly CONTAINER_SELECTOR = '.deaths';
+
+  private readonly $container: HTMLElement;
 
   constructor() {
-    this.$container = $('.deaths');
+    this.$container = $(this.CONTAINER_SELECTOR);
   }
 
-  loadData(data: Summary) {
-    const count = calcTotalCountData(data, 'TotalDeaths');
+  public loadData(data: Summary) {
+    const count = calcTotalDeaths(data);
     this.setHtml(String(count));
   }
 
-  setHtml(count: string) {
+  public setHtml(count: string) {
     this.$container.innerText = count;
   }
 
-  setHtmlByFirstCountry(data?: Country[]) {
+  public setHtmlByFirstCountry(data?: Country[]) {
     if (!data) return;
+
     this.setHtml(data[0].Cases);
   }
 }

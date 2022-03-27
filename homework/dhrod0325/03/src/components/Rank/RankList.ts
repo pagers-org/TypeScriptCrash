@@ -1,16 +1,20 @@
 import { Component } from '../../interfaces';
-import { Summary } from '../../types';
+import { Country, Summary } from '../../types';
 import { EventEmitter } from '../../lib/EventEmitter';
 import { createRankListItem } from '../../lib/template';
 import { $ } from '../../lib/utils';
 
 export class RankList implements Component {
+  private CONTAINER_SELECTOR = '.rank-list';
+
+  private readonly ITEM_CLICK_EVENT_NAME = 'rankItemClicked';
+
   private readonly $container: HTMLElement;
 
   constructor(eventEmitter: EventEmitter) {
-    this.$container = $('.rank-list');
+    this.$container = $(this.CONTAINER_SELECTOR);
     this.$container.addEventListener('click', e => {
-      eventEmitter.emit('rankItemClicked', e);
+      eventEmitter.emit(this.ITEM_CLICK_EVENT_NAME, e);
     });
   }
 
@@ -18,13 +22,15 @@ export class RankList implements Component {
     this.setByTotalConfirmed(data);
   }
 
-  private setByTotalConfirmed(data: Summary) {
-    const sorted = data.Countries.sort(
-      (a, b) => b.TotalConfirmed - a.TotalConfirmed,
-    );
+  private setByTotalConfirmed(data: Summary): void {
+    this.sortedData(data).forEach(value => this.addItem(value));
+  }
 
-    sorted.forEach(value => {
-      this.$container.appendChild(createRankListItem(value));
-    });
+  private sortedData(data: Summary): Country[] {
+    return data.Countries.sort((a, b) => b.TotalConfirmed - a.TotalConfirmed);
+  }
+
+  private addItem(value: Country): void {
+    this.$container.appendChild(createRankListItem(value));
   }
 }

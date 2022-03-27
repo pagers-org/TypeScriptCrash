@@ -1,20 +1,22 @@
 import { Component } from '../../interfaces';
 import { Summary } from '../../types';
-import { $, calcTotalCountData } from '../../lib/utils';
+import { $, calcTotalConfirmed } from '../../lib/utils';
 
 export class ConfirmedTotal implements Component {
+  private readonly CONTAINER_SELECTOR = '.confirmed-total';
+
   private readonly $container: HTMLElement;
 
   constructor() {
-    this.$container = $('.confirmed-total');
+    this.$container = $(this.CONTAINER_SELECTOR);
   }
 
-  setup(data: Summary): void {
-    const count = calcTotalCountData(data, 'TotalConfirmed');
-    this.setTotal(String(count));
+  public setup(data: Summary): void {
+    const count = calcTotalConfirmed(data);
+    this.setHtml(String(count));
   }
 
-  private setTotal(count: string) {
+  private setHtml(count: string): void {
     this.$container.innerText = count;
   }
 }
