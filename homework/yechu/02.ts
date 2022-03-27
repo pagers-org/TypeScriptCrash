@@ -1,20 +1,53 @@
 /*----------------- 01 calc ------------------*/
 type Operator = 'add' | 'sub' | 'mul' | 'div' | 'calc';
+type OpertorShorthand = '*' | '/';
+type ArgType = Array<string | number>;
+type Result = number | undefined;
 
-function runCalc(args: [string | number]) {
-  //함수 만들기
+function runCalc(args: ArgType): Result {
+  let result: Result;
+  let idx = 0;
+
+  function isOepratorExist(operator: OpertorShorthand) {
+    if (args.includes(operator)) return true;
+    return false;
+  }
+
+  while (args.length > 1) {
+    if (isOepratorExist('*')) {
+      idx = args.findIndex(elem => elem === '*');
+      result = calculate('mul', args[idx - 1], args[idx + 1]) as number;
+      args.splice(idx - 1, 3, result);
+      idx = 0;
+    }
+
+    if (isOepratorExist('/')) {
+      idx = args.findIndex(elem => elem === '/');
+      result = calculate('div', args[idx - 1], args[idx + 1]) as number;
+      args.splice(idx - 1, 3, result);
+      idx = 0;
+    }
+    if (args[idx] === '+') {
+      result = calculate('add', args[idx - 1], args[idx + 1]) as number;
+      args.splice(idx - 1, 3, result);
+      idx--;
+    }
+
+    if (args[idx] === '-') {
+      result = calculate('sub', args[idx - 1], args[idx + 1]) as number;
+      args.splice(idx - 1, 3, result);
+      idx--;
+    }
+
+    idx++;
+  }
+  return result;
 }
-function calculate(
-  operator: Operator,
-  ...args: [string | number, number | string]
-) {
-  //if (args.length > 2) return runCalc(args);
-  if (typeof args[0] === 'string') {
-    args[0] = parseInt(args[0]);
-  }
-  if (typeof args[1] === 'string') {
-    args[1] = parseInt(args[1]);
-  }
+
+function calculate(operator: Operator, ...args: ArgType): Result {
+  if (args.length > 2) return runCalc(args);
+
+  console.log(typeof args[0]);
 
   switch (operator) {
     case 'add':
@@ -27,10 +60,10 @@ function calculate(
       return +args[0] * +args[1];
 
     case 'div':
-      return Math.floor(+args[0] / +args[1]);
+      return Math.trunc(+args[0] / +args[1]);
 
     default:
-      return;
+      console.log(`args: ${args}, operator:${operator}`);
   }
 }
 
@@ -38,18 +71,19 @@ console.log(calculate('add', 1, 3)); // 4
 console.log(calculate('sub', '3', 2)); // 1
 console.log(calculate('mul', 6, '9')); // 54
 console.log(calculate('div', '5', '4')); // 1
-//console.log(calculate('calc', 6, '-', 4, '*', 12, '/', 6, '+', 19)); // 17
+console.log(calculate('calc', 6, '-', 4, '*', 12, '/', 6, '+', 19)); // 17
 
 /*----------------- 02 control ------------------*/
 type Category = 'game' | 'memory' | 'study';
 type Game = 'start' | 'pause' | 'stop';
+type Gender = 'female' | 'male';
 type Memory = {
   name: string;
-  gender: 'female' | 'male';
+  gender: Gender;
   age: number;
   isStudent: boolean;
-  hobby?: string[];
-  doing?: object[];
+  hobby?: Array<string>;
+  doing?: Array<object>;
 };
 
 const GAME = {
@@ -58,26 +92,29 @@ const GAME = {
   STOP: '게임이 종료되었습니다!',
 };
 
-const studyArray: number[] = [];
-let ageSuffix = '';
+const studyArray: Array<number> = [];
 
 const studentState = (isStudent: boolean) => {
-  if (isStudent) return `학생은 아니에요🤣`;
+  if (isStudent) return `학교에 다니고 있어요🤗`;
   return `학생은 아니에요🤣 `;
 };
-const genderState = (gender: string) => {
+const genderState = (gender: Gender) => {
   if (gender === 'female') {
-    ageSuffix = '이구';
     return `여성`;
   }
-  ageSuffix = '살이예요!';
   return `남성`;
 };
-const hobbyState = (hobby: string[]) => {
+const genderSuffix = (gender: Gender) => {
+  if (gender === 'female') {
+    return '이구';
+  }
+  return '살이예요!';
+};
+const hobbyState = (hobby: Array<string>) => {
   const result = hobby.reduce((prev, curr) => prev + ', ' + curr);
   return `취미는 ${result}에요!`;
 };
-const doingState = (doing: object[]) => {
+const doingState = (doing: Array<object>) => {
   return `현재 하고 있는 일은 이래요!\
   ${JSON.stringify(doing)}`;
 };
@@ -112,15 +149,15 @@ function control(category: Category, action: Game | number | Memory) {
   }
 
   if (category === 'memory') {
-    if (typeof action === 'object') {
-      const result = `
-      저의 이름은 ${action.name}, ${genderState(action.gender)}이고 
-       ${action.age + ageSuffix} ${studentState(action.isStudent)} 
-       ${action.hobby ? hobbyState(action.hobby) : ''} 
-        ${action.doing ? doingState(action.doing) : ''}
-          `;
-      return result;
-    }
+    const person = <Memory>action;
+    const result = `
+      저의 이름은 ${person.name}, ${genderState(person.gender)}이고 
+      ${person.age + genderSuffix(person.gender)} 
+      ${studentState(person.isStudent)} 
+      ${person.hobby ? hobbyState(person.hobby) : ''} 
+      ${person.doing ? doingState(person.doing) : ''}
+      `;
+    return result;
   }
 }
 
