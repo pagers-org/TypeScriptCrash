@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution":"Node",    
     "strict": true,
     "outDir": "dist",
     "sourceMap": true,
-    "typeRoots": ["./node_modules/@types", "./types"],
-    "lib": ["ES2015", "DOM"]
-  }
+    "typeRoots": ["/node_modules/@types", "@types"],
+    "lib": ["ES2015", "DOM", "ESNext"]
+  },
+  "include": ["src"],
 }

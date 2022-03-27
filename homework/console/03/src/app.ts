@@ -1,3 +1,5 @@
+import Chart from 'chartjs';
+import { TextElement, CountryStatus, CovidSummary } from 'Covid';
 // utils
 function $(selector: string) {
   return document.querySelector(selector);
@@ -40,62 +42,6 @@ async function fetchCovidSummary() {
   const response = await fetch('https://api.covid19api.com/summary');
   const result = await response.json();
   return result;
-}
-
-interface TextElement extends Element {
-  innerText?: string;
-}
-
-export enum Status {
-  Confirmed = 'confirmed',
-  Deaths = 'deaths',
-  Recovered = 'recovered',
-}
-
-export enum CountryCode {
-  Za = 'ZA',
-}
-export interface CountryStatus {
-  Country: Country;
-  CountryCode: CountryCode;
-  Province: string;
-  City: string;
-  CityCode: string;
-  Lat: string;
-  Lon: string;
-  Cases: number;
-  Status: Status;
-  Date: Date;
-}
-
-export interface CovidSummary {
-  ID: string;
-  Message: string;
-  Global: Global;
-  Countries: Country[];
-  Date: Date;
-}
-
-export interface Country {
-  Country: string;
-  CountryCode: string;
-  Slug: string;
-  NewConfirmed: number;
-  TotalConfirmed: number;
-  NewDeaths: number;
-  TotalDeaths: number;
-  NewRecovered: number;
-  TotalRecovered: number;
-  Date: Date;
-}
-
-export interface Global {
-  NewConfirmed: number;
-  TotalConfirmed: number;
-  NewDeaths: number;
-  TotalDeaths: number;
-  NewRecovered: number;
-  TotalRecovered: number;
 }
 
 async function fetchCountryInfo(
@@ -142,7 +88,6 @@ async function handleListClick(event: Event) {
   startLoadingAnimation();
   isDeathLoading = true;
   const deathResponse = await fetchCountryInfo(selectedId, 'deaths');
-  console.log(deathResponse);
   const recoveredResponse = await fetchCountryInfo(selectedId, 'recovered');
   const confirmedResponse = await fetchCountryInfo(selectedId, 'confirmed');
   endLoadingAnimation();
