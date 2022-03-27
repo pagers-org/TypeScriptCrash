@@ -25,9 +25,11 @@ type ContolType = 'game' | 'study' | 'memory';
 
 type Sex = 'male' | 'female';
 
+
 type SexKo<T> = {
   [k in Sex]: T extends 'male' ? '여성' : '남성';
 };
+
 
 type ArgType = GameState | number | Man;
 
