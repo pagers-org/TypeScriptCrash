@@ -16,21 +16,17 @@ export class RecoveredTotalList implements Component {
   }
 
   setup(data: Summary): void {
-    const TotalRecovered = calcTotalCountData(data, 'TotalRecovered');
-    this.$total.setHtml(String(TotalRecovered));
+    this.$total.loadData(data);
   }
 
   public async loadData(selectedId: string | undefined) {
     this.$list.clear();
 
     await useSpinner(this.$list.$container, 'recovered-spinner', async () => {
-      const recoveredResponse = await api.fetchCountryInfo(
-        selectedId,
-        'recovered',
-      );
+      const data = await api.fetchCountryInfo(selectedId, 'recovered');
 
-      this.$list.setItems(recoveredResponse);
-      this.$total.setByCountry(recoveredResponse);
+      this.$list.setItems(data);
+      this.$total.setHtmlByFirstCountry(data);
     });
   }
 }

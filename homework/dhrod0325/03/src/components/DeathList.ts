@@ -13,10 +13,6 @@ export class DeathList {
     this.setItems(data);
   }
 
-  public clear() {
-    this.$container.innerHTML = '';
-  }
-
   private setItems(data?: Country[]) {
     if (!data) return;
 
@@ -25,5 +21,9 @@ export class DeathList {
     sorted.forEach(country => {
       this.$container.appendChild(createDeathTotalListItem(country));
     });
+  }
+
+  public clear() {
+    this.$container.innerHTML = '';
   }
 }

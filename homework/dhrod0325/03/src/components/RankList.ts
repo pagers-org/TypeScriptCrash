@@ -9,17 +9,16 @@ export class RankList implements Component {
 
   constructor(eventEmitter: EventEmitter) {
     this.$container = $('.rank-list');
-
     this.$container.addEventListener('click', e => {
       eventEmitter.emit('rankItemClicked', e);
     });
   }
 
   public setup(data: Summary): void {
-    this.setByConfirmedCases(data);
+    this.setByTotalConfirmed(data);
   }
 
-  private setByConfirmedCases(data: Summary) {
+  private setByTotalConfirmed(data: Summary) {
     const sorted = data.Countries.sort(
       (a, b) => b.TotalConfirmed - a.TotalConfirmed,
     );

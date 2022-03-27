@@ -25,7 +25,7 @@ export class DeathTotalList implements Component {
       const deathResponse = await api.fetchCountryInfo(selectedId, 'deaths');
 
       this.$list.loadData(deathResponse);
-      this.$total.setByCountry(deathResponse);
+      this.$total.setHtmlByFirstCountry(deathResponse);
     });
   }
 }

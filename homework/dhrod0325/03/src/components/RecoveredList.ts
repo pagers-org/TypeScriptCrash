@@ -13,7 +13,6 @@ export class RecoveredList {
     if (!data) return;
 
     const sorted = data.sort((a, b) => sortByTimeStamp(b.Date, a.Date));
-
     sorted.forEach(value => {
       this.$container.appendChild(createRecoveredListItem(value));
     });
