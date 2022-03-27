@@ -12,3 +12,9 @@
 - 전역변수 지양
 - Math.floor() 보다는 Math.trunc()
 - 제네릭의 사용 
+
+## 3회차
+directory 03 으로 이동하여 실행
+```js
+npx parcel index.html
+```
