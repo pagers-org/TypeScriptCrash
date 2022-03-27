@@ -19,13 +19,13 @@ export class DeathTotalList implements Component {
   }
 
   public async loadData(selectedId: string | undefined) {
-    this.$list.clearDeathList();
+    this.$list.clear();
 
     await useSpinner(this.$list.$container, 'deaths-spinner', async () => {
       const deathResponse = await api.fetchCountryInfo(selectedId, 'deaths');
 
       this.$list.loadData(deathResponse);
-      this.$total.setTotalDeathsByCountry(deathResponse);
+      this.$total.setByCountry(deathResponse);
     });
   }
 }

@@ -3,18 +3,18 @@ import { Component } from '../interfaces';
 import { Summary } from '../types';
 
 export class ConfirmedTotal implements Component {
-  private readonly $confirmedTotal: HTMLElement;
+  private readonly $container: HTMLElement;
 
   constructor() {
-    this.$confirmedTotal = $('.confirmed-total');
+    this.$container = $('.confirmed-total');
   }
 
   setup(data: Summary): void {
     const count = calcTotalCountData(data, 'TotalConfirmed');
-    this.setCountNumber(String(count));
+    this.setTotal(String(count));
   }
 
-  private setCountNumber(count: string) {
-    this.$confirmedTotal.innerText = count;
+  private setTotal(count: string) {
+    this.$container.innerText = count;
   }
 }

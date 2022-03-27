@@ -16,10 +16,10 @@ export class RankList implements Component {
   }
 
   public setup(data: Summary): void {
-    this.setCountryRanksByConfirmedCases(data);
+    this.setByConfirmedCases(data);
   }
 
-  private setCountryRanksByConfirmedCases(data: Summary) {
+  private setByConfirmedCases(data: Summary) {
     const sorted = data.Countries.sort(
       (a, b) => b.TotalConfirmed - a.TotalConfirmed,
     );

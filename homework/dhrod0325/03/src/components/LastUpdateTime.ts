@@ -10,10 +10,10 @@ export class LastUpdateTime implements Component {
   }
 
   public setup(data: Summary): void {
-    this.setLastUpdatedTimestamp(data);
+    this.update(data);
   }
 
-  private setLastUpdatedTimestamp(data: Summary) {
+  private update(data: Summary) {
     this.$lastUpdatedTime.innerText = getDateString(data.Date);
   }
 }

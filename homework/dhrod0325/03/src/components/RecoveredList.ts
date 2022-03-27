@@ -9,7 +9,7 @@ export class RecoveredList {
     this.$container = $('.recovered-list');
   }
 
-  setRecoveredList(data?: Country[]) {
+  setItems(data?: Country[]) {
     if (!data) return;
 
     const sorted = data.sort((a, b) => sortByTimeStamp(b.Date, a.Date));
@@ -19,7 +19,7 @@ export class RecoveredList {
     });
   }
 
-  clearRecoveredList() {
+  clear() {
     this.$container.innerHTML = '';
   }
 }

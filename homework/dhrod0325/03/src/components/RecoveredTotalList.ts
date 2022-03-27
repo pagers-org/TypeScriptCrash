@@ -17,11 +17,11 @@ export class RecoveredTotalList implements Component {
 
   setup(data: Summary): void {
     const TotalRecovered = calcTotalCountData(data, 'TotalRecovered');
-    this.$total.setTotalRecoveredByWorld(String(TotalRecovered));
+    this.$total.setHtml(String(TotalRecovered));
   }
 
   public async loadData(selectedId: string | undefined) {
-    this.$list.clearRecoveredList();
+    this.$list.clear();
 
     await useSpinner(this.$list.$container, 'recovered-spinner', async () => {
       const recoveredResponse = await api.fetchCountryInfo(
@@ -29,8 +29,8 @@ export class RecoveredTotalList implements Component {
         'recovered',
       );
 
-      this.$list.setRecoveredList(recoveredResponse);
-      this.$total.setTotalRecoveredByCountry(recoveredResponse);
+      this.$list.setItems(recoveredResponse);
+      this.$total.setByCountry(recoveredResponse);
     });
   }
 }
