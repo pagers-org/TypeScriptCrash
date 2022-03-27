@@ -11,7 +11,6 @@ export class ConfirmedTotal implements Component {
 
   setup(data: Summary): void {
     const count = calcTotalCountData(data, 'TotalConfirmed');
-
     this.setCountNumber(String(count));
   }
 

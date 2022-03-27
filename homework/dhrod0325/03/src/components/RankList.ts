@@ -5,11 +5,12 @@ import { EventEmitter } from '../lib/EventEmitter';
 import { createRankListItem } from '../lib/template';
 
 export class RankList implements Component {
-  private readonly $rankList: HTMLElement;
+  private readonly $container: HTMLElement;
 
   constructor(eventEmitter: EventEmitter) {
-    this.$rankList = $('.rank-list');
-    this.$rankList.addEventListener('click', e => {
+    this.$container = $('.rank-list');
+
+    this.$container.addEventListener('click', e => {
       eventEmitter.emit('rankItemClicked', e);
     });
   }
@@ -24,7 +25,7 @@ export class RankList implements Component {
     );
 
     sorted.forEach(value => {
-      this.$rankList.appendChild(createRankListItem(value));
+      this.$container.appendChild(createRankListItem(value));
     });
   }
 }

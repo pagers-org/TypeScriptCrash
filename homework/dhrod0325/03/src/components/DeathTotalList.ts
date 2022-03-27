@@ -1,76 +1,31 @@
-import {
-  $,
-  calcTotalCountData,
-  createSpinnerElement,
-  getUnixTimestamp,
-  sortByTimeStamp,
-} from '../lib/utils';
-import { Country, Summary } from '../types';
+import { Summary } from '../types';
 import { api } from '../lib/api';
 import { Component } from '../interfaces';
-import { createDeathTotalListItem } from '../lib/template';
+import { useSpinner } from '../lib/Spinner';
+import { DeathList } from './DeathList';
+import { DeathTotal } from './DeathTotal';
 
 export class DeathTotalList implements Component {
-  private readonly $deathsTotal: HTMLElement;
-  private readonly $deathsList: HTMLElement;
-  private readonly $deathSpinner: HTMLElement;
+  private readonly $total: DeathTotal;
+  private readonly $list: DeathList;
 
   constructor() {
-    this.$deathsTotal = $('.deaths');
-
-    this.$deathsList = $('.deaths-list');
-
-    this.$deathSpinner = createSpinnerElement('deaths-spinner');
+    this.$total = new DeathTotal();
+    this.$list = new DeathList();
   }
 
   setup(data: Summary): void {
-    const count = calcTotalCountData(data, 'TotalDeaths');
-    this.setTotalDeathsByWorld(String(count));
+    this.$total.loadData(data);
   }
 
   public async loadData(selectedId: string | undefined) {
-    this.clearDeathList();
+    this.$list.clearDeathList();
 
-    this.startLoadingAnimation();
+    await useSpinner(this.$list.$container, 'deaths-spinner', async () => {
+      const deathResponse = await api.fetchCountryInfo(selectedId, 'deaths');
 
-    const deathResponse = await api.fetchCountryInfo(selectedId, 'deaths');
-
-    this.setDeathsList(deathResponse);
-
-    this.setTotalDeathsByCountry(deathResponse);
-
-    this.endLoadingAnimation();
-  }
-
-  private startLoadingAnimation() {
-    this.$deathsList.appendChild(this.$deathSpinner);
-  }
-
-  private endLoadingAnimation() {
-    this.$deathsList.removeChild(this.$deathSpinner);
-  }
-
-  private clearDeathList() {
-    this.$deathsList.innerHTML = '';
-  }
-
-  private setTotalDeathsByWorld(count: string) {
-    this.$deathsTotal.innerText = count;
-  }
-
-  private setDeathsList(data?: Country[]) {
-    if (!data) return;
-
-    const sorted = data.sort((a, b) => sortByTimeStamp(a.Date, b.Date));
-
-    sorted.forEach(country => {
-      this.$deathsList.appendChild(createDeathTotalListItem(country));
+      this.$list.loadData(deathResponse);
+      this.$total.setTotalDeathsByCountry(deathResponse);
     });
-  }
-
-  private setTotalDeathsByCountry(data?: Country[]) {
-    if (!data) return;
-
-    this.setTotalDeathsByWorld(data[0].Cases);
   }
 }

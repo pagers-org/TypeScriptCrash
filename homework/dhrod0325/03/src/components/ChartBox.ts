@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Country, Summary } from '../types';
-import { $ } from '../lib/utils';
+import { $, getDateString } from '../lib/utils';
 import { api } from '../lib/api';
 import { Component } from '../interfaces';
 
@@ -28,9 +28,7 @@ export class ChartBox implements Component {
   }
 
   private getLabel(data: Country[]) {
-    return data
-      .slice(-14)
-      .map(value => new Date(value.Date).toLocaleDateString().slice(5, -1));
+    return data.slice(-14).map(value => getDateString(value.Date).slice(5, -1));
   }
 
   private renderChart(data: string[], labels: string[]) {

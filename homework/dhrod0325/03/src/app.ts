@@ -3,7 +3,7 @@ import { api } from './lib/api';
 import { ConfirmedTotal } from './components/ConfirmedTotal';
 import { RankList } from './components/RankList';
 import { ChartBox } from './components/ChartBox';
-import { RecoveredList } from './components/RecoveredList';
+import { RecoveredTotalList } from './components/RecoveredTotalList';
 import { DeathTotalList } from './components/DeathTotalList';
 import { LastUpdateTime } from './components/LastUpdateTime';
 import { Component } from './interfaces';
@@ -15,7 +15,7 @@ const eventEmitter = new EventEmitter();
 const confirmedTotal = new ConfirmedTotal();
 
 const rankList = new RankList(eventEmitter);
-const recoveredList = new RecoveredList();
+const recoveredList = new RecoveredTotalList();
 const deathTotalList = new DeathTotalList();
 
 const chart = new ChartBox();

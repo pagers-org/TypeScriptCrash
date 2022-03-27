@@ -15,6 +15,10 @@ export function calcTotalCountData(
   return data.Countries.reduce((total, current) => total + current[prop], 0);
 }
 
+export function getDateString(date: Date) {
+  return new Date(date).toLocaleString();
+}
+
 export function findClickedId(event: Event): string | undefined {
   let selectedId!: string | undefined;
 
