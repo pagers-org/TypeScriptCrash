@@ -1,11 +1,19 @@
-import { CountryTotalCounterProp, Summary } from '../types';
+import { Country, CountryTotalCounterProp, Summary } from '../types';
 
 export function $(selector: string): HTMLElement {
   return <HTMLElement>document.querySelector(selector);
 }
 
-export function getUnixTimestamp(date: number | string | Date) {
+export function getDateTime(date: number | string | Date) {
   return new Date(date).getTime();
+}
+
+export function getDateString(date: Date) {
+  return new Date(date).toLocaleString();
+}
+
+export function timeDiff(a: Date, b: Date) {
+  return getDateTime(b) - getDateTime(a);
 }
 
 export function calcTotalCountData(
@@ -13,10 +21,6 @@ export function calcTotalCountData(
   prop: CountryTotalCounterProp,
 ) {
   return data.Countries.reduce((total, current) => total + current[prop], 0);
-}
-
-export function getDateString(date: Date) {
-  return new Date(date).toLocaleString();
 }
 
 export function findClickedId(event: Event): string | undefined {
@@ -36,6 +40,6 @@ export function findClickedId(event: Event): string | undefined {
   return selectedId;
 }
 
-export function sortByTimeStamp(a: Date, b: Date) {
-  return getUnixTimestamp(b) - getUnixTimestamp(a);
+export function sortedData(data: Country[]): Country[] {
+  return data.sort((a, b) => timeDiff(a.Date, b.Date));
 }

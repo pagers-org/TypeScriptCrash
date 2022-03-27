@@ -2,8 +2,8 @@ import { RecoveredList } from './RecoveredList';
 import { Component } from '../../interfaces';
 import { RecoveredTotal } from './RecoveredTotal';
 import { Summary } from '../../types';
-import { useSpinner } from '../../lib/Spinner';
 import { api } from '../../lib/api';
+import { useSpinner } from '../Helper/Spinner';
 
 export class RecoveredTotalList implements Component {
   private readonly $total: RecoveredTotal;
