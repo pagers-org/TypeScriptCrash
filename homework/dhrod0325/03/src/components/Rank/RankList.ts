@@ -1,8 +1,8 @@
-import { $ } from '../lib/utils';
-import { Summary } from '../types';
-import { Component } from '../interfaces';
-import { EventEmitter } from '../lib/EventEmitter';
-import { createRankListItem } from '../lib/template';
+import { Component } from '../../interfaces';
+import { Summary } from '../../types';
+import { EventEmitter } from '../../lib/EventEmitter';
+import { createRankListItem } from '../../lib/template';
+import { $ } from '../../lib/utils';
 
 export class RankList implements Component {
   private readonly $container: HTMLElement;

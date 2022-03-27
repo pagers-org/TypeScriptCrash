@@ -1,14 +1,14 @@
 import './assets/css/main.css';
 import { api } from './lib/api';
-import { ConfirmedTotal } from './components/ConfirmedTotal';
-import { RankList } from './components/RankList';
-import { ChartBox } from './components/ChartBox';
-import { RecoveredTotalList } from './components/RecoveredTotalList';
-import { DeathTotalList } from './components/DeathTotalList';
-import { LastUpdateTime } from './components/LastUpdateTime';
 import { Component } from './interfaces';
 import { findClickedId } from './lib/utils';
 import { EventEmitter } from './lib/EventEmitter';
+import { ConfirmedTotal } from './components/Confirmed/ConfirmedTotal';
+import { RecoveredTotalList } from './components/Recovered/RecoveredTotalList';
+import { RankList } from './components/Rank/RankList';
+import { ChartBox } from './components/Chart/ChartBox';
+import { LastUpdateTime } from './components/LastUpdate/LastUpdateTime';
+import { DeathTotalList } from './components/Death/DeathTotalList';
 
 const eventEmitter = new EventEmitter();
 

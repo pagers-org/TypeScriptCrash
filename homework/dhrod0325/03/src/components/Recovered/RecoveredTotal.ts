@@ -1,5 +1,5 @@
-import { $, calcTotalCountData } from '../lib/utils';
-import { Country, Summary } from '../types';
+import { Country, Summary } from '../../types';
+import { $, calcTotalCountData } from '../../lib/utils';
 
 export class RecoveredTotal {
   private readonly $container: HTMLElement;

@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Country, Summary } from '../types';
-import { $, getDateString } from '../lib/utils';
-import { api } from '../lib/api';
-import { Component } from '../interfaces';
+
+import { Component } from '../../interfaces';
+import { Country, Summary } from '../../types';
+import { api } from '../../lib/api';
+import { $, getDateString } from '../../lib/utils';
 
 export class ChartBox implements Component {
   setup(data: Summary): void {
@@ -10,16 +11,10 @@ export class ChartBox implements Component {
   }
 
   async loadData(selectedId: string | undefined) {
-    const confirmedResponse = await api.fetchCountryInfo(
-      selectedId,
-      'confirmed',
-    );
+    const data = await api.fetchCountryInfo(selectedId, 'confirmed');
 
-    if (confirmedResponse) {
-      this.renderChart(
-        this.getData(confirmedResponse),
-        this.getLabel(confirmedResponse),
-      );
+    if (data) {
+      this.renderChart(this.getData(data), this.getLabel(data));
     }
   }
 

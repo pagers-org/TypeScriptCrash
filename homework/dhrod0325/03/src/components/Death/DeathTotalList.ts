@@ -1,9 +1,9 @@
-import { Summary } from '../types';
-import { api } from '../lib/api';
-import { Component } from '../interfaces';
-import { useSpinner } from '../lib/Spinner';
 import { DeathList } from './DeathList';
 import { DeathTotal } from './DeathTotal';
+import { Component } from '../../interfaces';
+import { Summary } from '../../types';
+import { useSpinner } from '../../lib/Spinner';
+import { api } from '../../lib/api';
 
 export class DeathTotalList implements Component {
   private readonly $total: DeathTotal;

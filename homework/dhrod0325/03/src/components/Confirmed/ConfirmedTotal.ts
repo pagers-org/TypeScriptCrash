@@ -1,6 +1,6 @@
-import { $, calcTotalCountData } from '../lib/utils';
-import { Component } from '../interfaces';
-import { Summary } from '../types';
+import { Component } from '../../interfaces';
+import { Summary } from '../../types';
+import { $, calcTotalCountData } from '../../lib/utils';
 
 export class ConfirmedTotal implements Component {
   private readonly $container: HTMLElement;

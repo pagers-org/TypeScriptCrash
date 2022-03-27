@@ -1,6 +1,6 @@
-import { $, sortByTimeStamp } from '../lib/utils';
-import { Country } from '../types';
-import { createRecoveredListItem } from '../lib/template';
+import { Country } from '../../types';
+import { $, sortByTimeStamp } from '../../lib/utils';
+import { createRecoveredListItem } from '../../lib/template';
 
 export class RecoveredList {
   readonly $container: HTMLElement;

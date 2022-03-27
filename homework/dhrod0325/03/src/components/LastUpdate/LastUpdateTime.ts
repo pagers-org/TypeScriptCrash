@@ -1,6 +1,6 @@
-import { $, getDateString } from '../lib/utils';
-import { Summary } from '../types';
-import { Component } from '../interfaces';
+import { Component } from '../../interfaces';
+import { Summary } from '../../types';
+import { $, getDateString } from '../../lib/utils';
 
 export class LastUpdateTime implements Component {
   private readonly $lastUpdatedTime: HTMLElement;

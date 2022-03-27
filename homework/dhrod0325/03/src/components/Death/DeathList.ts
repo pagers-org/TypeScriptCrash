@@ -1,6 +1,6 @@
-import { $, sortByTimeStamp } from '../lib/utils';
-import { Country } from '../types';
-import { createDeathTotalListItem } from '../lib/template';
+import { $, sortByTimeStamp } from '../../lib/utils';
+import { Country } from '../../types';
+import { createDeathTotalListItem } from '../../lib/template';
 
 export class DeathList {
   readonly $container: HTMLElement;
