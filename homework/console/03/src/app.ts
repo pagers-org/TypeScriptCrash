@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { TextElement, CountryStatus, CovidSummary } from 'Covid';
 
 // utils
@@ -175,8 +174,8 @@ function renderChart(data: string[], labels: string[]) {
   const canvas = $('#lineChart') as HTMLCanvasElement;
   const ctx: CanvasRenderingContext2D | null = canvas?.getContext('2d');
 
-  Chart.defaults.global.scaleFontColor = '#f5eaea';
-  Chart.defaults.global.scaleFontFamily = 'Exo 2';
+  Chart.defaults.global.defaultFontColor = '#f5eaea';
+  Chart.defaults.global.defaultFontFamily = 'Exo 2';
   new Chart(<CanvasRenderingContext2D>ctx, {
     type: 'line',
     data: {

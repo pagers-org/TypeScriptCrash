@@ -36,6 +36,8 @@ interface ChartSettings {
   animation?: boolean;
   animationSteps?: number;
   animationEasing?: string;
+  defaultFontColor?: string;
+  defaultFontFamily?: string;
   showScale?: boolean;
   scaleOverride?: boolean;
   scaleSteps?: number;
@@ -207,8 +209,24 @@ interface Chart {
   ): CircularInstance;
 }
 
+interface Config {
+  labels: string[];
+  datasets: {
+    label: string;
+    backgroundColor: string;
+    borderColor: string;
+    data: string[];
+  }[];
+}
 declare const Chart: {
-  new (context: CanvasRenderingContext2D, config: any): Chart;
+  new (
+    context: CanvasRenderingContext2D,
+    config: {
+      type: string;
+      data: Config;
+      options: Record<string, unknown>;
+    },
+  ): Chart;
   defaults: {
     global: ChartSettings;
   };
