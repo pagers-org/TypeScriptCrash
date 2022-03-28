@@ -50,11 +50,11 @@ console.log(
   }),
 );
 
-저의 이름은 mark, 남성이고 42살이에요! 학생은 아니에요🤣 현재 하고 있는 일은 이래요!
-[
- { category: '회사일', content: ['상담', '스프린트 진행하기'] },
- { category: '집안일', content: ['청소', '쓰레기 비우기'], },
-]
+// 저의 이름은 mark, 남성이고 42살이에요! 학생은 아니에요🤣 현재 하고 있는 일은 이래요!
+// [
+//  { category: '회사일', content: ['상담', '스프린트 진행하기'] },
+//  { category: '집안일', content: ['청소', '쓰레기 비우기'], },
+// ]
 
 function calculate(operation: string, ...numbers: (number | string)[]): number {
   switch (operation) {
@@ -75,8 +75,7 @@ function calculate(operation: string, ...numbers: (number | string)[]): number {
       return Math.trunc(Number(numbers[0]) / Number(numbers[1]));
     }
     case 'calc': {
-      calc(numbers);
-      return 0;
+      return calc(numbers);
     }
     default:
       return 0;
@@ -154,7 +153,31 @@ function getDoing(
 }
 
 function calc(arr: (number | string)[]) {
-  return 0;
+  const foo: (number | string)[] = [arr[0]];
+  const bar = [];
+
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i] === '*' || arr[i] === '/') {
+      const left = foo.pop() as string;
+      const result = calculate(arr[i] as string, left, arr[i + 1]);
+      foo.push(result);
+      i++;
+    } else if (arr[i] === '+' || arr[i] === '-') {
+      bar.push(arr[i]);
+    } else {
+      foo.push(arr[i]);
+    }
+  }
+
+  let baz = 0;
+  for (let i = 1; i < foo.length; i++) {
+    const left = i === 1 ? foo[0] : baz;
+    const operator = bar.shift();
+    const result = calculate(operator as string, left, foo[i] as number);
+    baz = result;
+  }
+
+  return baz;
 }
 
 // 정해진 시간에 만난다. 개발할 수 있게 해준다.(the goal) -> ()
