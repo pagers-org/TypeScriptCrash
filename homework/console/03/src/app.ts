@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { TextElement, CountryStatus, CovidSummary } from 'Covid';
+
 // utils
 function $(selector: string) {
   return document.querySelector(selector);
@@ -174,12 +175,9 @@ function renderChart(data: string[], labels: string[]) {
   const canvas = $('#lineChart') as HTMLCanvasElement;
   const ctx: CanvasRenderingContext2D | null = canvas?.getContext('2d');
 
-  // @ts-ignore
-  Chart.defaults.global.defaultFontColor = '#f5eaea';
-  // @ts-ignore
-  Chart.defaults.global.defaultFontFamily = 'Exo 2';
-  // @ts-ignore
-  new Chart(ctx, {
+  Chart.defaults.global.scaleFontColor = '#f5eaea';
+  Chart.defaults.global.scaleFontFamily = 'Exo 2';
+  new Chart(<CanvasRenderingContext2D>ctx, {
     type: 'line',
     data: {
       labels,
