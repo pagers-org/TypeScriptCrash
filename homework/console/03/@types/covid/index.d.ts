@@ -1,8 +1,4 @@
 declare module 'Covid' {
-  export interface TextElement extends Element {
-    innerText?: string;
-  }
-
   export enum Status {
     Confirmed = 'confirmed',
     Deaths = 'deaths',

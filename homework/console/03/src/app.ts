@@ -1,21 +1,19 @@
-import { TextElement, CountryStatus, CovidSummary } from 'Covid';
-
+import { CountryStatus, CovidSummary } from 'Covid';
+import { fetchCovidSummary, fetchCountryInfo } from './api';
+import { getUnixTimestamp } from './lib/utils';
 // utils
 function $(selector: string) {
   return document.querySelector(selector);
 }
-function getUnixTimestamp(date: Date) {
-  return new Date(date).getTime();
-}
 
 // DOM
-const confirmedTotal = $('.confirmed-total') as TextElement;
-const deathsTotal = $('.deaths') as TextElement;
-const recoveredTotal = $('.recovered') as TextElement;
-const lastUpdatedTime = $('.last-updated-time') as TextElement;
-const rankList = $('.rank-list') as TextElement;
-const deathsList = $('.deaths-list') as TextElement;
-const recoveredList = $('.recovered-list') as TextElement;
+const confirmedTotal = $('.confirmed-total') as HTMLElement;
+const deathsTotal = $('.deaths') as HTMLElement;
+const recoveredTotal = $('.recovered') as HTMLElement;
+const lastUpdatedTime = $('.last-updated-time') as HTMLElement;
+const rankList = $('.rank-list') as HTMLElement;
+const deathsList = $('.deaths-list') as HTMLElement;
+const recoveredList = $('.recovered-list') as HTMLElement;
 const deathSpinner = createSpinnerElement('deaths-spinner');
 const recoveredSpinner = createSpinnerElement('recovered-spinner');
 
@@ -36,24 +34,6 @@ function createSpinnerElement(id: string) {
 
 // state
 let isDeathLoading = false;
-
-// api
-async function fetchCovidSummary() {
-  const response = await fetch('https://api.covid19api.com/summary');
-  const result = await response.json();
-  return result;
-}
-
-async function fetchCountryInfo(
-  countryCode: string,
-  status: string,
-): Promise<CountryStatus[]> {
-  const response = await fetch(
-    `https://api.covid19api.com/country/${countryCode}/status/${status}`,
-  );
-  const result = await response.json();
-  return result;
-}
 
 // methods
 function startApp() {
