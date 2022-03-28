@@ -1,7 +1,7 @@
-import { Summary } from './types';
+import { SummaryInfo } from './types';
 
 export interface SetupAble {
-  setup(data: Summary): void;
+  setup(data: SummaryInfo): void;
 }
 
 export interface LoadDataAble {

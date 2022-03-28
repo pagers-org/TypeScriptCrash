@@ -1,54 +1,36 @@
-import { Country } from '../types';
+import { Country } from '@/types';
+import { getDateString } from '@/lib/utils';
 
-export function createDeathTotalListItem(value: Country): HTMLElement {
-  const li = document.createElement('li');
-  li.setAttribute('class', 'list-item-b flex align-center');
+export function createElement(html: string): HTMLElement {
+  const f = document.createElement('template');
+  f.innerHTML = html;
 
-  const span = document.createElement('span');
-  span.textContent = value.Cases;
-  span.setAttribute('class', 'deaths');
-
-  const p = document.createElement('p');
-  p.textContent = new Date(value.Date).toLocaleDateString().slice(0, -1);
-
-  li.appendChild(span);
-  li.appendChild(p);
-
-  return li;
+  return <HTMLElement>f.content.firstElementChild;
 }
 
-export function createRankListItem(value: Country): HTMLElement {
-  const li = document.createElement('li');
-  li.setAttribute('class', 'list-item flex align-center');
-  li.setAttribute('id', value.Slug);
+export const createRecoveredListItem = (value: Country): Element => {
+  return createElement(`
+  <li class="list-item-b flex align-center">
+    <span class="recovered">${value.Cases}</span>
+    <p>${getDateString(value.Date).slice(0, -3)}</p>
+  </li>
+`);
+};
 
-  const span = document.createElement('span');
-  span.textContent = String(value.TotalConfirmed);
-  span.setAttribute('class', 'cases');
+export const createDeathTotalListItem = (value: Country): Element => {
+  return createElement(`
+  <li class="list-item-b flex align-center">
+    <span class="deaths">${value.Cases}</span>
+    <p>${getDateString(value.Date).slice(0, -3)}</p>
+  </li>
+`);
+};
 
-  const p = document.createElement('p');
-  p.setAttribute('class', 'country');
-  p.textContent = value.Country;
-
-  li.appendChild(span);
-  li.appendChild(p);
-
-  return li;
-}
-
-export function createRecoveredListItem(value: Country): HTMLElement {
-  const $li = document.createElement('li');
-  $li.setAttribute('class', 'list-item-b flex align-center');
-  const span = document.createElement('span');
-
-  span.textContent = String(value.Cases);
-  span.setAttribute('class', 'recovered');
-
-  const p = document.createElement('p');
-  p.textContent = new Date(value.Date).toLocaleDateString().slice(0, -1);
-
-  $li.appendChild(span);
-  $li.appendChild(p);
-
-  return $li;
-}
+export const createRankListItem = (value: Country): Element => {
+  return createElement(`
+  <li class="list-item flex align-center" id="${value.Slug}">
+    <span class="cases">${value.TotalConfirmed}</span>
+    <p class="country">${value.Country}</p>
+  </li>
+`);
+};

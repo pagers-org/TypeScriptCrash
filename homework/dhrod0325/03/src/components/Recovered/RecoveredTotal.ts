@@ -1,5 +1,5 @@
-import { Country, Summary } from '../../types';
-import { $, calcTotalRecovered } from '../../lib/utils';
+import { Country, SummaryInfo } from '@/types';
+import { $ } from '@/lib/utils';
 
 export class RecoveredTotal {
   private readonly CONTAINER_SELECTOR = '.recovered';
@@ -10,10 +10,8 @@ export class RecoveredTotal {
     this.$container = $(this.CONTAINER_SELECTOR);
   }
 
-  public loadData(data: Summary): void {
-    const count = calcTotalRecovered(data);
-
-    this.setHtml(String(count));
+  public loadData(data: SummaryInfo): void {
+    this.setHtml(String(data.TotalRecovered));
   }
 
   public setHtml(count: string): void {

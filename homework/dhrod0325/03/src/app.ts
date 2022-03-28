@@ -1,18 +1,19 @@
 import './assets/css/main.css';
-import { api } from './lib/api';
+
+import { api } from './lib/Api';
 import { Component } from './interfaces';
-import { findClickedId } from './lib/utils';
+import { createSummaryInfo, findClickedId } from './lib/utils';
 import { EventEmitter } from './lib/EventEmitter';
-import { ConfirmedTotal } from './components/Confirmed/ConfirmedTotal';
+import { Confirmed } from './components/Confirmed/Confirmed';
 import { RecoveredTotalList } from './components/Recovered/RecoveredTotalList';
 import { RankList } from './components/Rank/RankList';
 import { ChartBox } from './components/Chart/ChartBox';
-import { LastUpdateTime } from './components/LastUpdate/LastUpdateTime';
+import { LastUpdate } from './components/LastUpdate/LastUpdate';
 import { DeathTotalList } from './components/Death/DeathTotalList';
 
 const eventEmitter = new EventEmitter();
 
-const confirmedTotal = new ConfirmedTotal();
+const confirmedTotal = new Confirmed();
 
 const rankList = new RankList(eventEmitter);
 const recoveredList = new RecoveredTotalList();
@@ -20,7 +21,7 @@ const deathTotalList = new DeathTotalList();
 
 const chart = new ChartBox();
 
-const lastUpdateTime = new LastUpdateTime();
+const lastUpdateTime = new LastUpdate();
 
 const components: Component[] = [
   rankList,
@@ -40,7 +41,9 @@ function startApp() {
 async function setup() {
   const data = await api.getCovidSummary();
 
-  components.forEach(component => component.setup(data));
+  const summaryInfo = createSummaryInfo(data);
+
+  components.forEach(component => component.setup(summaryInfo));
 }
 
 // events

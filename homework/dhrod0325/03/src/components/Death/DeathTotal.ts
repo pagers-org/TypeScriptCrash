@@ -1,5 +1,5 @@
-import { Country, Summary } from '../../types';
-import { $, calcTotalDeaths } from '../../lib/utils';
+import { Country, SummaryInfo } from '@/types';
+import { $ } from '@/lib/utils';
 
 export class DeathTotal {
   private readonly CONTAINER_SELECTOR = '.deaths';
@@ -10,9 +10,8 @@ export class DeathTotal {
     this.$container = $(this.CONTAINER_SELECTOR);
   }
 
-  public loadData(data: Summary) {
-    const count = calcTotalDeaths(data);
-    this.setHtml(String(count));
+  public loadData(data: SummaryInfo) {
+    this.setHtml(String(data.TotalDeaths));
   }
 
   public setHtml(count: string) {

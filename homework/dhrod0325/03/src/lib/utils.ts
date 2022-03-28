@@ -1,4 +1,4 @@
-import { Country, TotalCounterProp, Summary } from '../types';
+import { Country, Summary, SummaryInfo, TotalCounterProp } from '@/types';
 
 export function $(selector: string): HTMLElement {
   return <HTMLElement>document.querySelector(selector);
@@ -14,25 +14,6 @@ export function getDateString(date: Date): string {
 
 export function timeDiff(a: Date, b: Date): number {
   return getDateTime(b) - getDateTime(a);
-}
-
-export function calcTotalCountData(
-  data: Summary,
-  prop: TotalCounterProp,
-): number {
-  return data.Countries.reduce((total, current) => total + current[prop], 0);
-}
-
-export function calcTotalConfirmed(data: Summary) {
-  return calcTotalCountData(data, 'TotalConfirmed');
-}
-
-export function calcTotalRecovered(data: Summary) {
-  return calcTotalCountData(data, 'TotalRecovered');
-}
-
-export function calcTotalDeaths(data: Summary) {
-  return calcTotalCountData(data, 'TotalDeaths');
 }
 
 export function findClickedId(event: Event): string | undefined {
@@ -56,4 +37,30 @@ export function sortedData(data: Country[]): Country[] {
   const result = data.sort((a, b) => timeDiff(a.Date, b.Date));
 
   return [...result];
+}
+
+export function createSummaryInfo(summary: Summary): SummaryInfo {
+  function calcTotalCountData(data: Summary, prop: TotalCounterProp): number {
+    return data.Countries.reduce((total, current) => total + current[prop], 0);
+  }
+
+  function totalConfirmed(data: Summary) {
+    return calcTotalCountData(data, 'TotalConfirmed');
+  }
+
+  function totalRecovered(data: Summary) {
+    return calcTotalCountData(data, 'TotalRecovered');
+  }
+
+  function totalDeaths(data: Summary) {
+    return calcTotalCountData(data, 'TotalDeaths');
+  }
+
+  const summaryInfo = { ...summary } as SummaryInfo;
+
+  summaryInfo.TotalConfirmed = totalConfirmed(summary);
+  summaryInfo.TotalRecovered = totalRecovered(summary);
+  summaryInfo.TotalDeaths = totalDeaths(summary);
+
+  return summaryInfo;
 }

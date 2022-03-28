@@ -1,6 +1,6 @@
-import { $, sortedData } from '../../lib/utils';
-import { Country } from '../../types';
-import { createDeathTotalListItem } from '../../lib/template';
+import { $, sortedData } from '@/lib/utils';
+import { Country } from '@/types';
+import { createDeathTotalListItem } from '@/lib/template';
 
 export class DeathList {
   private readonly CONTAINER_SELECTOR = '.deaths-list';
@@ -30,6 +30,8 @@ export class DeathList {
   }
 
   private addItem(country: Country): void {
-    this.$container.appendChild(createDeathTotalListItem(country));
+    const child = createDeathTotalListItem(country);
+
+    this.$container.appendChild(child);
   }
 }

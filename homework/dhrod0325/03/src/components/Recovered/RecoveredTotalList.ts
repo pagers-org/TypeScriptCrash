@@ -1,8 +1,8 @@
 import { RecoveredList } from './RecoveredList';
-import { Component } from '../../interfaces';
+import { Component } from '@/interfaces';
 import { RecoveredTotal } from './RecoveredTotal';
-import { Summary } from '../../types';
-import { api } from '../../lib/api';
+import { SummaryInfo } from '@/types';
+import { api } from '@/lib/Api';
 import { useSpinner } from '../Helper/Spinner';
 
 export class RecoveredTotalList implements Component {
@@ -16,7 +16,7 @@ export class RecoveredTotalList implements Component {
     this.$list = new RecoveredList();
   }
 
-  public setup(data: Summary): void {
+  public setup(data: SummaryInfo): void {
     this.$total.loadData(data);
   }
 

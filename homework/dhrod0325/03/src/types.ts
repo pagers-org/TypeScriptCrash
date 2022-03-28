@@ -1,10 +1,16 @@
 export type Summary = {
   ID: string;
   Message: string;
-  Global: Global;
+  Global?: Global;
   Countries: Country[];
   Date: Date;
 };
+
+export interface SummaryInfo extends Summary {
+  TotalConfirmed: number;
+  TotalRecovered: number;
+  TotalDeaths: number;
+}
 
 export type Country = {
   ID: string;
