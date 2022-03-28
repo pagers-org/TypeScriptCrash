@@ -1,108 +1,21 @@
-import Chart from "chart.js";
-
-interface Global {
-  NewConfirmed: number;
-  TotalConfirmed: number;
-  NewDeaths: number;
-  TotalDeaths: number;
-  NewRecovered: number;
-  TotalRecovered: number;
-  Date: Date;
-}
-
-interface Premium {}
-
-interface Country {
-  ID: string;
-  Country: string;
-  CountryCode: string;
-  Slug: string;
-  NewConfirmed: number;
-  TotalConfirmed: number;
-  NewDeaths: number;
-  TotalDeaths: number;
-  NewRecovered: number;
-  TotalRecovered: number;
-  Date: Date;
-  Premium: Premium;
-}
-
-interface CountryStatus {
-  Country: string;
-  CountryCode: string;
-  Province: string;
-  City: string;
-  CityCode: string;
-  Lat: string;
-  Lon: string;
-  Cases: number;
-  Status: string;
-  Date: Date;
-}
-
-interface SummaryObject {
-  ID: string;
-  Message: string;
-  Global: Global;
-  Countries: Country[];
-  Date: Date;
-}
-
-// utils
-function $(selector: string) {
-  return document.querySelector(selector);
-}
-function getUnixTimestamp(date: string | number | Date) {
-  return new Date(date).getTime();
-}
+import { fetchCountryInfo, fetchCovidSummary } from "./api";
+import { createDeathItemElement, createSpinnerElement } from "./components";
+import { CountryStatus, SummaryObject } from "./types";
+import { $, getUnixTimestamp } from "./utils";
 
 // DOM
-const confirmedTotal = $(".confirmed-total") as HTMLParagraphElement;
-const deathsTotal = $(".deaths") as HTMLParagraphElement;
-const recoveredTotal = $(".recovered") as HTMLParagraphElement;
-const lastUpdatedTime = $(".last-updated-time") as HTMLParagraphElement;
+const confirmedTotal = $(".confirmed-total");
+const deathsTotal = $(".deaths");
+const recoveredTotal = $(".recovered");
+const lastUpdatedTime = $(".last-updated-time");
 const rankList = $(".rank-list");
 const deathsList = $(".deaths-list");
 const recoveredList = $(".recovered-list");
 const deathSpinner = createSpinnerElement("deaths-spinner");
 const recoveredSpinner = createSpinnerElement("recovered-spinner");
 
-function createSpinnerElement(id: string): HTMLDivElement {
-  const wrapperDiv = document.createElement("div");
-  wrapperDiv.setAttribute("id", id);
-  wrapperDiv.setAttribute(
-    "class",
-    "spinner-wrapper flex justify-center align-center"
-  );
-  const spinnerDiv = document.createElement("div");
-  spinnerDiv.setAttribute("class", "ripple-spinner");
-  spinnerDiv.appendChild(document.createElement("div"));
-  spinnerDiv.appendChild(document.createElement("div"));
-  wrapperDiv.appendChild(spinnerDiv);
-  return wrapperDiv;
-}
-
 // state
 let isDeathLoading = false;
-
-// api
-async function fetchCovidSummary(): Promise<SummaryObject> {
-  const response = await fetch("https://api.covid19api.com/summary");
-  const result = await response.json();
-  return result;
-}
-
-async function fetchCountryInfo(
-  countryCode: string | undefined,
-  status: string
-) {
-  if (!countryCode) alert("Error with CountryCode");
-  const response = await fetch(
-    `https://api.covid19api.com/country/${countryCode}/status/${status}`
-  );
-  const result = await response.json();
-  return result;
-}
 
 // methods
 function startApp(): void {
@@ -112,7 +25,7 @@ function startApp(): void {
 
 // events
 function initEvents(): void {
-  rankList?.addEventListener("click", handleListClick);
+  rankList.addEventListener("click", handleListClick);
 }
 
 async function handleListClick(event: Event): Promise<void> {
@@ -153,16 +66,7 @@ function setDeathsList(data: CountryStatus[]): void {
     (a, b) => getUnixTimestamp(b.Date) - getUnixTimestamp(a.Date)
   );
   sorted.forEach((value) => {
-    const li = document.createElement("li");
-    li.setAttribute("class", "list-item-b flex align-center");
-    const span = document.createElement("span");
-    span.textContent = value.Cases.toString();
-    span.setAttribute("class", "deaths");
-    const p = document.createElement("p");
-    p.textContent = new Date(value.Date).toLocaleDateString().slice(0, -1);
-    li.appendChild(span);
-    li.appendChild(p);
-    deathsList?.appendChild(li);
+    deathsList?.appendChild(createDeathItemElement(value));
   });
 }
 
@@ -231,26 +135,26 @@ async function setupData(): Promise<void> {
 function renderChart(data: number[], labels: string[]): void {
   const canvas = $("#lineChart") as HTMLCanvasElement;
   const ctx = canvas.getContext("2d");
-  // eslint-disable-next-line no-undef
-  // Chart.defaults.global.defaultFontColor = "#f5eaea";
-  // // eslint-disable-next-line no-undef
-  // Chart.defaults.global.defaultFontFamily = "Exo 2";
-  // // eslint-disable-next-line no-undef
-  // new Chart(ctx, {
-  //   type: "line",
-  //   data: {
-  //     labels,
-  //     datasets: [
-  //       {
-  //         label: "Confirmed for the last two weeks",
-  //         backgroundColor: "#feb72b",
-  //         borderColor: "#feb72b",
-  //         data,
-  //       },
-  //     ],
-  //   },
-  //   options: {},
-  // });
+  // @ts-ignore
+  Chart.defaults.global.defaultFontColor = "#f5eaea";
+  // @ts-ignore
+  Chart.defaults.global.defaultFontFamily = "Exo 2";
+  // @ts-ignore
+  new Chart(ctx, {
+    type: "line",
+    data: {
+      labels,
+      datasets: [
+        {
+          label: "Confirmed for the last two weeks",
+          backgroundColor: "#feb72b",
+          borderColor: "#feb72b",
+          data,
+        },
+      ],
+    },
+    options: {},
+  });
 }
 
 function setChartData(data: CountryStatus[]): void {
