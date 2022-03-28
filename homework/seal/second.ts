@@ -56,7 +56,9 @@ console.log(
 //  { category: '집안일', content: ['청소', '쓰레기 비우기'], },
 // ]
 
-function calculate(operation: string, ...numbers: (number | string)[]): number {
+type Numbers = (number | string)[];
+
+function calculate(operation: string, ...numbers: Numbers): number {
   switch (operation) {
     case '+':
     case 'add': {
@@ -82,21 +84,23 @@ function calculate(operation: string, ...numbers: (number | string)[]): number {
   }
 }
 
-interface foo {
+interface Memory {
   name: string;
   gender: string;
   age: number;
   isStudent: boolean;
   hobby?: string[];
-  doing?: {
-    category: string;
-    content: string[];
-  }[];
+  doing?: Doing[];
+}
+
+interface Doing {
+  category: string;
+  content: string[];
 }
 
 function control(
   type: string,
-  purpose: string | number | foo,
+  purpose: string | number | Memory,
 ): string | number[] {
   switch (type) {
     case 'game': {
@@ -116,7 +120,7 @@ function control(
       return study;
     }
     case 'memory': {
-      const { name, gender, age, isStudent, hobby, doing } = purpose as foo;
+      const { name, gender, age, isStudent, hobby, doing } = purpose as Memory;
       const bar = `저의 이름은 ${name}, ${getGender(
         gender,
       )}이고 ${age}살이에요! ${getIsStudent(isStudent)} ${getHobby(
@@ -141,19 +145,12 @@ function getHobby(hobby: string[] | undefined) {
   return hobby ? `취미는 ${hobby.join(', ')}에요!` : '';
 }
 
-function getDoing(
-  doing:
-    | {
-        category: string;
-        content: string[];
-      }[]
-    | undefined,
-) {
+function getDoing(doing: Doing[] | undefined) {
   return doing ? `현재 하고 있는 일은 이래요! \n ${JSON.stringify(doing)}` : '';
 }
 
-function calc(arr: (number | string)[]) {
-  const foo: (number | string)[] = [arr[0]];
+function calc(arr: Numbers) {
+  const foo: Numbers = [arr[0]];
   const bar = [];
 
   for (let i = 1; i < arr.length; i++) {
