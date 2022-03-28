@@ -1,4 +1,4 @@
-import Chart from 'chartjs';
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { TextElement, CountryStatus, CovidSummary } from 'Covid';
 // utils
 function $(selector: string) {
@@ -174,11 +174,11 @@ function renderChart(data: string[], labels: string[]) {
   const canvas = $('#lineChart') as HTMLCanvasElement;
   const ctx: CanvasRenderingContext2D | null = canvas?.getContext('2d');
 
-  // eslint-disable-next-line no-undef
+  // @ts-ignore
   Chart.defaults.global.defaultFontColor = '#f5eaea';
-  // eslint-disable-next-line no-undef
+  // @ts-ignore
   Chart.defaults.global.defaultFontFamily = 'Exo 2';
-  // eslint-disable-next-line no-undef
+  // @ts-ignore
   new Chart(ctx, {
     type: 'line',
     data: {

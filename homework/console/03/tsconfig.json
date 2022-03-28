@@ -6,7 +6,7 @@
     "strict": true,
     "outDir": "dist",
     "sourceMap": true,
-    "typeRoots": ["/node_modules/@types", "@types"],
+    "typeRoots": ["@types"],
     "lib": ["ES2015", "DOM", "ESNext"]
   },
   "include": ["src"],

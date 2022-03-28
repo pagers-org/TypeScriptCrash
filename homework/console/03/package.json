@@ -11,8 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.26.1",
-    "chartjs": "^0.3.24"
+    "axios": "^0.26.1"
   },
   "devDependencies": {
     "vite": "^2.8.6"
