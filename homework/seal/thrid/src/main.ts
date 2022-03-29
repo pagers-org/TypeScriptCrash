@@ -168,7 +168,7 @@ function renderChart(data: number[], labels: string[]) {
 
   Chart.getChart('lineChart')?.destroy();
 
-  const confirmChart = new Chart(ctx, {
+  new Chart(ctx, {
     type: 'line',
     data: {
       labels,
@@ -183,7 +183,6 @@ function renderChart(data: number[], labels: string[]) {
     },
     options: {},
   });
-  console.log(confirmChart);
 }
 
 function setChartData(data: GetCountryResponse[]) {
