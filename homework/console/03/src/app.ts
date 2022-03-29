@@ -1,19 +1,23 @@
 import { CountryStatus, CovidSummary } from 'Covid';
 import { fetchCovidSummary, fetchCountryInfo } from './api';
 import { getUnixTimestamp } from './lib/utils';
-// utils
-function $(selector: string) {
-  return document.querySelector(selector);
+
+function $<T extends HTMLElement>(selector: string): T {
+  //여기서도 as T 를 써도 되는건 아래 null 처리를 해서
+  const element = document.querySelector(selector) as T;
+  //type guard
+  if (element === null) throw new Error('element is null');
+  return element;
 }
 
 // DOM
-const confirmedTotal = $('.confirmed-total') as HTMLElement;
-const deathsTotal = $('.deaths') as HTMLElement;
-const recoveredTotal = $('.recovered') as HTMLElement;
-const lastUpdatedTime = $('.last-updated-time') as HTMLElement;
-const rankList = $('.rank-list') as HTMLElement;
-const deathsList = $('.deaths-list') as HTMLElement;
-const recoveredList = $('.recovered-list') as HTMLElement;
+const confirmedTotal = $('.confirmed-total');
+const deathsTotal = $('.deaths');
+const recoveredTotal = $('.recovered');
+const lastUpdatedTime = $('.last-updated-time');
+const rankList = $('.rank-list');
+const deathsList = $('.deaths-list');
+const recoveredList = $('.recovered-list');
 const deathSpinner = createSpinnerElement('deaths-spinner');
 const recoveredSpinner = createSpinnerElement('recovered-spinner');
 
