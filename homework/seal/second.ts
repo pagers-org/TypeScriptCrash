@@ -77,7 +77,7 @@ function calculate(operation: string, ...numbers: Numbers): number {
       return Math.trunc(Number(numbers[0]) / Number(numbers[1]));
     }
     case 'calc': {
-      return calc(numbers);
+      return 사칙연산(numbers);
     }
     default:
       return 0;
@@ -104,33 +104,44 @@ function control(
 ): string | number[] {
   switch (type) {
     case 'game': {
-      if (purpose === 'start') return '게임이 시작되었습니다!';
-      else if (purpose === 'pause') return '게임이 중단되었습니다!';
-      else if (purpose === 'stop') return '게임이 종료되었습니다!';
-      return '';
+      return getGame(purpose as string);
     }
     case 'study': {
-      if (purpose > 0) study.push(Number(purpose));
-      else {
-        const index = study.findIndex(
-          (value: number) => value === Number(purpose),
-        );
-        study.splice(index, 1);
-      }
+      getStudy(purpose as number);
       return study;
     }
     case 'memory': {
-      const { name, gender, age, isStudent, hobby, doing } = purpose as Memory;
-      const bar = `저의 이름은 ${name}, ${getGender(
-        gender,
-      )}이고 ${age}살이에요! ${getIsStudent(isStudent)} ${getHobby(
-        hobby,
-      )} ${getDoing(doing)}`;
-      return bar;
+      return getMemory(purpose as Memory);
     }
     default:
       return [];
   }
+}
+
+function getGame(purpose: string) {
+  if (purpose === 'start') return '게임이 시작되었습니다!';
+  else if (purpose === 'pause') return '게임이 중단되었습니다!';
+  else if (purpose === 'stop') return '게임이 종료되었습니다!';
+  return '';
+}
+
+function getStudy(purpose: number) {
+  if (purpose > 0) study.push(Number(purpose));
+  else {
+    const index = study.findIndex((value: number) => value === Number(purpose));
+    study.splice(index, 1);
+  }
+}
+
+function getMemory(purpose: Memory) {
+  const { name, gender, age, isStudent, hobby, doing } = purpose;
+  const bar = `저의 이름은 ${name}, ${getGender(
+    gender,
+  )}이고 ${age}살이에요! ${getIsStudent(isStudent)} ${getHobby(
+    hobby,
+  )} ${getDoing(doing)}`;
+
+  return bar;
 }
 
 function getGender(gender: string) {
@@ -149,32 +160,44 @@ function getDoing(doing: Doing[] | undefined) {
   return doing ? `현재 하고 있는 일은 이래요! \n ${JSON.stringify(doing)}` : '';
 }
 
-function calc(arr: Numbers) {
-  const foo: Numbers = [arr[0]];
-  const bar = [];
+function 사칙연산(arr: Numbers) {
+  const { numbers, operators } = getMultiplyDividePriorityCalculation(arr);
+  const result = getAddSubtractCalculation(numbers, operators);
+
+  return result;
+}
+
+function getMultiplyDividePriorityCalculation(arr: Numbers) {
+  const numbers = [arr[0]];
+  const operators: string[] = [];
 
   for (let i = 1; i < arr.length; i++) {
     if (arr[i] === '*' || arr[i] === '/') {
-      const left = foo.pop() as string;
+      const left = numbers.pop() as string;
       const result = calculate(arr[i] as string, left, arr[i + 1]);
-      foo.push(result);
+      numbers.push(result);
       i++;
     } else if (arr[i] === '+' || arr[i] === '-') {
-      bar.push(arr[i]);
+      operators.push(arr[i] as string);
     } else {
-      foo.push(arr[i]);
+      numbers.push(arr[i]);
     }
   }
 
-  let baz = 0;
-  for (let i = 1; i < foo.length; i++) {
-    const left = i === 1 ? foo[0] : baz;
-    const operator = bar.shift();
-    const result = calculate(operator as string, left, foo[i] as number);
-    baz = result;
+  return { numbers, operators };
+}
+
+function getAddSubtractCalculation(numbers: Numbers, operators: string[]) {
+  let total = 0;
+
+  for (let i = 1; i < numbers.length; i++) {
+    const left = i === 1 ? numbers[0] : total;
+    const operator = operators.shift();
+    const result = calculate(operator as string, left, numbers[i] as number);
+    total = result;
   }
 
-  return baz;
+  return total;
 }
 
 // 정해진 시간에 만난다. 개발할 수 있게 해준다.(the goal) -> ()
