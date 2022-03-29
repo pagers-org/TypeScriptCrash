@@ -177,6 +177,7 @@ function renderChart(data: number[], labels: string[]) {
           label: 'Confirmed for the last two weeks',
           backgroundColor: '#feb72b',
           borderColor: '#feb72b',
+          fill: true,
           data,
         },
       ],
