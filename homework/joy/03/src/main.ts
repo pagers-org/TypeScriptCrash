@@ -31,13 +31,26 @@ function startApp() {
   initEvents();
 }
 
+async function setupData() {
+  const data = await fetchCovidSummary();
+
+  confirmedTotal.setTotalConfirmedNumber(data);
+  deathTotal.setTotalDeathsByWorld(data);
+  recoveredTotal.setTotalRecoveredByWorld(data);
+  rankList.setCountryRanksByConfirmedCases(data);
+  lastUpdatedTime.setLastUpdatedTimestamp(data);
+}
+
 // events
 function initEvents() {
   rankList.container.addEventListener('click', handleListClick);
 }
 
 async function handleListClick(event: any) {
-  let selectedId;
+  let selectedId = '';
+
+  //Element > HTML Element > HTMLParagraphElement
+  //타입단언
   if (
     event.target instanceof HTMLParagraphElement ||
     event.target instanceof HTMLSpanElement
@@ -80,16 +93,6 @@ function startLoadingAnimation() {
 function endLoadingAnimation() {
   deathsList.container.removeChild(deathSpinner);
   recoveredList.container.removeChild(recoveredSpinner);
-}
-
-async function setupData() {
-  const data = await fetchCovidSummary();
-
-  confirmedTotal.setTotalConfirmedNumber(data);
-  deathTotal.setTotalDeathsByWorld(data);
-  recoveredTotal.setTotalRecoveredByWorld(data);
-  rankList.setCountryRanksByConfirmedCases(data);
-  lastUpdatedTime.setLastUpdatedTimestamp(data);
 }
 
 startApp();

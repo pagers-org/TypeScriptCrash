@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
 // utils
-export function $(selector: any) {
+export function $(selector: string) {
   return document.querySelector(selector);
 }
 
-export function getUnixTimestamp(date: any) {
+export function getUnixTimestamp(date: Date) {
   return new Date(date).getTime();
 }
 
