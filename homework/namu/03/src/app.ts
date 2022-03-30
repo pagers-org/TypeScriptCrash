@@ -1,5 +1,10 @@
 import { fetchCountryInfo, fetchCovidSummary } from "./api";
-import { createDeathItemElement, createSpinnerElement } from "./components";
+import {
+  createCountryRankItemElement,
+  createDeathItemElement,
+  createRecoveredItemElement,
+  createSpinnerElement,
+} from "./components";
 import { CountryStatus, SummaryObject } from "./types";
 import { $, getUnixTimestamp } from "./utils";
 
@@ -87,16 +92,7 @@ function setRecoveredList(data: CountryStatus[]): void {
     (a, b) => getUnixTimestamp(b.Date) - getUnixTimestamp(a.Date)
   );
   sorted.forEach((value) => {
-    const li = document.createElement("li");
-    li.setAttribute("class", "list-item-b flex align-center");
-    const span = document.createElement("span");
-    span.textContent = value.Cases.toString();
-    span.setAttribute("class", "recovered");
-    const p = document.createElement("p");
-    p.textContent = new Date(value.Date).toLocaleDateString().slice(0, -1);
-    li.appendChild(span);
-    li.appendChild(p);
-    recoveredList?.appendChild(li);
+    recoveredList?.appendChild(createRecoveredItemElement(value));
   });
 }
 
@@ -124,7 +120,6 @@ function endLoadingAnimation(): void {
 
 async function setupData(): Promise<void> {
   const data = await fetchCovidSummary();
-  console.log("data", data);
   setTotalConfirmedNumber(data);
   setTotalDeathsByWorld(data);
   setTotalRecoveredByWorld(data);
@@ -197,18 +192,7 @@ function setCountryRanksByConfirmedCases(data: SummaryObject): void {
     (a, b) => b.TotalConfirmed - a.TotalConfirmed
   );
   sorted.forEach((value) => {
-    const li = document.createElement("li");
-    li.setAttribute("class", "list-item flex align-center");
-    li.setAttribute("id", value.Slug);
-    const span = document.createElement("span");
-    span.textContent = value.TotalConfirmed.toString();
-    span.setAttribute("class", "cases");
-    const p = document.createElement("p");
-    p.setAttribute("class", "country");
-    p.textContent = value.Country;
-    li.appendChild(span);
-    li.appendChild(p);
-    rankList?.appendChild(li);
+    rankList?.appendChild(createCountryRankItemElement(value));
   });
 }
 
