@@ -13,7 +13,7 @@ export const ChartWrapper = () => {
   }
 
   function renderChart(data: any, labels: any) {
-    const ctx = $('#lineChart').getContext('2d');
+    const ctx = $<HTMLCanvasElement>('#lineChart').getContext('2d');
 
     // @ts-ignore
     Chart.defaults.global.defaultFontColor = '#f5eaea';

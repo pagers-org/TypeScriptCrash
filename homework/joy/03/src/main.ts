@@ -1,22 +1,26 @@
 import '@/assets/style.css';
+
+import { DeathsList, RecoveredList, RankList } from '@/components/ChartList';
+
 import { createSpinnerElement } from '@/utils/utils';
 import { ConfirmedTotal } from '@/components/ConfirmedTotal';
 import { DeathsTotal } from '@/components/DeathsTotal';
 import { RecoveredTotal } from '@/components/RecoveredTotal';
 import { LastUpdatedTime } from '@/components/LastUpdatedTime';
-import { RankList } from '@/components/RankList';
-import { DeathsList } from '@/components/DeathsList';
-import { RecoveredList } from '@/components/RecoveredList';
 import { fetchCountryInfo, fetchCovidSummary } from '@/api';
 import { ChartWrapper } from '@/components/ChartWrapper';
+
+import { CountryInfo, Summary } from '@/types/type';
+
+const deathsList = new DeathsList();
+const recoveredList = new RecoveredList();
+const rankList = new RankList();
 
 const confirmedTotal = ConfirmedTotal();
 const deathTotal = DeathsTotal();
 const recoveredTotal = RecoveredTotal();
 const lastUpdatedTime = LastUpdatedTime();
-const rankList = RankList();
-const deathsList = DeathsList();
-const recoveredList = RecoveredList();
+
 const chartWrapper = ChartWrapper();
 
 const deathSpinner = createSpinnerElement('deaths-spinner');
@@ -32,7 +36,7 @@ function startApp() {
 }
 
 async function setupData() {
-  const data = await fetchCovidSummary();
+  const data = await fetchCovidSummary<Summary>();
 
   confirmedTotal.setTotalConfirmedNumber(data);
   deathTotal.setTotalDeathsByWorld(data);
@@ -66,19 +70,30 @@ async function handleListClick(event: any) {
   if (selectedId === 'united-states')
     return alert('데이터가 많아 총괄 현황은 제공하지 않아요😭');
 
-  deathsList.clearDeathList();
-  recoveredList.clearRecoveredList();
+  deathsList.clearList();
+  recoveredList.clearList();
 
   startLoadingAnimation();
   isDeathLoading = true;
-  const deathResponse = await fetchCountryInfo(selectedId, 'deaths');
-  const recoveredResponse = await fetchCountryInfo(selectedId, 'recovered');
-  const confirmedResponse = await fetchCountryInfo(selectedId, 'confirmed');
+  const deathResponse = await fetchCountryInfo<CountryInfo[]>(
+    selectedId,
+    'deaths',
+  );
+  const recoveredResponse = await fetchCountryInfo<CountryInfo[]>(
+    selectedId,
+    'recovered',
+  );
+  const confirmedResponse = await fetchCountryInfo<CountryInfo[]>(
+    selectedId,
+    'confirmed',
+  );
   endLoadingAnimation();
 
-  deathsList.setDeathsList(deathResponse);
+  deathsList.setList(deathResponse, 'deaths');
+  recoveredList.setList(recoveredResponse, 'recovered');
+
   deathTotal.setTotalDeathsByCountry(deathResponse);
-  recoveredList.setRecoveredList(recoveredResponse);
+
   recoveredTotal.setTotalRecoveredByCountry(recoveredResponse);
   chartWrapper.setChartData(confirmedResponse);
 

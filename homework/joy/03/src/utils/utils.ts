@@ -1,15 +1,15 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-
 // utils
-export function $(selector: string) {
-  return document.querySelector(selector);
+export function $<T extends HTMLElement>(selector: string): T {
+  const element = document.querySelector(selector) as T;
+  if(element === null) throw new Error('element is null!!!');
+  return element;
 }
 
 export function getUnixTimestamp(date: Date) {
   return new Date(date).getTime();
 }
 
-export function createSpinnerElement(id: any) {
+export function createSpinnerElement(id: string) {
   const wrapperDiv = document.createElement('div');
   wrapperDiv.setAttribute('id', id);
   wrapperDiv.setAttribute(
