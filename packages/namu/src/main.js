@@ -1,31 +1,47 @@
-import '../assets/index.css';
-import { addBookmark, getBookmarkList } from './api';
-import { $, toggleLoading, debounce } from './helper/index.js';
+import "../assets/index.css";
+import {
+  $,
+  toggleLoading,
+  debounce,
+  getLocal,
+  postAsync,
+} from "./helper/index.ts";
+import { BASE_SERVER_URL, FOX_URL } from "./constant/url";
+
+async function addBookmark(key, _id) {
+  await postAsync(`${BASE_SERVER_URL}/api/user/bookmark/${key}`, { _id });
+}
+
+async function getBookmarkList(_id) {
+  return await postAsync(`${BASE_SERVER_URL}/api/user/bookmark`, {
+    _id,
+  });
+}
 
 (() => {
-  const isLogin = localStorage.getItem('user_token');
+  const isLogin = getLocal("user_token");
   if (isLogin !== null) return;
 
-  location.replace('./login.html');
+  location.replace("./login.html");
 })();
 
 let globalIndex = 0;
 
 const createPin = () => {
   toggleLoading();
-  const pin = document.createElement('div');
-  const buttonWrapper = document.createElement('div');
-  const image = document.createElement('img');
+  const pin = document.createElement("div");
+  const buttonWrapper = document.createElement("div");
+  const image = document.createElement("img");
   const random = Math.floor(Math.random() * 123) + 1;
-  image.src = `https://randomfox.ca/images/${random}.jpg`;
-  buttonWrapper.setAttribute('class', 'button-wrapper');
+  image.src = `${FOX_URL}/images/${random}.jpg`;
+  buttonWrapper.setAttribute("class", "button-wrapper");
   buttonWrapper.innerHTML = `
   <div class="anim-icon anim-icon-md heart">
     <input type="checkbox" id="heart${globalIndex}" />
     <label for="heart${globalIndex}" key=${random}></label>
   </div>
   `;
-  pin.classList.add('pin');
+  pin.classList.add("pin");
   pin.appendChild(buttonWrapper);
   pin.appendChild(image);
   toggleLoading();
@@ -33,7 +49,7 @@ const createPin = () => {
 };
 
 const loadMore = debounce(() => {
-  const container = $('.container');
+  const container = $(".container");
   const pinList = [];
   for (let i = 10; i > 0; i--) {
     pinList.push(createPin(++globalIndex));
@@ -43,22 +59,22 @@ const loadMore = debounce(() => {
 
 loadMore();
 
-window.addEventListener('scroll', () => {
-  const loader = $('.loader');
+window.addEventListener("scroll", () => {
+  const loader = $(".loader");
   if (loader === null) return;
   if (loader.getBoundingClientRect().top > window.innerHeight) return;
   loadMore();
 });
 
-$('nav').addEventListener('click', async event => {
+$("nav").addEventListener("click", async (event) => {
   event.stopPropagation();
-  if (!event.target.matches('input')) return;
+  if (!event.target.matches("input")) return;
 
-  const $main = $('main');
-  $main.innerHTML = '';
+  const $main = $("main");
+  $main.innerHTML = "";
 
-  if (event.target.matches('#explore')) {
-    $main.classList.remove('saved');
+  if (event.target.matches("#explore")) {
+    $main.classList.remove("saved");
     $main.innerHTML = `
       <div class="container"></div>
       <div class="loader"></div>
@@ -68,13 +84,10 @@ $('nav').addEventListener('click', async event => {
     loadMore();
   }
 
-  if (event.target.matches('#saved')) {
-    $main.classList.add('saved');
-    const _id = localStorage.getItem('user_token');
-    const result = await getBookmarkList(
-      'http://localhost:3000/api/user/bookmark',
-      { _id },
-    );
+  if (event.target.matches("#saved")) {
+    $main.classList.add("saved");
+    const _id = getLocal("user_token");
+    const result = await getBookmarkList(_id);
     const $content = `
     <div class="container">
     ${result
@@ -86,10 +99,10 @@ $('nav').addEventListener('click', async event => {
             <input type="checkbox" id="heart${index}" checked>
             <label for="heart${index}" key=${_id}></label>
           </div>
-        </div><img src="https://randomfox.ca/images/${url}.jpg">
-      </div>`,
+        </div><img src="${FOX_URL}/images/${url}.jpg">
+      </div>`
       )
-      .join('')}
+      .join("")}
     </div>
     `;
 
@@ -97,14 +110,10 @@ $('nav').addEventListener('click', async event => {
   }
 });
 
-$('main').addEventListener('click', async event => {
+$("main").addEventListener("click", async (event) => {
   if (!event.target.matches('label[for^="heart"]')) return;
-  const _id = localStorage.getItem('user_token');
-  await addBookmark(
-    `http://localhost:3000/api/user/bookmark/${event.target.getAttribute(
-      'key',
-    )}`,
-    { _id },
-  );
-  console.log('북마크에 저장되었습니다.');
+  const _id = getLocal("user_token");
+  await addBookmark(event.target.getAttribute("key"), _id);
+
+  console.log("북마크에 저장되었습니다.");
 });
