@@ -13,7 +13,7 @@ function throttle(delay, noTrailing, callback, debounceMode) {
     cancelled = true;
   }
 
-  if (typeof noTrailing !== 'boolean') {
+  if (typeof noTrailing !== "boolean") {
     debounceMode = callback;
     callback = noTrailing;
     noTrailing = undefined;
@@ -44,7 +44,7 @@ function throttle(delay, noTrailing, callback, debounceMode) {
     } else if (noTrailing !== true) {
       timeoutID = setTimeout(
         debounceMode ? clear : exec,
-        debounceMode === undefined ? delay - elapsed : delay,
+        debounceMode === undefined ? delay - elapsed : delay
       );
     }
   }
