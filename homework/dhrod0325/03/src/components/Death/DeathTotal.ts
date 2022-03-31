@@ -10,8 +10,8 @@ export class DeathTotal extends BaseComponent {
     this.$container.innerText = count;
   }
 
-  public setHtmlByFirstCountry(data?: Country[]) {
-    if (!data) return;
+  public setHtmlByFirstCountry(data: Country[]) {
+    if (data.length === 0) return;
 
     this.setHtml(data[0].Cases);
   }

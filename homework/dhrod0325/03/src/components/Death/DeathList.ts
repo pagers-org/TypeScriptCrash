@@ -5,18 +5,20 @@ import { DeathListItem } from '@/components/Death/DeathListItem';
 import { BaseComponent } from '@/lib/BaseComponent';
 
 export class DeathList extends BaseComponent {
+  public async loadData(data?: Country[]) {
+    if (!data) return;
+
+    sortedCountriesByDate(data).forEach(country => this.addItem(country));
+  }
+
   public clear() {
     this.$container.innerHTML = '';
   }
 
-  public async loadData(data?: Country[]) {
-    if (!data) return;
+  private addItem(country: Country) {
+    const deathListItem = new DeathListItem(country);
+    const elem = deathListItem.getElement();
 
-    sortedCountriesByDate(data).forEach(country => {
-      const deathListItem = new DeathListItem(country);
-      const elem = deathListItem.getElement();
-
-      this.$container.appendChild(elem);
-    });
+    this.$container.appendChild(elem);
   }
 }

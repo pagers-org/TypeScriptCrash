@@ -3,7 +3,7 @@ import { Client, ClientInit } from 'covid';
 export class HttpClient implements Client {
   private readonly baseUrl: string;
 
-  constructor({ baseUrl = '' } = {}) {
+  constructor(baseUrl = 'http://localhost:3000') {
     this.baseUrl = baseUrl;
   }
 
@@ -13,10 +13,10 @@ export class HttpClient implements Client {
       ...config,
     };
 
-    const callUrl = url.startsWith('http') ? url : `${this.baseUrl}${url}`;
+    const targetUrl = url.startsWith('http') ? url : `${this.baseUrl}${url}`;
 
     try {
-      const response = await fetch(callUrl, config);
+      const response = await fetch(targetUrl, config);
       return await response.json();
     } catch (e) {
       console.log(e);

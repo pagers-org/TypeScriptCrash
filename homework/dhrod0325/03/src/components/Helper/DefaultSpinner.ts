@@ -2,7 +2,6 @@ import { Spinner } from 'covid';
 
 export class DefaultSpinner implements Spinner {
   private readonly $container: HTMLElement;
-
   private readonly $spinner: HTMLElement;
 
   constructor($container: HTMLElement, spinnerId: string) {

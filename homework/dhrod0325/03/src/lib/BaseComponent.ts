@@ -4,7 +4,7 @@ import { $ } from '@/lib/utils';
 export class BaseComponent implements Component {
   readonly $container: HTMLElement;
 
-  constructor(container: string) {
-    this.$container = $(container);
+  constructor(selector: string) {
+    this.$container = $(selector);
   }
 }

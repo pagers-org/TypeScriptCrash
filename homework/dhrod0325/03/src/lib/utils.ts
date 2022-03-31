@@ -1,11 +1,27 @@
 import { Country, Summary, SummaryInfo, TotalCounterProp } from 'covid';
 
-export function $(selector: string): HTMLElement {
+export function $<Elem extends Element>(selector: string): Elem | null {
   const $el = document.querySelector(selector);
 
   if (!$el) throw new Error('null element');
 
-  return $el as HTMLElement;
+  return $el as Elem;
+}
+
+export function getIdByEventTarget(event: Event): string {
+  const { target } = event;
+
+  const isParagraphElement = target instanceof HTMLParagraphElement;
+  const isSpanElement = target instanceof HTMLSpanElement;
+
+  if (isParagraphElement || isSpanElement) {
+    const { parentElement } = target;
+    return parentElement ? parentElement.id : '';
+  }
+
+  const isLiElement = target instanceof HTMLLIElement;
+
+  return isLiElement ? target.id : '';
 }
 
 export function getDateTime(date: number | string | Date): number {
@@ -16,23 +32,8 @@ export function getDateString(date: Date): string {
   return new Date(date).toLocaleString();
 }
 
-export function timeDiff(a: Date, b: Date): number {
+export function getDateTimeDiff(a: Date, b: Date): number {
   return getDateTime(b) - getDateTime(a);
-}
-
-export function getIdByEventTarget(event: Event): string | undefined {
-  if (
-    event.target instanceof HTMLParagraphElement ||
-    event.target instanceof HTMLSpanElement
-  ) {
-    return event.target.parentElement?.id;
-  }
-
-  if (event.target instanceof HTMLLIElement) {
-    return event.target.id;
-  }
-
-  return undefined;
 }
 
 export function sortedCountriesByTotalConfirmed(data: Country[]): Country[] {
@@ -40,7 +41,7 @@ export function sortedCountriesByTotalConfirmed(data: Country[]): Country[] {
 }
 
 export function sortedCountriesByDate(data: Country[]): Country[] {
-  return [...data.sort((a, b) => timeDiff(a.Date, b.Date))];
+  return [...data.sort((a, b) => getDateTimeDiff(a.Date, b.Date))];
 }
 
 export function createSummaryInfo(summary: Summary): SummaryInfo {

@@ -7,11 +7,7 @@ const API_SUMMARY_URL = `${API_BASE_URL}/summary`;
 const API_COUNTRY_URL = `${API_BASE_URL}/country`;
 
 class Api {
-  private httpClient: HttpClient;
-
-  constructor() {
-    this.httpClient = new HttpClient();
-  }
+  private httpClient: HttpClient = new HttpClient();
 
   private async getCountryInfo(
     countryCode: string | undefined,

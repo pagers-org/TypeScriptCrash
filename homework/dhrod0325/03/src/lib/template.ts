@@ -5,7 +5,7 @@ export function createElement(html: string): HTMLElement {
   const f = document.createElement('template');
   f.innerHTML = html;
 
-  return <HTMLElement>f.content.firstElementChild;
+  return f.content.firstElementChild as HTMLElement;
 }
 
 export const createRecoveredListItem = (value: Country): Element => {
