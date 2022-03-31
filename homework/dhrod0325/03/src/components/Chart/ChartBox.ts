@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import { Component } from '@/interfaces';
-import { Country, SummaryInfo } from '@/types';
+import { Country, SummaryInfo, Component } from 'covid';
 import { $, getDateString } from '@/lib/utils';
 import { api } from '@/lib/Api';
 
@@ -21,18 +20,19 @@ export class ChartBox implements Component {
     if (data) this.render(this.createData(data), this.createLabel(data));
   }
 
-  private filteredViewDateData(data: Country[]) {
+  private viewDataList(data: Country[]) {
     return data.slice(this.VIEW_DATE_COUNT);
   }
 
   private createData(data: Country[]): string[] {
-    return this.filteredViewDateData(data).map(value => value.Cases);
+    const list = this.viewDataList(data);
+
+    return list.map(value => value.Cases);
   }
 
-  private createLabel(data: Country[]) {
-    return this.filteredViewDateData(data).map(value =>
-      getDateString(value.Date).slice(5, -1),
-    );
+  private createLabel(data: Country[]): string[] {
+    const list = this.viewDataList(data);
+    return list.map(value => getDateString(value.Date).slice(5, -1));
   }
 
   private render(data: string[], labels: string[]): void {
@@ -40,7 +40,7 @@ export class ChartBox implements Component {
       this.chart.destroy();
     }
 
-    const ctx = (<HTMLCanvasElement>$('#lineChart')).getContext('2d');
+    const ctx = ($('#lineChart') as HTMLCanvasElement).getContext('2d');
 
     // @ts-ignore
     Chart.defaults.global.defaultFontColor = '#f5eaea';
@@ -61,7 +61,6 @@ export class ChartBox implements Component {
           },
         ],
       },
-      options: {},
     });
   }
 }

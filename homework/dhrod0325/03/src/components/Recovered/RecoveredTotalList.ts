@@ -1,9 +1,9 @@
+import { Component, SummaryInfo } from 'covid';
+
 import { RecoveredList } from './RecoveredList';
-import { Component } from '@/interfaces';
 import { RecoveredTotal } from './RecoveredTotal';
-import { SummaryInfo } from '@/types';
 import { api } from '@/lib/Api';
-import { useSpinner } from '../Helper/Spinner';
+import { DefaultSpinner } from '@/components/Helper/DefaultSpinner';
 
 export class RecoveredTotalList implements Component {
   private readonly SPINNER_ID = 'recovered-spinner';
@@ -12,8 +12,8 @@ export class RecoveredTotalList implements Component {
   private readonly $list: RecoveredList;
 
   constructor() {
-    this.$total = new RecoveredTotal();
-    this.$list = new RecoveredList();
+    this.$total = new RecoveredTotal('.recovered');
+    this.$list = new RecoveredList('.recovered-list');
   }
 
   public setup(data: SummaryInfo): void {
@@ -23,7 +23,8 @@ export class RecoveredTotalList implements Component {
   public async loadData(selectedId: string) {
     this.$list.clear();
 
-    await useSpinner(this.$list.container(), this.SPINNER_ID, async () => {
+    const spinner = new DefaultSpinner(this.$list.$container, this.SPINNER_ID);
+    await spinner.spin(async () => {
       const data = await api.getRecovered(selectedId);
 
       this.$list.setItems(data);

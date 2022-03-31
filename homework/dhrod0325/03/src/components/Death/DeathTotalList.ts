@@ -1,9 +1,8 @@
 import { DeathList } from './DeathList';
 import { DeathTotal } from './DeathTotal';
-import { Component } from '@/interfaces';
-import { SummaryInfo } from '@/types';
+import { Component, SummaryInfo } from 'covid';
 import { api } from '@/lib/Api';
-import { useSpinner } from '../Helper/Spinner';
+import { DefaultSpinner } from '../Helper/DefaultSpinner';
 
 export class DeathTotalList implements Component {
   private readonly SPINNER_ID = 'deaths-spinner';
@@ -12,8 +11,8 @@ export class DeathTotalList implements Component {
   private readonly $list: DeathList;
 
   constructor() {
-    this.$total = new DeathTotal();
-    this.$list = new DeathList();
+    this.$total = new DeathTotal('.deaths');
+    this.$list = new DeathList('.deaths-list');
   }
 
   public setup(data: SummaryInfo): void {
@@ -23,7 +22,8 @@ export class DeathTotalList implements Component {
   public async loadData(selectedId: string) {
     this.$list.clear();
 
-    await useSpinner(this.$list.container(), this.SPINNER_ID, async () => {
+    const spinner = new DefaultSpinner(this.$list.$container, this.SPINNER_ID);
+    await spinner.spin(async () => {
       const data = await api.getDeaths(selectedId);
       await this.$list.loadData(data);
 

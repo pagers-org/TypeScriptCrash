@@ -1,4 +1,4 @@
-import { Country } from '@/types';
+import { Country } from 'covid';
 import { getDateString } from '@/lib/utils';
 
 export function createElement(html: string): HTMLElement {
@@ -12,15 +12,6 @@ export const createRecoveredListItem = (value: Country): Element => {
   return createElement(`
   <li class="list-item-b flex align-center">
     <span class="recovered">${value.Cases}</span>
-    <p>${getDateString(value.Date).slice(0, -3)}</p>
-  </li>
-`);
-};
-
-export const createDeathTotalListItem = (value: Country): Element => {
-  return createElement(`
-  <li class="list-item-b flex align-center">
-    <span class="deaths">${value.Cases}</span>
     <p>${getDateString(value.Date).slice(0, -3)}</p>
   </li>
 `);

@@ -1,7 +1,11 @@
-import { Country, Summary, SummaryInfo, TotalCounterProp } from '@/types';
+import { Country, Summary, SummaryInfo, TotalCounterProp } from 'covid';
 
 export function $(selector: string): HTMLElement {
-  return <HTMLElement>document.querySelector(selector);
+  const $el = document.querySelector(selector);
+
+  if (!$el) throw new Error('null element');
+
+  return $el as HTMLElement;
 }
 
 export function getDateTime(date: number | string | Date): number {
@@ -16,27 +20,27 @@ export function timeDiff(a: Date, b: Date): number {
   return getDateTime(b) - getDateTime(a);
 }
 
-export function findClickedId(event: Event): string | undefined {
-  let selectedId!: string | undefined;
-
+export function getIdByEventTarget(event: Event): string | undefined {
   if (
     event.target instanceof HTMLParagraphElement ||
     event.target instanceof HTMLSpanElement
   ) {
-    selectedId = event.target.parentElement?.id;
+    return event.target.parentElement?.id;
   }
 
   if (event.target instanceof HTMLLIElement) {
-    selectedId = event.target.id;
+    return event.target.id;
   }
 
-  return selectedId;
+  return undefined;
 }
 
-export function sortedData(data: Country[]): Country[] {
-  const result = data.sort((a, b) => timeDiff(a.Date, b.Date));
+export function sortedCountriesByTotalConfirmed(data: Country[]): Country[] {
+  return [...data.sort((a, b) => b.TotalConfirmed - a.TotalConfirmed)];
+}
 
-  return [...result];
+export function sortedCountriesByDate(data: Country[]): Country[] {
+  return [...data.sort((a, b) => timeDiff(a.Date, b.Date))];
 }
 
 export function createSummaryInfo(summary: Summary): SummaryInfo {

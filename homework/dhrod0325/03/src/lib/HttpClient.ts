@@ -1,17 +1,13 @@
-type HttpRequestArgs = {
-  url: string;
-  config?: RequestInit;
-  data?: object;
-};
+import { Client, ClientInit } from 'covid';
 
-export class HttpClient {
+export class HttpClient implements Client {
   private readonly baseUrl: string;
 
   constructor({ baseUrl = '' } = {}) {
     this.baseUrl = baseUrl;
   }
 
-  async request({ url, config }: HttpRequestArgs) {
+  async request({ url, config }: ClientInit) {
     config = {
       ...{ headers: new Headers({ 'content-type': 'application/json' }) },
       ...config,
@@ -27,14 +23,14 @@ export class HttpClient {
     }
   }
 
-  get({ url }: HttpRequestArgs) {
+  get({ url }: ClientInit) {
     return this.request({
       url,
       config: { method: 'GET' },
     });
   }
 
-  post({ url, data = {} }: HttpRequestArgs) {
+  post({ url, data = {} }: ClientInit) {
     const body = JSON.stringify(data);
 
     return this.request({
@@ -43,12 +39,16 @@ export class HttpClient {
     });
   }
 
-  delete({ url, data = {} }: HttpRequestArgs) {
+  delete({ url, data = {} }: ClientInit) {
     const body = JSON.stringify(data);
 
     return this.request({
       url,
       config: { body, method: 'DELETE' },
     });
+  }
+
+  put({ url, data }: ClientInit): any {
+    return null;
   }
 }

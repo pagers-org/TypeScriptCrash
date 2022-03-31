@@ -1,18 +1,9 @@
-import { Component } from '@/interfaces';
-import { SummaryInfo } from '@/types';
-import { $ } from '@/lib/utils';
+import { SummaryInfo } from 'covid';
+import { BaseComponent } from '@/lib/BaseComponent';
 
-export class Confirmed implements Component {
-  private readonly CONTAINER_SELECTOR = '.confirmed-total';
-
-  private readonly $container: HTMLElement;
-
-  constructor() {
-    this.$container = $(this.CONTAINER_SELECTOR);
-  }
-
+export class Confirmed extends BaseComponent {
   public setup(data: SummaryInfo): void {
-    this.setHtml(String(data.TotalConfirmed));
+    this.setHtml(`${data.TotalConfirmed}`);
   }
 
   private setHtml(count: string): void {

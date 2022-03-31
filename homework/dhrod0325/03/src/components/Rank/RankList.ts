@@ -1,33 +1,25 @@
-import { Component } from '@/interfaces';
-import { Country, Summary } from '@/types';
-import { EventEmitter } from '@/lib/EventEmitter';
 import { createRankListItem } from '@/lib/template';
-import { $ } from '@/lib/utils';
+import { Country, Summary } from 'covid';
+import { BaseComponent } from '@/lib/BaseComponent';
+import { sortedCountriesByTotalConfirmed } from '@/lib/utils';
 
-export class RankList implements Component {
-  private CONTAINER_SELECTOR = '.rank-list';
-
-  private readonly ITEM_CLICK_EVENT_NAME = 'rankItemClicked';
-
-  private readonly $container: HTMLElement;
-
-  constructor(eventEmitter: EventEmitter) {
-    this.$container = $(this.CONTAINER_SELECTOR);
-    this.$container.addEventListener('click', e => {
-      eventEmitter.emit(this.ITEM_CLICK_EVENT_NAME, e);
-    });
-  }
+export class RankList extends BaseComponent {
+  public static readonly CLICK_EVENT = 'RankList.CLICK_EVENT';
 
   public setup(data: Summary): void {
-    this.setByTotalConfirmed(data);
+    this.$container.addEventListener('click', e => {
+      window.dispatchEvent(
+        new CustomEvent(RankList.CLICK_EVENT, { detail: e }),
+      );
+    });
+
+    this.addItemsByTotalConfirmed(data);
   }
 
-  private setByTotalConfirmed(data: Summary): void {
-    this.sortedData(data).forEach(value => this.addItem(value));
-  }
-
-  private sortedData(data: Summary): Country[] {
-    return data.Countries.sort((a, b) => b.TotalConfirmed - a.TotalConfirmed);
+  private addItemsByTotalConfirmed(data: Summary): void {
+    sortedCountriesByTotalConfirmed(data.Countries).forEach(value =>
+      this.addItem(value),
+    );
   }
 
   private addItem(value: Country): void {

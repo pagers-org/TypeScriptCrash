@@ -19,9 +19,6 @@ div {
   margin: 0;
   padding: 0;
   border: 0;
-  font-size: 100%;
-  font-weight: 500;
-  font: inherit;
   font-family: 'Exo 2', sans-serif;
 }
 ol {
@@ -227,8 +224,8 @@ header > h1 {
     opacity: 1;
   }
   100% {
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
     width: 72px;
     height: 72px;
     opacity: 0;

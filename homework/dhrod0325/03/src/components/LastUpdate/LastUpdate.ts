@@ -1,16 +1,8 @@
-import { Component } from '@/interfaces';
-import { Summary } from '@/types';
-import { $, getDateString } from '@/lib/utils';
+import { Summary } from 'covid';
+import { getDateString } from '@/lib/utils';
+import { BaseComponent } from '@/lib/BaseComponent';
 
-export class LastUpdate implements Component {
-  private readonly SELECTOR_ID = '.last-updated-time';
-
-  private readonly $container: HTMLElement;
-
-  constructor() {
-    this.$container = $(this.SELECTOR_ID);
-  }
-
+export class LastUpdate extends BaseComponent {
   public setup(data: Summary): void {
     this.update(data);
   }
