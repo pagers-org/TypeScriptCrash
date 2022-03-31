@@ -1,16 +1,13 @@
 import axios from 'axios';
+import { SystemErrorInterface } from 'Covid';
+import { BASE_URL } from '../constant';
 
 const api = axios.create({
-  baseURL: 'https://api.covid19api.com/',
+  baseURL: BASE_URL,
   headers: {
     'Content-type': 'application/json',
   },
 });
-
-interface SystemErrorInterface {
-  code: string;
-  message: string;
-}
 
 const fetchData = async (path: string) => {
   try {

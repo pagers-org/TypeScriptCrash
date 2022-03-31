@@ -1,23 +1,18 @@
 declare module 'Covid' {
+  export interface SystemErrorInterface {
+    code: string;
+    message: string;
+  }
+
   export type SummaryType = {
-    Countries: Array<PickCountriesType>;
+    Countries: CountriesSummaryType[];
     Date: string;
     Global: object;
     ID: string;
     Message: string;
   };
 
-  type PickCountriesType = Omit<
-    CountriesObjectType,
-    | 'CountryCode'
-    | 'ID'
-    | 'NewConfirmed'
-    | 'NewDeaths'
-    | 'NewRecovered'
-    | 'Premium'
-  >;
-
-  type CountriesObjectType = {
+  type FullCountriesObjType = {
     Country: string;
     CountryCode: string;
     Date: string;
@@ -32,10 +27,17 @@ declare module 'Covid' {
     TotalRecovered: number;
   };
 
-  export type PickCountriesDetailType = Pick<
-    CountryDetail,
-    'Cases' | 'City' | 'Date'
-  >;
+  type NoNeedCountriesKey =
+    | 'CountryCode'
+    | 'ID'
+    | 'NewConfirmed'
+    | 'NewDeaths'
+    | 'NewRecovered'
+    | 'Premium';
+
+  type CountriesSummaryType = Omit<FullCountriesObjType, NoNeedCountriesKey>;
+
+  type NeedCountryKey = 'Cases' | 'City' | 'Date';
 
   type CountryDetail = {
     Cases: string;
@@ -49,4 +51,7 @@ declare module 'Covid' {
     Province: string;
     Status: string;
   };
+
+  export type TotalType = 'TotalConfirmed' | 'TotalDeaths' | 'TotalRecovered';
+  export type PickCountriesDetailType = Pick<CountryDetail, NeedCountryKey>;
 }
