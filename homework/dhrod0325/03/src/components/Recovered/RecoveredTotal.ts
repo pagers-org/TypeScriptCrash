@@ -1,5 +1,5 @@
 import { Country, SummaryInfo } from 'covid';
-import { BaseComponent } from '@/lib/BaseComponent';
+import { BaseComponent } from '@/lib/Component';
 
 export class RecoveredTotal extends BaseComponent {
   public loadData(data: SummaryInfo): void {

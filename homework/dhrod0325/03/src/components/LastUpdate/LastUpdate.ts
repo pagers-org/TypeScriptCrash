@@ -1,6 +1,6 @@
 import { Summary } from 'covid';
 import { getDateString } from '@/lib/utils';
-import { BaseComponent } from '@/lib/BaseComponent';
+import { BaseComponent } from '@/lib/Component';
 
 export class LastUpdate extends BaseComponent {
   public setup(data: Summary): void {

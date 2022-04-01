@@ -69,3 +69,15 @@ export function createSummaryInfo(summary: Summary): SummaryInfo {
 
   return summaryInfo;
 }
+
+export function debounce(callback: () => void, timeout: number) {
+  let debounce: any;
+
+  return () => {
+    if (debounce) clearTimeout(debounce);
+
+    debounce = setTimeout(() => {
+      callback();
+    }, timeout);
+  };
+}

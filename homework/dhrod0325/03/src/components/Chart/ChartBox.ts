@@ -1,23 +1,22 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import { Country, SummaryInfo, Component } from 'covid';
+import { Country } from 'covid';
 import { $, getDateString } from '@/lib/utils';
 import { api } from '@/lib/Api';
+import { LoadingComponent } from '@/lib/Component';
 
-export class ChartBox implements Component {
+export class ChartBox extends LoadingComponent {
   private readonly VIEW_DATE_COUNT = -14;
 
   // @ts-ignore
   private chart;
 
-  setup(data: SummaryInfo): void {
-    //throw new Error('Method not implemented.');
-  }
+  public async loadAsyncData(selectedId: string) {
+    const data = await api().getConfirmed(selectedId);
 
-  public async loadData(selectedId: string) {
-    const data = await api.getConfirmed(selectedId);
-
-    if (data) this.render(this.createData(data), this.createLabel(data));
+    if (data) {
+      this.render(this.createData(data), this.createLabel(data));
+    }
   }
 
   private viewDataList(data: Country[]) {

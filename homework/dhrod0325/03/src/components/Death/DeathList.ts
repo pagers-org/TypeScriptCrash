@@ -2,7 +2,7 @@ import { Country } from 'covid';
 
 import { sortedCountriesByDate } from '@/lib/utils';
 import { DeathListItem } from '@/components/Death/DeathListItem';
-import { BaseComponent } from '@/lib/BaseComponent';
+import { BaseComponent } from '@/lib/Component';
 
 export class DeathList extends BaseComponent {
   public async loadData(data?: Country[]) {

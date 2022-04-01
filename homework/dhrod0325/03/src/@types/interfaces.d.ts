@@ -4,6 +4,7 @@ declare module 'covid' {
   }
 
   export interface LoadDataAble {
+    isLoading?: boolean;
     loadData?(selectedId: string | undefined): void;
   }
 

@@ -1,6 +1,6 @@
 import { createRankListItem } from '@/lib/template';
 import { Country, Summary } from 'covid';
-import { BaseComponent } from '@/lib/BaseComponent';
+import { BaseComponent } from '@/lib/Component';
 import { sortedCountriesByTotalConfirmed } from '@/lib/utils';
 
 export class RankList extends BaseComponent {

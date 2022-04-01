@@ -1,7 +1,7 @@
 import { Country } from 'covid';
 import { sortedCountriesByDate } from '@/lib/utils';
 import { createRecoveredListItem } from '@/lib/template';
-import { BaseComponent } from '@/lib/BaseComponent';
+import { BaseComponent } from '@/lib/Component';
 
 export class RecoveredList extends BaseComponent {
   public setItems(data?: Country[]): void {
