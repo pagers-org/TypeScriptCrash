@@ -22,11 +22,16 @@ export abstract class AsyncComponent implements Component {
   public async loadData(selectedId: string | undefined) {
     this.loading = true;
 
-    this.loadAsyncPrepare && this.loadAsyncPrepare();
+    try {
+      this.loadAsyncPrepare && this.loadAsyncPrepare();
 
-    await this.loadAsyncData(selectedId);
-
-    this.loading = false;
+      await this.loadAsyncData(selectedId);
+    } catch (e) {
+      console.log('error', e);
+      alert('데이터 요청중 오류가 발생했습니다. 잠시 후 다시 시도 해보세요.');
+    } finally {
+      this.loading = false;
+    }
   }
 
   public isLoading() {

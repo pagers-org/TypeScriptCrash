@@ -10,10 +10,10 @@ export class Api {
   private httpClient: HttpClient = new HttpClient();
 
   private async getCountryInfo(
-    countryCode: string | undefined,
+    countryCode: string,
     status: ApiCountryInfoType,
-  ): Promise<Country[] | undefined> {
-    if (!countryCode) return undefined;
+  ): Promise<Country[]> {
+    if (!countryCode) throw new Error('require countryCode');
 
     return await this.httpClient.get({
       url: `${API_COUNTRY_URL}/${countryCode}/status/${status}`,

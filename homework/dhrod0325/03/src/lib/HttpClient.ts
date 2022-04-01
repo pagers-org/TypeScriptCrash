@@ -15,12 +15,11 @@ export class HttpClient implements Client {
 
     const targetUrl = url.startsWith('http') ? url : `${this.baseUrl}${url}`;
 
-    try {
-      const response = await fetch(targetUrl, config);
-      return await response.json();
-    } catch (e) {
-      console.log(e);
-    }
+    const response = await fetch(targetUrl, config);
+
+    if (response.status !== 200) throw new Error('request fail');
+
+    return await response.json();
   }
 
   get({ url }: ClientInit) {
