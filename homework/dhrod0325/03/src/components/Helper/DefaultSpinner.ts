@@ -1,4 +1,16 @@
 import { Spinner } from 'covid';
+import { createElement } from '@/lib/template';
+
+const template = (id: string) => {
+  return createElement(`
+  <div id="${id}" class="spinner-wrapper flex justify-center align-center">
+    <div class="ripple-spinner">
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+  `);
+};
 
 export class DefaultSpinner implements Spinner {
   private readonly $container: HTMLElement;
@@ -6,7 +18,7 @@ export class DefaultSpinner implements Spinner {
 
   constructor($container: HTMLElement, spinnerId: string) {
     this.$container = $container;
-    this.$spinner = this.create(spinnerId);
+    this.$spinner = template(spinnerId);
   }
 
   public async spin(callback: () => void) {
@@ -15,34 +27,6 @@ export class DefaultSpinner implements Spinner {
     await callback();
 
     this.hide();
-  }
-
-  private create(id: string): HTMLElement {
-    const wrapperDiv = this.createWrapper(id);
-    const spinnerDiv = this.createSpinner();
-
-    wrapperDiv.appendChild(spinnerDiv);
-
-    return wrapperDiv;
-  }
-
-  private createWrapper(id: string) {
-    const wrapperDiv = document.createElement('div');
-    wrapperDiv.setAttribute('id', id);
-    wrapperDiv.setAttribute(
-      'class',
-      'spinner-wrapper flex justify-center align-center',
-    );
-    return wrapperDiv;
-  }
-
-  private createSpinner() {
-    const spinnerDiv = document.createElement('div');
-    spinnerDiv.setAttribute('class', 'ripple-spinner');
-    spinnerDiv.appendChild(document.createElement('div'));
-    spinnerDiv.appendChild(document.createElement('div'));
-
-    return spinnerDiv;
   }
 
   private show(): void {
