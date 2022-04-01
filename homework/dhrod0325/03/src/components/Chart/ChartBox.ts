@@ -3,9 +3,9 @@
 import { Country } from 'covid';
 import { $, getDateString } from '@/lib/utils';
 import { api } from '@/lib/Api';
-import { LoadingComponent } from '@/lib/Component';
+import { AsyncComponent } from '@/lib/Component';
 
-export class ChartBox extends LoadingComponent {
+export class ChartBox extends AsyncComponent {
   private readonly VIEW_DATE_COUNT = -14;
 
   // @ts-ignore

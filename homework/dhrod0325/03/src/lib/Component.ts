@@ -9,7 +9,7 @@ export class BaseComponent implements Component {
   }
 }
 
-export abstract class LoadingComponent implements Component {
+export abstract class AsyncComponent implements Component {
   public isLoading = false;
 
   public loadAsyncPrepare() {

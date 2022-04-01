@@ -2,10 +2,10 @@ import { RecoveredList } from './RecoveredList';
 import { RecoveredTotal } from './RecoveredTotal';
 import { api } from '@/lib/Api';
 import { DefaultSpinner } from '@/components/Helper/DefaultSpinner';
-import { LoadingComponent } from '@/lib/Component';
+import { AsyncComponent } from '@/lib/Component';
 import { SummaryWrapper } from '@/@model/SummaryWrapper';
 
-export class RecoveredTotalList extends LoadingComponent {
+export class RecoveredTotalList extends AsyncComponent {
   private readonly SPINNER_ID = 'recovered-spinner';
 
   private readonly $total: RecoveredTotal;

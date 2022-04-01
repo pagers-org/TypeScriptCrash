@@ -2,10 +2,10 @@ import { DeathList } from './DeathList';
 import { DeathTotal } from './DeathTotal';
 import { api } from '@/lib/Api';
 import { DefaultSpinner } from '../Helper/DefaultSpinner';
-import { LoadingComponent } from '@/lib/Component';
+import { AsyncComponent } from '@/lib/Component';
 import { SummaryWrapper } from '@/@model/SummaryWrapper';
 
-export class DeathTotalList extends LoadingComponent {
+export class DeathTotalList extends AsyncComponent {
   private readonly SPINNER_ID = 'deaths-spinner';
 
   private readonly $total: DeathTotal;
