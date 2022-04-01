@@ -1,6 +1,8 @@
-import { Country, Summary } from 'covid';
+import { Country } from 'covid';
 import { BaseComponent } from '@/lib/Component';
-import { createElement, sortedCountriesByTotalConfirmed } from '@/lib/utils';
+import { createElement } from '@/lib/utils';
+import { CountriesWrapper } from '@/@model/CountriesWrapper';
+import { SummaryWrapper } from '@/@model/SummaryWrapper';
 
 export const template = (value: Country): Element => {
   return createElement(`
@@ -14,20 +16,19 @@ export const template = (value: Country): Element => {
 export class RankList extends BaseComponent {
   public static readonly CLICK_EVENT = 'RankList.CLICK_EVENT';
 
-  public setup(data: Summary): void {
+  public setup(summary: SummaryWrapper): void {
     this.$container.addEventListener('click', e => {
       window.dispatchEvent(
         new CustomEvent(RankList.CLICK_EVENT, { detail: e }),
       );
     });
 
-    this.addItemsByTotalConfirmed(data);
+    this.addItemsByTotalConfirmed(summary);
   }
 
-  private addItemsByTotalConfirmed(data: Summary): void {
-    sortedCountriesByTotalConfirmed(data.Countries).forEach(value =>
-      this.addItem(value),
-    );
+  private addItemsByTotalConfirmed(data: SummaryWrapper): void {
+    const countries = new CountriesWrapper(data.summary.Countries);
+    countries.getSortedByTotalConfirmed().forEach(value => this.addItem(value));
   }
 
   private addItem(value: Country): void {

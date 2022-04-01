@@ -1,10 +1,9 @@
-import { SummaryInfo } from 'covid';
-
 import { RecoveredList } from './RecoveredList';
 import { RecoveredTotal } from './RecoveredTotal';
 import { api } from '@/lib/Api';
 import { DefaultSpinner } from '@/components/Helper/DefaultSpinner';
 import { LoadingComponent } from '@/lib/Component';
+import { SummaryWrapper } from '@/@model/SummaryWrapper';
 
 export class RecoveredTotalList extends LoadingComponent {
   private readonly SPINNER_ID = 'recovered-spinner';
@@ -19,7 +18,7 @@ export class RecoveredTotalList extends LoadingComponent {
     this.$list = new RecoveredList('.recovered-list');
   }
 
-  public setup(data: SummaryInfo): void {
+  public setup(data: SummaryWrapper): void {
     this.$total.loadData(data);
   }
 

@@ -14,7 +14,6 @@ const components: Component[] = [
   new RankList('.rank-list'),
   new Confirmed('.confirmed-total'),
   new LastUpdate('.last-updated-time'),
-
   new RecoveredTotalList(),
   new DeathTotalList(),
   new ChartBox(),

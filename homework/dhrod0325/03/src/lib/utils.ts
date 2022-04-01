@@ -1,5 +1,3 @@
-import { Country, Summary, SummaryInfo, TotalCounterProp } from 'covid';
-
 export function $<Elem extends Element>(selector: string): Elem | null {
   const $el = document.querySelector(selector);
 
@@ -34,40 +32,6 @@ export function getDateString(date: Date): string {
 
 export function getDateTimeDiff(a: Date, b: Date): number {
   return getDateTime(b) - getDateTime(a);
-}
-
-export function sortedCountriesByTotalConfirmed(data: Country[]): Country[] {
-  return [...data.sort((a, b) => b.TotalConfirmed - a.TotalConfirmed)];
-}
-
-export function sortedCountriesByDate(data: Country[]): Country[] {
-  return [...data.sort((a, b) => getDateTimeDiff(a.Date, b.Date))];
-}
-
-export function createSummaryInfo(summary: Summary): SummaryInfo {
-  function calcTotalCountData(data: Summary, prop: TotalCounterProp): number {
-    return data.Countries.reduce((total, current) => total + current[prop], 0);
-  }
-
-  function totalConfirmed(data: Summary) {
-    return calcTotalCountData(data, 'TotalConfirmed');
-  }
-
-  function totalRecovered(data: Summary) {
-    return calcTotalCountData(data, 'TotalRecovered');
-  }
-
-  function totalDeaths(data: Summary) {
-    return calcTotalCountData(data, 'TotalDeaths');
-  }
-
-  const summaryInfo = { ...summary } as SummaryInfo;
-
-  summaryInfo.TotalConfirmed = totalConfirmed(summary);
-  summaryInfo.TotalRecovered = totalRecovered(summary);
-  summaryInfo.TotalDeaths = totalDeaths(summary);
-
-  return summaryInfo;
 }
 
 export function debounce(callback: () => void, timeout: number) {

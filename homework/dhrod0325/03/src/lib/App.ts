@@ -1,7 +1,8 @@
-import { Component, SummaryInfo } from 'covid';
+import { Component } from 'covid';
 import { api } from '@/lib/Api';
-import { createSummaryInfo, debounce, getIdByEventTarget } from '@/lib/utils';
+import { debounce, getIdByEventTarget } from '@/lib/utils';
 import { RankList } from '@/components/Rank/RankList';
+import { SummaryWrapper } from '@/@model/SummaryWrapper';
 
 export class App {
   private readonly components: Component[];
@@ -18,8 +19,9 @@ export class App {
 
   private async setUp() {
     const data = await api().getCovidSummary();
-    const summaryInfo = createSummaryInfo(data);
-    this.setUpBySummaryInfo(summaryInfo);
+    const summaryInfo = new SummaryWrapper(data);
+
+    this.setUpWithSummary(summaryInfo);
   }
 
   private bindEvents() {
@@ -46,7 +48,7 @@ export class App {
     });
   }
 
-  private setUpBySummaryInfo(summaryInfo: SummaryInfo) {
+  private setUpWithSummary(summaryInfo: SummaryWrapper) {
     this.components.forEach(
       component => component.setup && component.setup(summaryInfo),
     );

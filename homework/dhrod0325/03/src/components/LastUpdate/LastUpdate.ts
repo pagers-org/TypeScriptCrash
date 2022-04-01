@@ -1,9 +1,9 @@
-import { Summary } from 'covid';
 import { getDateString } from '@/lib/utils';
 import { BaseComponent } from '@/lib/Component';
+import { SummaryWrapper } from '@/@model/SummaryWrapper';
 
 export class LastUpdate extends BaseComponent {
-  public setup(data: Summary): void {
+  public setup(data: SummaryWrapper): void {
     this.update(data);
   }
 
@@ -11,7 +11,7 @@ export class LastUpdate extends BaseComponent {
     this.$container.innerText = html;
   }
 
-  private update(data: Summary): void {
-    this.setHtml(getDateString(data.Date));
+  private update(data: SummaryWrapper): void {
+    this.setHtml(getDateString(data.summary.Date));
   }
 }

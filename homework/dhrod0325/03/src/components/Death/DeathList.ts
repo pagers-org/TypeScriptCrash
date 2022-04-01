@@ -1,14 +1,17 @@
 import { Country } from 'covid';
-
-import { sortedCountriesByDate } from '@/lib/utils';
 import { DeathListItem } from '@/components/Death/DeathListItem';
 import { BaseComponent } from '@/lib/Component';
+import { CountriesWrapper } from '@/@model/CountriesWrapper';
 
 export class DeathList extends BaseComponent {
-  public async loadData(data?: Country[]) {
-    if (!data) return;
+  public async loadData(countries?: Country[]) {
+    if (!countries) return;
 
-    sortedCountriesByDate(data).forEach(country => this.addItem(country));
+    const countriesWrapper = new CountriesWrapper(countries);
+
+    countriesWrapper
+      .getSortedByDate()
+      .forEach(country => this.addItem(country));
   }
 
   public clear() {

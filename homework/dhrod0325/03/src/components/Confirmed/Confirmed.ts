@@ -1,9 +1,9 @@
-import { SummaryInfo } from 'covid';
 import { BaseComponent } from '@/lib/Component';
+import { SummaryWrapper } from '@/@model/SummaryWrapper';
 
 export class Confirmed extends BaseComponent {
-  public setup(data: SummaryInfo): void {
-    this.setHtml(`${data.TotalConfirmed}`);
+  public setup(data: SummaryWrapper): void {
+    this.setHtml(`${data.getTotalConfirmed()}`);
   }
 
   private setHtml(count: string): void {
