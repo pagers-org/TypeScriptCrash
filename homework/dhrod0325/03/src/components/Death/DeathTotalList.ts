@@ -22,12 +22,16 @@ export class DeathTotalList extends AsyncComponent {
     this.$total.loadData(data);
   }
 
-  public loadAsyncPrepare(): void {
+  public prepareAsync(): void {
     this.$list.clear();
   }
 
-  public async loadAsyncData(selectedId: string) {
-    const spinner = new DefaultSpinner(this.$list.getContainer(), this.SPINNER_ID);
+  public async loadDataAsync(selectedId: string) {
+    const spinner = new DefaultSpinner(
+      this.$list.getContainer(),
+      this.SPINNER_ID,
+    );
+
     await spinner.spin(async () => {
       const data = await api().getDeaths(selectedId);
 

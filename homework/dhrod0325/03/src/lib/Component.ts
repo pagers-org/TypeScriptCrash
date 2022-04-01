@@ -16,23 +16,25 @@ export class BaseComponent implements Component {
 export abstract class AsyncComponent implements Component {
   private loading = false;
 
-  public loadAsyncPrepare() {
-    console.log('prepare async');
-  }
+  public abstract prepareAsync?(): void;
 
-  public abstract loadAsyncData(selectedId: string | undefined): void;
+  public abstract loadDataAsync(selectedId: string | undefined): void;
 
   //override
   public async loadData(selectedId: string | undefined) {
+    if (!selectedId) return;
+
     this.loading = true;
 
     try {
-      this.loadAsyncPrepare && this.loadAsyncPrepare();
-
-      await this.loadAsyncData(selectedId);
+      this.prepareAsync && this.prepareAsync();
+      await this.loadDataAsync(selectedId);
     } catch (e) {
-      console.log('error', e);
-      alert('데이터 요청중 오류가 발생했습니다. 잠시 후 다시 시도 해보세요.');
+      console.log('Api 요청실패 1 초후 다시 로드');
+
+      setTimeout(async () => {
+        await this.loadData(selectedId);
+      }, 1000);
     } finally {
       this.loading = false;
     }

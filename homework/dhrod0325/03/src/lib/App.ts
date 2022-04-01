@@ -1,8 +1,9 @@
 import { Component } from 'covid';
 import { api } from '@/lib/Api';
-import { debounce, getIdByEventTarget } from '@/lib/utils';
+import { getIdByEventTarget } from '@/lib/utils';
 import { RankList } from '@/components/Rank/RankList';
 import { SummaryWrapper } from '@/@model/SummaryWrapper';
+import { useTimer } from '@/lib/TimeChecker';
 
 export class App {
   private readonly components: Component[];
@@ -25,20 +26,25 @@ export class App {
   }
 
   private bindEvents() {
+    const timer = useTimer('clickEvent');
+
     window.addEventListener(RankList.CLICK_EVENT, e => {
-      debounce(() => {
-        const selectedId = getIdByEventTarget((e as CustomEvent).detail);
+      if (!timer.isTimeOver()) {
+        return;
+      }
 
-        if (selectedId === 'united-states')
-          return alert('데이터가 많아 총괄 현황은 제공하지 않아요 😭');
+      timer.setWaitTime(1000);
 
-        const loadings = this.getLoadingComponents();
+      const loadings = this.getLoadingComponents();
 
-        if (loadings.length > 0)
-          return console.log('component 가 로딩중입니다');
+      if (loadings.length > 0) return console.log('component 가 로딩중입니다');
 
-        this.loadData(selectedId);
-      }, 200)();
+      const selectedId = getIdByEventTarget((e as CustomEvent).detail);
+
+      if (selectedId === 'united-states')
+        return alert('데이터가 많아 총괄 현황은 제공하지 않아요 😭');
+
+      this.loadData(selectedId);
     });
   }
 
