@@ -7,6 +7,14 @@ import {
 } from "./components";
 import { CountryStatus, SummaryObject } from "./types";
 import { $, getUnixTimestamp } from "./utils";
+import {
+  LineController,
+  LineElement,
+  PointElement,
+  LinearScale,
+  Title,
+} from "chart.js";
+import Chart from "chart.js/auto";
 
 // DOM
 const confirmedTotal = $(".confirmed-total");
@@ -129,12 +137,14 @@ async function setupData(): Promise<void> {
 
 function renderChart(data: number[], labels: string[]): void {
   const canvas = $("#lineChart") as HTMLCanvasElement;
-  const ctx = canvas.getContext("2d");
-  // @ts-ignore
-  Chart.defaults.global.defaultFontColor = "#f5eaea";
-  // @ts-ignore
-  Chart.defaults.global.defaultFontFamily = "Exo 2";
-  // @ts-ignore
+  const ctx = canvas.getContext("2d")!;
+
+  Chart.defaults.color = "#f5eaea";
+  Chart.defaults.font.family = "Exo 2";
+
+  Chart.register(LineController, LineElement, PointElement, LinearScale, Title);
+  Chart.getChart("lineChart")?.destroy();
+
   new Chart(ctx, {
     type: "line",
     data: {
@@ -144,6 +154,7 @@ function renderChart(data: number[], labels: string[]): void {
           label: "Confirmed for the last two weeks",
           backgroundColor: "#feb72b",
           borderColor: "#feb72b",
+          fill: true,
           data,
         },
       ],
