@@ -1,10 +1,19 @@
 import { Country } from 'covid';
-import { DeathListItem } from '@/components/Death/DeathListItem';
 import { BaseComponent } from '@/lib/Component';
 import { CountriesWrapper } from '@/@model/CountriesWrapper';
+import { createElement, getDateString } from '@/lib/utils';
+
+const template = (country: Country) => {
+  return createElement(`
+          <li class="list-item-b flex align-center">
+            <span class="deaths">${country.Cases}</span>
+            <p>${getDateString(country.Date).slice(0, -3)}</p>
+          </li>
+        `);
+};
 
 export class DeathList extends BaseComponent {
-  public async loadData(countries?: Country[]) {
+  public loadData(countries?: Country[]) {
     if (!countries) return;
 
     const countriesWrapper = new CountriesWrapper(countries);
@@ -19,9 +28,6 @@ export class DeathList extends BaseComponent {
   }
 
   private addItem(country: Country) {
-    const deathListItem = new DeathListItem(country);
-    const elem = deathListItem.getElement();
-
-    this.$container.appendChild(elem);
+    this.$container.appendChild(template(country));
   }
 }

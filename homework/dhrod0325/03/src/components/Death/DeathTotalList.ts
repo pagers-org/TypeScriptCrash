@@ -30,9 +30,9 @@ export class DeathTotalList extends AsyncComponent {
     const spinner = new DefaultSpinner(this.$list.$container, this.SPINNER_ID);
     await spinner.spin(async () => {
       const data = await api().getDeaths(selectedId);
-      await this.$list.loadData(data);
 
-      data && this.$total.setHtmlByFirstCountry(data);
+      this.$list.loadData(data);
+      this.$total.setHtmlByFirstCountry(data);
     });
   }
 }
