@@ -1,30 +1,21 @@
 import '@/assets/style.css';
-
-import { DeathsList, RecoveredList, RankList } from '@/components/ChartList';
-
-import { createSpinnerElement } from '@/utils/utils';
-import { ConfirmedTotal } from '@/components/ConfirmedTotal';
-import { DeathsTotal } from '@/components/DeathsTotal';
-import { RecoveredTotal } from '@/components/RecoveredTotal';
-import { LastUpdatedTime } from '@/components/LastUpdatedTime';
+import { CountryInfo, Summary } from '@/types/type';
 import { fetchCountryInfo, fetchCovidSummary } from '@/api';
+
+import { Deaths } from '@/components/Deaths';
+import { Recovered } from '@/components/Recovered';
+import { Rank } from '@/components/Rank';
+import { LastUpdatedTime } from '@/components/LastUpdatedTime';
+import { ConfirmedTotal } from '@/components/ConfirmedTotal';
 import { ChartWrapper } from '@/components/ChartWrapper';
 
-import { CountryInfo, Summary } from '@/types/type';
+const deaths = new Deaths();
+const recovered = new Recovered();
+const rankList = new Rank();
 
-const deathsList = new DeathsList();
-const recoveredList = new RecoveredList();
-const rankList = new RankList();
-
-const confirmedTotal = ConfirmedTotal();
-const deathTotal = DeathsTotal();
-const recoveredTotal = RecoveredTotal();
-const lastUpdatedTime = LastUpdatedTime();
-
-const chartWrapper = ChartWrapper();
-
-const deathSpinner = createSpinnerElement('deaths-spinner');
-const recoveredSpinner = createSpinnerElement('recovered-spinner');
+const lastUpdatedTime = new LastUpdatedTime();
+const confirmedTotal = new ConfirmedTotal();
+const chartWrapper = new ChartWrapper();
 
 // state
 let isDeathLoading = false;
@@ -38,16 +29,17 @@ function startApp() {
 async function setupData() {
   const data = await fetchCovidSummary<Summary>();
 
+  //TODO set하는 함수들을 묶어서 사용 (Mapped Type)
   confirmedTotal.setTotalConfirmedNumber(data);
-  deathTotal.setTotalDeathsByWorld(data);
-  recoveredTotal.setTotalRecoveredByWorld(data);
+  deaths.setTotalDeathsByWorld(data);
+  recovered.setTotalRecoveredByWorld(data);
   rankList.setCountryRanksByConfirmedCases(data);
   lastUpdatedTime.setLastUpdatedTimestamp(data);
 }
 
 // events
 function initEvents() {
-  rankList.container.addEventListener('click', handleListClick);
+  rankList.rankList.addEventListener('click', handleListClick);
 }
 
 async function handleListClick(event: any) {
@@ -70,8 +62,8 @@ async function handleListClick(event: any) {
   if (selectedId === 'united-states')
     return alert('데이터가 많아 총괄 현황은 제공하지 않아요😭');
 
-  deathsList.clearList();
-  recoveredList.clearList();
+  deaths.clearDeathsList();
+  recovered.clearRecoveredList();
 
   startLoadingAnimation();
   isDeathLoading = true;
@@ -89,25 +81,23 @@ async function handleListClick(event: any) {
   );
   endLoadingAnimation();
 
-  deathsList.setList(deathResponse, 'deaths');
-  recoveredList.setList(recoveredResponse, 'recovered');
-
-  deathTotal.setTotalDeathsByCountry(deathResponse);
-
-  recoveredTotal.setTotalRecoveredByCountry(recoveredResponse);
+  deaths.setDeathsList(deathResponse);
+  recovered.setRecoveredList(recoveredResponse);
+  deaths.setTotalDeathsByCountry(deathResponse);
+  recovered.setTotalRecoveredByCountry(recoveredResponse);
   chartWrapper.setChartData(confirmedResponse);
 
   isDeathLoading = false;
 }
 
 function startLoadingAnimation() {
-  deathsList.container.appendChild(deathSpinner);
-  recoveredList.container.appendChild(recoveredSpinner);
+  deaths.addDeathsSpinner();
+  recovered.addRecoveredSpinner();
 }
 
 function endLoadingAnimation() {
-  deathsList.container.removeChild(deathSpinner);
-  recoveredList.container.removeChild(recoveredSpinner);
+  deaths.removeDeathsSpinner();
+  recovered.removeRecoveredSpinner();
 }
 
 startApp();

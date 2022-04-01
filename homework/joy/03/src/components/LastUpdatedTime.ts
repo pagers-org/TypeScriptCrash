@@ -1,13 +1,10 @@
 import { $ } from '@/utils/utils';
+import { Summary } from '@/types/type';
 
-export const LastUpdatedTime = () => {
-  const lastUpdatedTime = $('.last-updated-time');
+export class LastUpdatedTime {
+  private readonly lastUpdatedTime = $('.last-updated-time');
 
-  function setLastUpdatedTimestamp(data: any) {
-    lastUpdatedTime.innerText = new Date(data.Date).toLocaleString();
+  public setLastUpdatedTimestamp(data: Summary) {
+    this.lastUpdatedTime.innerText = new Date(data.Date).toLocaleString();
   }
-
-  return {
-    setLastUpdatedTimestamp,
-  };
-};
+}

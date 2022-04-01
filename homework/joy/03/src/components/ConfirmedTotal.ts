@@ -1,16 +1,13 @@
 import { $ } from '@/utils/utils';
+import { Summary } from '@/types/type';
 
-export const ConfirmedTotal = () => {
-  const confirmedTotal = $('.confirmed-total');
+export class ConfirmedTotal {
+  private readonly confirmedTotal = $('.confirmed-total');
 
-  function setTotalConfirmedNumber(data: any) {
-    confirmedTotal.innerText = data.Countries.reduce(
+  public setTotalConfirmedNumber(data: Summary) {
+    this.confirmedTotal.innerText = data.Countries.reduce(
       (total: any, current: any) => (total += current.TotalConfirmed),
       0,
     );
   }
-
-  return {
-    setTotalConfirmedNumber,
-  };
-};
+}

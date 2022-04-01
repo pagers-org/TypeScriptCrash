@@ -1,18 +1,20 @@
 import { $ } from '@/utils/utils';
+import { CountryInfo } from '@/types/type';
 
-export const ChartWrapper = () => {
-  function setChartData(data: any) {
-    const chartData = data.slice(-14).map((value: any) => value.Cases);
+export class ChartWrapper {
+  private readonly temp = -14;
+
+  public setChartData(data: CountryInfo[]) {
+    console.log(data);
+    const chartData = data.slice(this.temp).map(value => value.Cases);
     const chartLabel = data
-      .slice(-14)
-      .map((value: any) =>
-        new Date(value.Date).toLocaleDateString().slice(5, -1),
-      );
+      .slice(this.temp)
+      .map(value => new Date(value.Date).toLocaleDateString().slice(5, -1));
 
-    renderChart(chartData, chartLabel);
+    this.renderChart(chartData, chartLabel);
   }
 
-  function renderChart(data: any, labels: any) {
+  private renderChart(data: string[], labels: string[]) {
     const ctx = $<HTMLCanvasElement>('#lineChart').getContext('2d');
 
     // @ts-ignore
@@ -36,8 +38,4 @@ export const ChartWrapper = () => {
       options: {},
     });
   }
-
-  return {
-    setChartData,
-  };
-};
+}
