@@ -8,7 +8,7 @@ export class LastUpdate extends BaseComponent {
   }
 
   public setHtml(html: string): void {
-    this.$container.innerText = html;
+    this.getContainer().innerText = html;
   }
 
   private update(data: SummaryWrapper): void {

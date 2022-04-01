@@ -24,10 +24,10 @@ export class DeathList extends BaseComponent {
   }
 
   public clear() {
-    this.$container.innerHTML = '';
+    this.getContainer().innerHTML = '';
   }
 
   private addItem(country: Country) {
-    this.$container.appendChild(template(country));
+    this.getContainer().appendChild(template(country));
   }
 }

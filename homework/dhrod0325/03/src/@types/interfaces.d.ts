@@ -11,7 +11,7 @@ declare module 'covid' {
   }
 
   export interface Component extends SetupAble, LoadDataAble {
-    readonly $container?: HTMLElement;
+    getContainer?(): HTMLElement;
     onLoad?(): void;
   }
 

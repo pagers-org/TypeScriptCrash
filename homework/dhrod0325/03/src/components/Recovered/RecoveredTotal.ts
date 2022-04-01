@@ -8,7 +8,7 @@ export class RecoveredTotal extends BaseComponent {
   }
 
   public setHtml(count: string): void {
-    this.$container.innerText = count;
+    this.getContainer().innerText = count;
   }
 
   public setHtmlByFirstCountry(data?: Country[]): void {

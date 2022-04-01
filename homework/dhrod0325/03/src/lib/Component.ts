@@ -2,10 +2,14 @@ import { Component } from 'covid';
 import { $ } from '@/lib/utils';
 
 export class BaseComponent implements Component {
-  readonly $container: HTMLElement;
+  private readonly $container: HTMLElement;
 
   constructor(selector: string) {
     this.$container = $(selector) as HTMLElement;
+  }
+
+  public getContainer(): HTMLElement {
+    return this.$container;
   }
 }
 

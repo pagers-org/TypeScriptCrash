@@ -8,7 +8,7 @@ export class DeathTotal extends BaseComponent {
   }
 
   public setHtml(count: string) {
-    this.$container.innerText = count;
+    this.getContainer().innerText = count;
   }
 
   public setHtmlByFirstCountry(data: Country[] | undefined) {

@@ -17,7 +17,7 @@ export class RankList extends BaseComponent {
   public static readonly CLICK_EVENT = 'RankList.CLICK_EVENT';
 
   public setup(summary: SummaryWrapper): void {
-    this.$container.addEventListener('click', e => {
+    this.getContainer().addEventListener('click', e => {
       window.dispatchEvent(
         new CustomEvent(RankList.CLICK_EVENT, { detail: e }),
       );
@@ -32,6 +32,6 @@ export class RankList extends BaseComponent {
   }
 
   private addItem(value: Country): void {
-    this.$container.appendChild(template(value));
+    this.getContainer().appendChild(template(value));
   }
 }

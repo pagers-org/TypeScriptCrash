@@ -21,10 +21,10 @@ export class RecoveredList extends BaseComponent {
   }
 
   public clear(): void {
-    this.$container.innerHTML = '';
+    this.getContainer().innerHTML = '';
   }
 
   public addItem(country: Country): void {
-    this.$container.appendChild(template(country));
+    this.getContainer().appendChild(template(country));
   }
 }

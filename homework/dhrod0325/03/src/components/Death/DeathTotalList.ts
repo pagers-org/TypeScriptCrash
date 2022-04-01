@@ -27,7 +27,7 @@ export class DeathTotalList extends AsyncComponent {
   }
 
   public async loadAsyncData(selectedId: string) {
-    const spinner = new DefaultSpinner(this.$list.$container, this.SPINNER_ID);
+    const spinner = new DefaultSpinner(this.$list.getContainer(), this.SPINNER_ID);
     await spinner.spin(async () => {
       const data = await api().getDeaths(selectedId);
 

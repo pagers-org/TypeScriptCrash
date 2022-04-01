@@ -7,6 +7,6 @@ export class Confirmed extends BaseComponent {
   }
 
   private setHtml(count: string): void {
-    this.$container.innerText = count;
+    this.getContainer().innerText = count;
   }
 }

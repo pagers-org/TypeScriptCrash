@@ -13,17 +13,10 @@ Chart.defaults.global.defaultFontFamily = 'Exo 2';
 export class ChartBox extends AsyncComponent {
   private readonly VIEW_DATE_COUNT = -14;
 
+  private $container = $('#lineChart') as HTMLCanvasElement;
+
   private chart?: Chart;
-
-  public $container: HTMLCanvasElement;
-
   private countries: Country[] = [];
-
-  constructor() {
-    super();
-
-    this.$container = $('#lineChart') as HTMLCanvasElement;
-  }
 
   public async loadAsyncData(selectedId: string) {
     this.destroy();
