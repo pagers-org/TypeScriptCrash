@@ -8,9 +8,10 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "moment": "^2.29.1",
     "typescript": "^4.5.4",
     "vite": "^2.8.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "chart.js": "^3.7.1"
+  }
 }
