@@ -55,6 +55,8 @@ export class App {
   }
 
   private getLoadingComponents() {
-    return [...this.components].filter(component => component.isLoading);
+    return [...this.components].filter(
+      component => component.isLoading && component.isLoading(),
+    );
   }
 }
