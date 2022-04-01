@@ -4,21 +4,20 @@ import { Country } from 'covid';
 import { $, getDateString } from '@/lib/utils';
 import { api } from '@/lib/Api';
 import { AsyncComponent } from '@/lib/Component';
+import { Chart } from 'chart.js';
 
 export class ChartBox extends AsyncComponent {
   private readonly VIEW_DATE_COUNT = -14;
 
-  // @ts-ignore
-  private chart;
+  private chart?: Chart;
+
   private $container: HTMLCanvasElement;
   private countries: Country[] = [];
 
   constructor() {
     super();
 
-    // @ts-ignore
     Chart.defaults.global.defaultFontColor = '#f5eaea';
-    // @ts-ignore
     Chart.defaults.global.defaultFontFamily = 'Exo 2';
 
     this.$container = $('#lineChart') as HTMLCanvasElement;
@@ -27,28 +26,27 @@ export class ChartBox extends AsyncComponent {
   public async loadAsyncData(selectedId: string) {
     this.destroy();
 
+    await this.initCountries(selectedId);
+
+    this.create();
+  }
+
+  private async initCountries(selectedId: string) {
     const countries = await api().getConfirmed(selectedId);
-
     this.countries = [...countries].slice(this.VIEW_DATE_COUNT);
-
-    this.render();
   }
 
-  private createData(): string[] {
-    return this.countries.map(value => value.Cases);
+  private createChartData(): number[] {
+    return this.countries.map(value => +value.Cases);
   }
 
-  private createLabel(): string[] {
+  private createChartLabel(): string[] {
     return this.countries.map(value => getDateString(value.Date).slice(5, -1));
   }
 
-  private destroy() {
-    this.chart && this.chart.destroy();
-  }
-
-  private createChartOption() {
-    const data = this.createData();
-    const labels = this.createLabel();
+  private createChartOption(): Chart.ChartConfiguration {
+    const data = this.createChartData();
+    const labels = this.createChartLabel();
 
     return {
       type: 'line',
@@ -66,14 +64,17 @@ export class ChartBox extends AsyncComponent {
     };
   }
 
-  private createChart() {
-    const ctx = this.$container.getContext('2d');
-    const option = this.createChartOption();
-    // @ts-ignore
-    this.chart = new Chart(ctx, option);
+  private destroy() {
+    this.chart && this.chart.destroy();
   }
 
-  private render(): void {
-    this.createChart();
+  private create() {
+    const ctx = this.$container.getContext('2d');
+
+    if (!ctx) throw new Error('chart create fail');
+
+    const option = this.createChartOption();
+
+    this.chart = new Chart(ctx, option);
   }
 }
