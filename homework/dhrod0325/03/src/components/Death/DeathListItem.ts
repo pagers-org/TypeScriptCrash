@@ -1,5 +1,4 @@
-import { getDateString } from '@/lib/utils';
-import { createElement } from '@/lib/template';
+import { createElement, getDateString } from '@/lib/utils';
 import { Country } from 'covid';
 
 export class DeathListItem {

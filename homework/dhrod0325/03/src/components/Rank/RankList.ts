@@ -1,7 +1,15 @@
-import { createRankListItem } from '@/lib/template';
 import { Country, Summary } from 'covid';
 import { BaseComponent } from '@/lib/Component';
-import { sortedCountriesByTotalConfirmed } from '@/lib/utils';
+import { createElement, sortedCountriesByTotalConfirmed } from '@/lib/utils';
+
+export const template = (value: Country): Element => {
+  return createElement(`
+  <li class="list-item flex align-center" id="${value.Slug}">
+    <span class="cases">${value.TotalConfirmed}</span>
+    <p class="country">${value.Country}</p>
+  </li>
+`);
+};
 
 export class RankList extends BaseComponent {
   public static readonly CLICK_EVENT = 'RankList.CLICK_EVENT';
@@ -23,6 +31,6 @@ export class RankList extends BaseComponent {
   }
 
   private addItem(value: Country): void {
-    this.$container.appendChild(createRankListItem(value));
+    this.$container.appendChild(template(value));
   }
 }

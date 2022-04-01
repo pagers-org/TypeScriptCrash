@@ -1,5 +1,5 @@
 import { Spinner } from 'covid';
-import { createElement } from '@/lib/template';
+import { createElement } from '@/lib/utils';
 
 const template = (id: string) => {
   return createElement(`

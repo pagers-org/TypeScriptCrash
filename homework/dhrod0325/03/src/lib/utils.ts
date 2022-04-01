@@ -81,3 +81,10 @@ export function debounce(callback: () => void, timeout: number) {
     }, timeout);
   };
 }
+
+export function createElement(html: string): HTMLElement {
+  const f = document.createElement('template');
+  f.innerHTML = html;
+
+  return f.content.firstElementChild as HTMLElement;
+}

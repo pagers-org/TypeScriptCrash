@@ -1,7 +1,19 @@
 import { Country } from 'covid';
-import { sortedCountriesByDate } from '@/lib/utils';
-import { createRecoveredListItem } from '@/lib/template';
+import {
+  createElement,
+  getDateString,
+  sortedCountriesByDate,
+} from '@/lib/utils';
 import { BaseComponent } from '@/lib/Component';
+
+const template = (value: Country): Element => {
+  return createElement(`
+  <li class="list-item-b flex align-center">
+    <span class="recovered">${value.Cases}</span>
+    <p>${getDateString(value.Date).slice(0, -3)}</p>
+  </li>
+`);
+};
 
 export class RecoveredList extends BaseComponent {
   public setItems(data?: Country[]): void {
@@ -15,7 +27,7 @@ export class RecoveredList extends BaseComponent {
   }
 
   public addItem(value: Country): void {
-    const child = createRecoveredListItem(value);
+    const child = template(value);
 
     this.$container.appendChild(child);
   }
