@@ -10,44 +10,47 @@ export class ChartBox extends AsyncComponent {
 
   // @ts-ignore
   private chart;
+  private $container: HTMLCanvasElement;
+  private countries: Country[] = [];
 
-  public async loadAsyncData(selectedId: string) {
-    const data = await api().getConfirmed(selectedId);
-
-    if (data) {
-      this.render(this.createData(data), this.createLabel(data));
-    }
-  }
-
-  private viewDataList(data: Country[]) {
-    return data.slice(this.VIEW_DATE_COUNT);
-  }
-
-  private createData(data: Country[]): string[] {
-    const list = this.viewDataList(data);
-
-    return list.map(value => value.Cases);
-  }
-
-  private createLabel(data: Country[]): string[] {
-    const list = this.viewDataList(data);
-    return list.map(value => getDateString(value.Date).slice(5, -1));
-  }
-
-  private render(data: string[], labels: string[]): void {
-    if (this.chart) {
-      this.chart.destroy();
-    }
-
-    const ctx = ($('#lineChart') as HTMLCanvasElement).getContext('2d');
+  constructor() {
+    super();
 
     // @ts-ignore
     Chart.defaults.global.defaultFontColor = '#f5eaea';
     // @ts-ignore
     Chart.defaults.global.defaultFontFamily = 'Exo 2';
 
-    // @ts-ignore
-    this.chart = new Chart(ctx, {
+    this.$container = $('#lineChart') as HTMLCanvasElement;
+  }
+
+  public async loadAsyncData(selectedId: string) {
+    this.destroy();
+
+    const countries = await api().getConfirmed(selectedId);
+
+    this.countries = [...countries].slice(this.VIEW_DATE_COUNT);
+
+    this.render();
+  }
+
+  private createData(): string[] {
+    return this.countries.map(value => value.Cases);
+  }
+
+  private createLabel(): string[] {
+    return this.countries.map(value => getDateString(value.Date).slice(5, -1));
+  }
+
+  private destroy() {
+    this.chart && this.chart.destroy();
+  }
+
+  private createChartOption() {
+    const data = this.createData();
+    const labels = this.createLabel();
+
+    return {
       type: 'line',
       data: {
         labels,
@@ -60,6 +63,17 @@ export class ChartBox extends AsyncComponent {
           },
         ],
       },
-    });
+    };
+  }
+
+  private createChart() {
+    const ctx = this.$container.getContext('2d');
+    const option = this.createChartOption();
+    // @ts-ignore
+    this.chart = new Chart(ctx, option);
+  }
+
+  private render(): void {
+    this.createChart();
   }
 }
