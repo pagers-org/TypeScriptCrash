@@ -3,13 +3,13 @@ import { BaseComponent } from '@/lib/Component';
 import { SummaryWrapper } from '@/model/SummaryWrapper';
 
 export class RecoveredTotal extends BaseComponent {
-  public loadData(data: SummaryWrapper): void {
-    this.setHtml(`${data.getTotalRecovered()}`);
+  public loadData(summary: SummaryWrapper): void {
+    this.setHtml(`${summary.getTotalRecovered()}`);
   }
 
-  public setHtmlByFirstCountry(data?: Country[]): void {
-    if (!data) return;
+  public setHtmlByFirstCountry(countries?: Country[]): void {
+    if (!countries) return;
 
-    this.setHtml(data[0].Cases);
+    this.setHtml(countries[0].Cases);
   }
 }

@@ -2,7 +2,7 @@ import { SummaryWrapper } from '@/model/SummaryWrapper';
 
 declare module 'covid' {
   export interface SetupAble {
-    setup?(data: SummaryWrapper): void;
+    setup?(summary: SummaryWrapper): void;
   }
 
   export interface LoadDataAble {

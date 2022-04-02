@@ -26,15 +26,15 @@ export class Api {
     });
   }
 
-  public async getConfirmed(countryCode: string) {
+  public async getConfirmedCountries(countryCode: string) {
     return await this.getCountryInfo(countryCode, 'confirmed');
   }
 
-  public async getDeaths(countryCode: string) {
+  public async getDeathCountries(countryCode: string) {
     return await this.getCountryInfo(countryCode, 'deaths');
   }
 
-  public async getRecovered(countryCode: string) {
+  public async getRecoveredCountries(countryCode: string) {
     return await this.getCountryInfo(countryCode, 'recovered');
   }
 

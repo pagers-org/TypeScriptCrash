@@ -18,8 +18,8 @@ export class RecoveredTotalList extends AsyncComponent {
     this.$list = new RecoveredList('.recovered-list');
   }
 
-  public setup(data: SummaryWrapper): void {
-    this.$total.loadData(data);
+  public setup(summary: SummaryWrapper): void {
+    this.$total.loadData(summary);
   }
 
   public prepareAsync(): void {
@@ -33,10 +33,10 @@ export class RecoveredTotalList extends AsyncComponent {
     );
 
     await spinner.spin(async () => {
-      const data = await api().getRecovered(selectedId);
+      const countries = await api().getRecoveredCountries(selectedId);
 
-      this.$list.setItems(data);
-      this.$total.setHtmlByFirstCountry(data);
+      this.$list.setItems(countries);
+      this.$total.setHtmlByFirstCountry(countries);
     });
   }
 }

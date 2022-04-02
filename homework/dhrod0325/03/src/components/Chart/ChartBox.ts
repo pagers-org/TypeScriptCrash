@@ -31,7 +31,7 @@ export class ChartBox extends AsyncComponent {
   }
 
   private async initCountries(selectedId: string) {
-    const countries = await api().getConfirmed(selectedId);
+    const countries = await api().getConfirmedCountries(selectedId);
     this.countries = [...countries].slice(this.VIEW_DATE_COUNT);
   }
 

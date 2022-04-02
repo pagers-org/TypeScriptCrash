@@ -26,9 +26,11 @@ export class RankList extends BaseComponent {
     this.addItemsByTotalConfirmed(summary);
   }
 
-  private addItemsByTotalConfirmed(data: SummaryWrapper): void {
-    const countries = new CountriesWrapper(data.summary.Countries);
-    countries.getSortedByTotalConfirmed().forEach(value => this.addItem(value));
+  private addItemsByTotalConfirmed(summary: SummaryWrapper): void {
+    summary
+      .getCountries()
+      .getSortedByTotalConfirmed()
+      .forEach(value => this.addItem(value));
   }
 
   private addItem(value: Country): void {

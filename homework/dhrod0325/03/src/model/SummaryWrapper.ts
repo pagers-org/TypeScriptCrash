@@ -1,4 +1,6 @@
 import { Summary, TotalCounterProp } from 'covid';
+import { getDateString } from '@/lib/utils';
+import { CountriesWrapper } from '@/model/CountriesWrapper';
 
 export class SummaryWrapper {
   public summary: Summary;
@@ -24,5 +26,17 @@ export class SummaryWrapper {
 
   public getTotalDeaths() {
     return this.calcTotalCountData('TotalDeaths');
+  }
+
+  public getDate() {
+    return this.summary.Date;
+  }
+
+  public getDateString() {
+    return getDateString(this.getDate());
+  }
+
+  public getCountries() {
+    return new CountriesWrapper(this.summary.Countries);
   }
 }

@@ -18,8 +18,8 @@ export class DeathTotalList extends AsyncComponent {
     this.$list = new DeathList('.deaths-list');
   }
 
-  public setup(data: SummaryWrapper): void {
-    this.$total.loadData(data);
+  public setup(summary: SummaryWrapper): void {
+    this.$total.loadData(summary);
   }
 
   public prepareAsync(): void {
@@ -33,10 +33,10 @@ export class DeathTotalList extends AsyncComponent {
     );
 
     await spinner.spin(async () => {
-      const data = await api().getDeaths(selectedId);
+      const countries = await api().getDeathCountries(selectedId);
 
-      this.$list.loadData(data);
-      this.$total.setHtmlByFirstCountry(data);
+      this.$list.loadData(countries);
+      this.$total.setHtmlByFirstCountry(countries);
     });
   }
 }
