@@ -8,15 +8,8 @@ import { SummaryWrapper } from '@/model/SummaryWrapper';
 export class RecoveredTotalList extends AsyncComponent {
   private readonly SPINNER_ID = 'recovered-spinner';
 
-  private readonly $total: RecoveredTotal;
-  private readonly $list: RecoveredList;
-
-  constructor() {
-    super();
-
-    this.$total = new RecoveredTotal('.recovered');
-    this.$list = new RecoveredList('.recovered-list');
-  }
+  private readonly $total: RecoveredTotal = new RecoveredTotal('.recovered');
+  private readonly $list: RecoveredList = new RecoveredList('.recovered-list');
 
   public setup(summary: SummaryWrapper): void {
     this.$total.loadData(summary);

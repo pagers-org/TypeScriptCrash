@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-
 import { Country } from 'covid';
 import { $ } from '@/lib/utils';
 import { api } from '@/lib/Api';

@@ -1,9 +1,9 @@
 import { Component } from 'covid';
 import { api } from '@/lib/Api';
-import { getIdByEventTarget } from '@/lib/utils';
 import { RankList } from '@/components/Rank/RankList';
 import { SummaryWrapper } from '@/model/SummaryWrapper';
 import { useTimer } from '@/lib/TimeChecker';
+import { IdFinder } from '@/lib/IdFinder';
 
 export class App {
   private readonly components: Component[];
@@ -29,17 +29,14 @@ export class App {
     const timer = useTimer('clickEvent');
 
     window.addEventListener(RankList.CLICK_EVENT, e => {
-      if (!timer.isTimeOver()) {
-        return;
-      }
-
+      if (!timer.isTimeOver()) return;
       timer.setWaitTime(1000);
 
       const loadings = this.getLoadingComponents();
 
       if (loadings.length > 0) return console.log('component 가 로딩중입니다');
 
-      const selectedId = getIdByEventTarget((e as CustomEvent).detail);
+      const selectedId = new IdFinder(e).findId();
 
       if (selectedId === 'united-states')
         return alert('데이터가 많아 총괄 현황은 제공하지 않아요 😭');
