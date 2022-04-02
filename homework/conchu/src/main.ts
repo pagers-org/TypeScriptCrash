@@ -10,8 +10,8 @@ import TotalRecovered from './components/TotalRecover';
 import TotalRecoveredList from './components/TotalRecoveredList';
 import UpdateTimeStamp from './components/UpdateTimeStamp';
 import { $ } from './utils/common';
+import { createSpinnerElement, clearInnerHTML } from './utils/dom';
 
-//HTMLElement or HTMLSpanElement
 const confirmedTotal = $<HTMLSpanElement>('.confirmed-total');
 const deathsTotal = $<HTMLParagraphElement>('.deaths');
 const recoveredTotal = $<HTMLParagraphElement>('.recovered');
@@ -22,57 +22,52 @@ const recoveredList = $<HTMLOListElement>('.recovered-list');
 const deathSpinner = createSpinnerElement('deaths-spinner');
 const recoveredSpinner = createSpinnerElement('recovered-spinner');
 
-function createSpinnerElement(id: string) {
-  const wrapperDiv = document.createElement('div');
-  wrapperDiv.setAttribute('id', id);
-  wrapperDiv.setAttribute(
-    'class',
-    'spinner-wrapper flex justify-center align-center',
-  );
-  const spinnerDiv = document.createElement('div');
-  spinnerDiv.setAttribute('class', 'ripple-spinner');
-  spinnerDiv.appendChild(document.createElement('div'));
-  spinnerDiv.appendChild(document.createElement('div'));
-  wrapperDiv.appendChild(spinnerDiv);
-  return wrapperDiv;
-}
+// laoding state
+const loading = {
+  state: false,
+  getState: function () {
+    return this.state;
+  },
+  setState: function (state: boolean) {
+    this.state = state;
+    return state;
+  },
+};
 
-// state
-
-let isDeathLoading = false;
-// methods
 function startApp() {
+  // 제대로 분리?
   setupData();
   initEvents();
 }
-
 // events
 function initEvents() {
   rankList.addEventListener('click', handleListClick);
 }
-
-async function handleListClick(event: Event) {
+function getSelectedId(event: Event): string | undefined {
   const { target } = event;
 
-  let selectedId = '';
   if (
     target instanceof HTMLParagraphElement ||
     target instanceof HTMLSpanElement
   ) {
-    selectedId = target?.parentElement?.id || '';
+    if (target.parentElement !== null) return target.parentElement.id;
   }
   if (target instanceof HTMLLIElement) {
-    selectedId = target.id;
+    return target.id;
   }
-  if (isDeathLoading) {
-    return;
-  }
+}
+async function handleListClick(event: Event) {
+  const selectedId = getSelectedId(event);
+
+  if (!loading.getState) return;
   if (selectedId === 'united-states') return alert(COUNTRY.USA);
 
-  clearDeathList();
-  clearRecoveredList();
+  clearInnerHTML(deathsList);
+  clearInnerHTML(recoveredList);
   startLoadingAnimation();
-  isDeathLoading = true;
+  loading.setState(true);
+  if (!selectedId) return;
+
   const deathResponse = await fetchCountryInfo<PickCountriesDetailType[]>(
     selectedId,
     PEOPLE_STATUS.DEATHS,
@@ -89,30 +84,17 @@ async function handleListClick(event: Event) {
 
   new TotalDeathsList(deathsList, { data: deathResponse });
   new TotalRecoveredList(recoveredList, { data: deathResponse });
-  setTotalDeathsByCountry(deathResponse);
-  setTotalRecoveredByCountry(recoveredResponse);
+  setCountryCases(deathsTotal, deathResponse);
+  setCountryCases(recoveredTotal, recoveredResponse);
   setChartData(confirmedResponse);
-  isDeathLoading = false;
+  loading.setState(false);
 }
 
-function clearInnerHTML(elem: HTMLElement): void {
-  elem.innerHTML = '';
-}
-
-function clearDeathList(): void {
-  clearInnerHTML(deathsList);
-}
-
-function setTotalDeathsByCountry(data: PickCountriesDetailType[]) {
-  deathsTotal.innerText = data[0].Cases;
-}
-
-function clearRecoveredList() {
-  clearInnerHTML(recoveredList);
-}
-
-function setTotalRecoveredByCountry(data: PickCountriesDetailType[]) {
-  recoveredTotal.innerText = data[0].Cases;
+function setCountryCases(
+  elem: HTMLParagraphElement,
+  data: PickCountriesDetailType[],
+): void {
+  elem.innerText = data[0].Cases;
 }
 
 function startLoadingAnimation() {

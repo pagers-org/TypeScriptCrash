@@ -16,7 +16,7 @@ export function $<T extends HTMLElement>(selector: string): T {
   return element;
 }
 
-function setInnerText(key: TotalType, result: string) {
+export function setInnerText(key: TotalType, result: string) {
   return (elementTable[key].innerText = result || '');
 }
 export function getTotal(data: SummaryType, key: TotalType) {
@@ -24,7 +24,7 @@ export function getTotal(data: SummaryType, key: TotalType) {
     (acc, curr) => (acc += curr[key]),
     0,
   ).toLocaleString();
-  return setInnerText(key, result);
+  return result;
 }
 //.. 일단 빼놓음 나중에 수정
 function sortDate(

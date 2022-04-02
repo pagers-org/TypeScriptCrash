@@ -1,11 +1,12 @@
 import { SummaryType } from 'Covid';
 import Component from '../core/Component';
-import { getTotal } from '../utils/common';
+import { getTotal, setInnerText } from '../utils/common';
 
 export default class TotalConfirmed extends Component {
   setup() {
     const { data }: { data: SummaryType } = this.$props;
-    const total = getTotal(data, 'TotalConfirmed');
+    const result = getTotal(data, 'TotalConfirmed');
+    const total = setInnerText('TotalConfirmed', result);
     this.setState<{ total: string }>({ total });
   }
 
