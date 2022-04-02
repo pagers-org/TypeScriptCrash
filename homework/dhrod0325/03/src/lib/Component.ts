@@ -11,6 +11,14 @@ export class BaseComponent implements Component {
   public getContainer(): HTMLElement {
     return this.$container;
   }
+
+  public setHtml(html: string) {
+    this.$container.innerText = html;
+  }
+
+  public clearHtml() {
+    this.setHtml('');
+  }
 }
 
 export abstract class AsyncComponent implements Component {

@@ -1,8 +1,8 @@
 import { Country } from 'covid';
 import { BaseComponent } from '@/lib/Component';
 import { createElement } from '@/lib/utils';
-import { CountriesWrapper } from '@/@model/CountriesWrapper';
-import { SummaryWrapper } from '@/@model/SummaryWrapper';
+import { CountriesWrapper } from '@/model/CountriesWrapper';
+import { SummaryWrapper } from '@/model/SummaryWrapper';
 
 export const template = (value: Country): Element => {
   return createElement(`

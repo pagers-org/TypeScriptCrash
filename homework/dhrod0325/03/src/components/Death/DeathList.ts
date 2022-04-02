@@ -1,6 +1,6 @@
 import { Country } from 'covid';
 import { BaseComponent } from '@/lib/Component';
-import { CountriesWrapper } from '@/@model/CountriesWrapper';
+import { CountriesWrapper } from '@/model/CountriesWrapper';
 import { createElement, getDateString } from '@/lib/utils';
 
 const template = (country: Country) => {
@@ -21,10 +21,6 @@ export class DeathList extends BaseComponent {
     countriesWrapper
       .getSortedByDate()
       .forEach(country => this.addItem(country));
-  }
-
-  public clear() {
-    this.getContainer().innerHTML = '';
   }
 
   private addItem(country: Country) {

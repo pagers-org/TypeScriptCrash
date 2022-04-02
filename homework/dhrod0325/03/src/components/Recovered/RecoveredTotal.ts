@@ -1,14 +1,10 @@
 import { Country } from 'covid';
 import { BaseComponent } from '@/lib/Component';
-import { SummaryWrapper } from '@/@model/SummaryWrapper';
+import { SummaryWrapper } from '@/model/SummaryWrapper';
 
 export class RecoveredTotal extends BaseComponent {
   public loadData(data: SummaryWrapper): void {
     this.setHtml(`${data.getTotalRecovered()}`);
-  }
-
-  public setHtml(count: string): void {
-    this.getContainer().innerText = count;
   }
 
   public setHtmlByFirstCountry(data?: Country[]): void {

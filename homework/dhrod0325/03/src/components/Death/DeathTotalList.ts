@@ -3,7 +3,7 @@ import { DeathTotal } from './DeathTotal';
 import { api } from '@/lib/Api';
 import { DefaultSpinner } from '../Helper/DefaultSpinner';
 import { AsyncComponent } from '@/lib/Component';
-import { SummaryWrapper } from '@/@model/SummaryWrapper';
+import { SummaryWrapper } from '@/model/SummaryWrapper';
 
 export class DeathTotalList extends AsyncComponent {
   private readonly SPINNER_ID = 'deaths-spinner';
@@ -23,7 +23,7 @@ export class DeathTotalList extends AsyncComponent {
   }
 
   public prepareAsync(): void {
-    this.$list.clear();
+    this.$list.clearHtml();
   }
 
   public async loadDataAsync(selectedId: string) {

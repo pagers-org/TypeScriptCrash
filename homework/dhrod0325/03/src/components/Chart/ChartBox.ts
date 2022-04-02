@@ -18,7 +18,11 @@ export class ChartBox extends AsyncComponent {
   private chart?: Chart;
   private countries: Country[] = [];
 
-  public async loadAsyncData(selectedId: string) {
+  prepareAsync() {
+    //
+  }
+
+  public async loadDataAsync(selectedId: string) {
     this.destroy();
 
     await this.initCountries(selectedId);

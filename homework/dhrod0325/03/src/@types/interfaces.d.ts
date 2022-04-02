@@ -1,4 +1,4 @@
-import { SummaryWrapper } from '@/@model/SummaryWrapper';
+import { SummaryWrapper } from '@/model/SummaryWrapper';
 
 declare module 'covid' {
   export interface SetupAble {
@@ -12,7 +12,6 @@ declare module 'covid' {
 
   export interface Component extends SetupAble, LoadDataAble {
     getContainer?(): HTMLElement;
-    onLoad?(): void;
   }
 
   export type ClientInit = {

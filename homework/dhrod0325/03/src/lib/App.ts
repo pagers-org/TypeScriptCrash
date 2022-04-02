@@ -2,7 +2,7 @@ import { Component } from 'covid';
 import { api } from '@/lib/Api';
 import { getIdByEventTarget } from '@/lib/utils';
 import { RankList } from '@/components/Rank/RankList';
-import { SummaryWrapper } from '@/@model/SummaryWrapper';
+import { SummaryWrapper } from '@/model/SummaryWrapper';
 import { useTimer } from '@/lib/TimeChecker';
 
 export class App {

@@ -1,7 +1,7 @@
 import { Country } from 'covid';
 import { createElement, getDateString } from '@/lib/utils';
 import { BaseComponent } from '@/lib/Component';
-import { CountriesWrapper } from '@/@model/CountriesWrapper';
+import { CountriesWrapper } from '@/model/CountriesWrapper';
 
 const template = (value: Country): Element => {
   return createElement(`
@@ -18,10 +18,6 @@ export class RecoveredList extends BaseComponent {
 
     const countriesWrapper = new CountriesWrapper(countries);
     countriesWrapper.getSortedByDate().forEach(value => this.addItem(value));
-  }
-
-  public clear(): void {
-    this.getContainer().innerHTML = '';
   }
 
   public addItem(country: Country): void {
