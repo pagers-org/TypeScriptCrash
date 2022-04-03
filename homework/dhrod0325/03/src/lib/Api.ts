@@ -1,10 +1,6 @@
 import { ApiCountryInfoType, Country, Summary } from 'covid';
 import { HttpClient } from './HttpClient';
-
-const API_BASE_URL = 'https://api.covid19api.com';
-
-const API_SUMMARY_URL = `${API_BASE_URL}/summary`;
-const API_COUNTRY_URL = `${API_BASE_URL}/country`;
+import { API_URL } from '@/lib/Constant';
 
 export class Api {
   private httpClient: HttpClient = new HttpClient();
@@ -16,13 +12,13 @@ export class Api {
     if (!countryCode) throw new Error('require countryCode');
 
     return await this.httpClient.get({
-      url: `${API_COUNTRY_URL}/${countryCode}/status/${status}`,
+      url: `${API_URL.COUNTRY}/${countryCode}/status/${status}`,
     });
   }
 
   public async getSummary(): Promise<Summary> {
     return await this.httpClient.get({
-      url: API_SUMMARY_URL,
+      url: API_URL.SUMMARY,
     });
   }
 

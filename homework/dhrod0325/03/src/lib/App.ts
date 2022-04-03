@@ -4,6 +4,7 @@ import { RankList } from '@/components/Rank/RankList';
 import { SummaryWrapper } from '@/model/SummaryWrapper';
 import { useTimer } from '@/lib/TimeChecker';
 import { IdFinder } from '@/lib/IdFinder';
+import { MSG } from '@/lib/Constant';
 
 export class App {
   private readonly components: Component[];
@@ -28,21 +29,21 @@ export class App {
   private bindEvents() {
     const timer = useTimer('clickEvent');
 
-    window.addEventListener(RankList.CLICK_EVENT, e => {
+    window.addEventListener(RankList.CLICK_EVENT, event => {
       if (!timer.isTimeOver()) return;
       timer.setWaitTime(1000);
 
-      const loadings = this.getLoadingComponents();
+      if (this.isLoading()) return console.log(MSG.LOADING_COMPONENT);
 
-      if (loadings.length > 0) return console.log('component 가 로딩중입니다');
-
-      const selectedId = new IdFinder(e).findId();
-
-      if (selectedId === 'united-states')
-        return alert('데이터가 많아 총괄 현황은 제공하지 않아요 😭');
-
+      const selectedId = new IdFinder((event as CustomEvent).detail).findId();
+      if (selectedId === 'united-states') return alert(MSG.MANY_DATA);
       this.loadData(selectedId);
     });
+  }
+
+  private isLoading() {
+    const loadings = this.getLoadingComponents();
+    return loadings.length > 0;
   }
 
   private loadData(selectedId: string) {
