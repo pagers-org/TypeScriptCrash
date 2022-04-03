@@ -8,15 +8,8 @@ import { SummaryWrapper } from '@/model/SummaryWrapper';
 export class DeathTotalList extends AsyncComponent {
   private readonly SPINNER_ID = 'deaths-spinner';
 
-  private readonly $total: DeathTotal;
-  private readonly $list: DeathList;
-
-  constructor() {
-    super();
-
-    this.$total = new DeathTotal('.deaths');
-    this.$list = new DeathList('.deaths-list');
-  }
+  private readonly $total: DeathTotal = new DeathTotal('.deaths');
+  private readonly $list: DeathList = new DeathList('.deaths-list');
 
   public setup(summary: SummaryWrapper): void {
     this.$total.loadData(summary);

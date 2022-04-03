@@ -1,6 +1,7 @@
+import { api } from '@/lib/Api';
+
 import { RecoveredList } from './RecoveredList';
 import { RecoveredTotal } from './RecoveredTotal';
-import { api } from '@/lib/Api';
 import { DefaultSpinner } from '@/components/Helper/DefaultSpinner';
 import { AsyncComponent } from '@/lib/Component';
 import { SummaryWrapper } from '@/model/SummaryWrapper';
