@@ -1,4 +1,4 @@
-const globalStudy: Array<number> = [];
+let globalStudy: number[] = [];
 const gameStatus = {
   start: '게임이 시작되었습니다!',
   pause: '게임이 중지되었습니다!',
@@ -23,44 +23,44 @@ type GameType = 'start' | 'pause' | 'stop';
 
 
 function control(type: string, detail: DetailType): string {
-  if (type === 'game') {
-    const gameType = <GameType>detail;
-    return gameStatus[gameType];
+  switch(type){
+    case 'game': 
+      const gameType = <GameType>detail;
+      return gameStatus[gameType];
 
-  } else if (type === 'study') {
-    const detailNumber = Number(detail);
-    const detailNatural = Math.abs(detailNumber);
-    const isPlusValue: boolean = detail > 0;
-    const isDuplicate: boolean = globalStudy.includes(detailNatural);
+    case 'study': 
+      const detailNumber = Number(detail);
+      const detailNatural = Math.abs(detailNumber);
+      const isPlusValue = detail > 0;
+      const isDuplicate = globalStudy.includes(detailNatural);
 
-    if (isPlusValue && !isDuplicate) globalStudy.push(detailNumber);
-    else if (!isPlusValue && isDuplicate) {
-      const detailIndex = globalStudy.indexOf(detailNatural);
-      globalStudy.splice(detailIndex);
-    }
+      if (isPlusValue && !isDuplicate) globalStudy.push(detailNumber);
+      else if (!isPlusValue && isDuplicate) {
+        globalStudy = globalStudy.filter(num => num !== detailNatural);
+      }
 
-    return String(globalStudy);
+      return String(globalStudy);
 
-  } else if (type === 'memory') {
-    let memoryText: string = '저의 이름은 ';
-    const memoryJson = <PersonInterface>detail;
-    memoryText += `${memoryJson.name}, `;
-    memoryText += `${memoryJson.gender === 'female' ? '여성' : '남성'}이고 `;
-    memoryText += `${memoryJson.age}살`;
-    memoryText += `${
-      memoryJson.isStudent
-        ? '이고, 학교에 다니고 있어요🤗 '
-        : '이에요. 학생은 아니에요🤣 '
-    }`;
-    if (memoryJson.hobby) {
-      memoryText += `취미는 ${(memoryJson.hobby).join(",")}`;
-      memoryText += `${memoryJson.doing ? '에요.' : '이고, '}`;
-    }
-    if (memoryJson.doing) {
-      memoryText += `현재 하고 있는 일은 이래요!`+'\n';
-      memoryText += JSON.stringify(memoryJson.doing, null, 2);
-    }
-    return memoryText;
+    case 'memory': 
+      let memoryText: string = '저의 이름은 ';
+      const memoryJson = <PersonInterface>detail;
+      memoryText += `${memoryJson.name}, `;
+      memoryText += `${memoryJson.gender === 'female' ? '여성' : '남성'}이고 `;
+      memoryText += `${memoryJson.age}살`;
+      memoryText += `${
+        memoryJson.isStudent
+          ? '이고, 학교에 다니고 있어요🤗 '
+          : '이에요. 학생은 아니에요🤣 '
+      }`;
+      if (memoryJson.hobby) {
+        memoryText += `취미는 ${(memoryJson.hobby).join(",")}`;
+        memoryText += `${memoryJson.doing ? '에요.' : '이고, '}`;
+      }
+      if (memoryJson.doing) {
+        memoryText += `현재 하고 있는 일은 이래요!`+'\n';
+        memoryText += JSON.stringify(memoryJson.doing, null, 2);
+      }
+      return memoryText;
   }
 
   return '';
