@@ -5,12 +5,24 @@ import { SummaryWrapper } from '@/model/SummaryWrapper';
 import { useTimer } from '@/lib/TimeChecker';
 import { IdFinder } from '@/lib/IdFinder';
 import { MSG } from '@/lib/Constant';
+import { Confirmed } from '@/components/Confirmed/Confirmed';
+import { LastUpdate } from '@/components/LastUpdate/LastUpdate';
+import { RecoveredTotalList } from '@/components/Recovered/RecoveredTotalList';
+import { DeathTotalList } from '@/components/Death/DeathTotalList';
+import { ChartBox } from '@/components/Chart/ChartBox';
 
 export class App {
   private readonly components: Component[];
 
-  constructor(components: Component[]) {
-    this.components = components;
+  constructor() {
+    this.components = [
+      new RankList('.rank-list'),
+      new Confirmed('.confirmed-total'),
+      new LastUpdate('.last-updated-time'),
+      new RecoveredTotalList(),
+      new DeathTotalList(),
+      new ChartBox(),
+    ];
   }
 
   public run() {
