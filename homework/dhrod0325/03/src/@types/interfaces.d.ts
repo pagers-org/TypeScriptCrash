@@ -13,7 +13,15 @@ declare module 'covid' {
   export interface Component extends SetupAble, LoadDataAble {
     getContainer?(): HTMLElement;
   }
+}
 
+declare module 'util' {
+  export interface Spinner {
+    spin(callback: () => void): void;
+  }
+}
+
+declare module 'http' {
   export type ClientInit = {
     url: string;
     config?: RequestInit;
@@ -25,20 +33,5 @@ declare module 'covid' {
     post({ url, data }: ClientInit): unknown;
     delete({ url, data }: ClientInit): unknown;
     put({ url, data }: ClientInit): unknown;
-  }
-
-  export interface Container {
-    container(): Element;
-
-    clear(): void;
-  }
-
-  export interface Spinner {
-    spin(callback: () => void): void;
-  }
-
-  export interface SpinnerArgs {
-    spinner?: Spinner;
-    callback: () => void;
   }
 }

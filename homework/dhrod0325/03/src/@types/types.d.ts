@@ -7,12 +7,6 @@ declare module 'covid' {
     Date: Date;
   };
 
-  export interface SummaryInfo extends Summary {
-    TotalConfirmed: number;
-    TotalRecovered: number;
-    TotalDeaths: number;
-  }
-
   export type Country = {
     ID: string;
     Country: string;

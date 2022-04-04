@@ -1,4 +1,4 @@
-import { Client, ClientInit } from 'covid';
+import { Client, ClientInit } from 'http';
 
 export class HttpClient implements Client {
   private readonly baseUrl: string;
