@@ -19,8 +19,7 @@ export class IdFinder {
   }
 
   private findIdFromParent() {
-    const { target } = this.event;
-    const { parentElement } = target as HTMLElement;
+    const { parentElement } = this.event.target as HTMLElement;
     return parentElement ? parentElement.id : '';
   }
 

@@ -1,11 +1,11 @@
 export const API_URL = (() => {
   const BASE = 'https://api.covid19api.com';
 
-  return {
+  return Object.freeze({
     BASE,
     SUMMARY: `${BASE}/summary`,
     COUNTRY: `${BASE}/country`,
-  };
+  });
 })();
 
 export const MSG = {
