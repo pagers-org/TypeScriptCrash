@@ -102,9 +102,15 @@ function control(
   type: 'game' | 'study' | 'memory',
   purpose: string | number | Memory
 ): string | number[] {
+  const CONSTANTS_CONTROL = {
+    GAME: 'game',
+    STUDY: 'study',
+    MEMORY: 'memory',
+  };
+
   switch (type) {
     case CONSTANTS_CONTROL.GAME: {
-      return getGame(purpose as string);
+      return getGame(purpose as 'start' | 'pause' | 'stop');
     }
     case CONSTANTS_CONTROL.STUDY: {
       getStudy(purpose as number);
@@ -118,11 +124,14 @@ function control(
   }
 }
 
-function getGame(purpose: string) {
-  if (purpose === 'start') return '게임이 시작되었습니다!';
-  else if (purpose === 'pause') return '게임이 중단되었습니다!';
-  else if (purpose === 'stop') return '게임이 종료되었습니다!';
-  return '';
+function getGame(key: 'start' | 'pause' | 'stop') {
+  const purpose = {
+    start: '게임이 시작되었습니다!',
+    pause: '게임이 중단되었습니다!',
+    stop: '게임이 종료되었습니다!',
+  };
+
+  return purpose[key];
 }
 
 function getStudy(purpose: number) {
@@ -201,9 +210,3 @@ function getAddSubtractCalculation(numbers: Numbers, operators: string[]) {
 }
 
 // 정해진 시간에 만난다. 개발할 수 있게 해준다.(the goal) -> ()
-
-const CONSTANTS_CONTROL = {
-  GAME: 'game',
-  STUDY: 'study',
-  MEMORY: 'memory',
-};
