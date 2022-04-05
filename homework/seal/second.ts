@@ -99,7 +99,7 @@ interface Doing {
 }
 
 function control(
-  type: string,
+  type: 'game' | 'study' | 'memory',
   purpose: string | number | Memory
 ): string | number[] {
   switch (type) {
