@@ -21,7 +21,7 @@ console.log(
     age: 13,
     isStudent: true,
     hobby: ['swimming', 'movie'],
-  }),
+  })
 ); // 저의 이름은 wave, 여성이고 13살이구 학교에 다니고 있어요🤗 취미는 swimming, movie에요!
 console.log(
   control('memory', {
@@ -29,7 +29,7 @@ console.log(
     gender: 'male',
     age: 17,
     isStudent: false,
-  }),
+  })
 ); // 저의 이름은 evaw, 남성이고 17살이에요! 학생은 아니에요🤣
 console.log(
   control('memory', {
@@ -47,7 +47,7 @@ console.log(
         content: ['청소', '쓰레기 비우기'],
       },
     ],
-  }),
+  })
 );
 
 // 저의 이름은 mark, 남성이고 42살이에요! 학생은 아니에요🤣 현재 하고 있는 일은 이래요!
@@ -100,17 +100,17 @@ interface Doing {
 
 function control(
   type: string,
-  purpose: string | number | Memory,
+  purpose: string | number | Memory
 ): string | number[] {
   switch (type) {
-    case 'game': {
+    case CONSTANTS_CONTROL.GAME: {
       return getGame(purpose as string);
     }
-    case 'study': {
+    case CONSTANTS_CONTROL.STUDY: {
       getStudy(purpose as number);
       return study;
     }
-    case 'memory': {
+    case CONSTANTS_CONTROL.MEMORY: {
       return getMemory(purpose as Memory);
     }
     default:
@@ -136,9 +136,9 @@ function getStudy(purpose: number) {
 function getMemory(purpose: Memory) {
   const { name, gender, age, isStudent, hobby, doing } = purpose;
   const bar = `저의 이름은 ${name}, ${getGender(
-    gender,
+    gender
   )}이고 ${age}살이에요! ${getIsStudent(isStudent)} ${getHobby(
-    hobby,
+    hobby
   )} ${getDoing(doing)}`;
 
   return bar;
@@ -201,3 +201,9 @@ function getAddSubtractCalculation(numbers: Numbers, operators: string[]) {
 }
 
 // 정해진 시간에 만난다. 개발할 수 있게 해준다.(the goal) -> ()
+
+const CONSTANTS_CONTROL = {
+  GAME: 'game',
+  STUDY: 'study',
+  MEMORY: 'memory',
+};
