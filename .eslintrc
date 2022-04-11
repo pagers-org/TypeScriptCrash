@@ -18,6 +18,7 @@
     "sourceType": "module"
   },
   "rules": {
+    "@typescript-eslint/ban-ts-comment": 0,
     "prettier/prettier": [
       "error",
       {
