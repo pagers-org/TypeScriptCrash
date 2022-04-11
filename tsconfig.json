@@ -26,5 +26,6 @@
     "skipLibCheck": true,
     "lib": ["esnext", "dom", "dom.iterable", "scripthost"],
     "types": ["node"],
-  },
+    "typeRoots": ["@types"]
+  }
 }
