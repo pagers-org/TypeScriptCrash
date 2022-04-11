@@ -1,17 +1,20 @@
 import axios from 'axios';
-import { SystemErrorInterface } from 'Covid';
-import { BASE_URL } from '../constant';
 
 const api = axios.create({
-  baseURL: BASE_URL,
+  baseURL: 'https://api.covid19api.com/',
   headers: {
     'Content-type': 'application/json',
   },
 });
 
-const fetchData = async (path: string) => {
+interface SystemErrorInterface {
+  code: string;
+  message: string;
+}
+
+const fetchData = async <T>(path: string, params?: T) => {
   try {
-    const result = await api.get(path);
+    const result = await api.get(path, params);
     return result.data;
   } catch (error) {
     const err = error as SystemErrorInterface;
@@ -20,7 +23,7 @@ const fetchData = async (path: string) => {
 };
 
 export async function fetchCovidSummary<T>(): Promise<T> {
-  return fetchData('summary');
+  return fetchData('/summuary');
 }
 
 export async function fetchCountryInfo<T>(
