@@ -1,18 +1,24 @@
-export default class StorageMap {
-  #key;
-  #value;
-  constructor(key) {
+interface Storage {
+  convertItemProps(value: string): void;
+  parseItemProps(value: string): void;
+  setValue(value: string): void;
+  getValue(): void;
+}
+export default class StorageMap implements Storage {
+  #key: string;
+  #value: string;
+  constructor(key: string) {
     this.#key = key;
   }
 
-  convertItemProps(value) {
+  convertItemProps(value: string) {
     this.#value = JSON.stringify(value);
   }
-  parseItemProps(value) {
+  parseItemProps(value: string) {
     this.#value = JSON.parse(value);
   }
 
-  setValue(value) {
+  setValue(value: string) {
     this.convertItemProps(value);
     localStorage.setItem(this.#key, this.#value);
   }

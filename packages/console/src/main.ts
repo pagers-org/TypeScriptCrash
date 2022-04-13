@@ -1,9 +1,13 @@
 import '../assets/index.css';
-import { fetchData } from './api';
-import { $, toggleLoading, debounce } from './helper/index.js';
+import { fetchData } from './api/index';
+import { $, toggleLoading, debounce } from './helper';
 import StorageManager from './utils/storageMap';
 import { STORAGE_KEY_NAMES, FOX_IMAGES_URL } from './utils/constants';
-
+import { BookMarkInterface } from 'Global';
+interface ElementInterface {
+  _id: string;
+  url: string;
+}
 const storageMap = new StorageManager(STORAGE_KEY_NAMES.USER_TOKEN);
 
 (() => {
@@ -25,7 +29,7 @@ NAV_MENU.forEach(item =>
   ),
 );
 
-const createPin = () => {
+const createPin = (index: number) => {
   toggleLoading();
   const pin = document.createElement('div');
   const buttonWrapper = document.createElement('div');
@@ -42,12 +46,15 @@ const createPin = () => {
   return pin;
 };
 
-const createHeartElem = (index, key, isChecked = false) => {
+const createHeartElem = (
+  index: number,
+  key: string | number,
+  isChecked = false,
+) => {
   return `
   <div class="anim-icon anim-icon-md heart">
-  <input type="checkbox" id="heart${index}" key=${key} ${
-    isChecked && 'checked'
-  }/>
+  <input type="checkbox" id="heart${index}" key=${key} 
+  ${isChecked && 'checked'}/>
   <label for="heart${index}" key=${key}></label>
 </div>`;
 };
@@ -70,17 +77,17 @@ window.addEventListener('scroll', () => {
   loadMore();
 });
 
-const setMainInnerHtml = contents => {
+const setMainInnerHtml = (contents: string) => {
   $main.innerHTML = contents;
 };
 
-const mainAddOrRemoveClass = (isAdd, className) => {
+const mainAddOrRemoveClass = (isAdd: boolean, className: string) => {
   const method = isAdd ? 'add' : 'remove';
   $main.classList[method](className);
 };
 
-const render = (event, page) => {
-  if (event.target.matches(page)) {
+const render = (event: Event, page: string) => {
+  if ((<HTMLElement>event.target).matches(page)) {
     switch (page) {
       case '#explore':
         return renderExplorePage();
@@ -114,7 +121,7 @@ const renderSavePage = async () => {
     <div class="container">
     ${result
       .map(
-        ({ _id, url }, index) => `
+        ({ _id, url }: ElementInterface, index: number) => `
       <div class="pin">
         <div class="button-wrapper">
         ${createHeartElem(index, _id, true)}
@@ -128,11 +135,12 @@ const renderSavePage = async () => {
   setMainInnerHtml($content);
 };
 
-$main.addEventListener('click', async ({ target }) => {
-  const targetAttrKey = target.getAttribute('key');
+$main.addEventListener('click', async (event: MouseEvent) => {
+  const target = event.target as HTMLInputElement;
+  const targetAttrKey = target.getAttribute('key') as string;
   const requestUrl = `/user/bookmark/${targetAttrKey}`;
 
-  if (targetAttrKey?.length > 3) {
+  if (targetAttrKey.length > 3) {
     await fetchData('removeBookmark', requestUrl, { _id }, 'DELETE');
     renderSavePage();
   }
@@ -143,9 +151,13 @@ $main.addEventListener('click', async ({ target }) => {
       return;
     }
 
-    const result = await fetchData('getBookmarkList', '/user/bookmark', {
-      _id,
-    });
+    const result: BookMarkInterface[] = await fetchData(
+      'getBookmarkList',
+      '/user/bookmark',
+      {
+        _id,
+      },
+    );
     const selectedImage = result.filter(item => item.url === targetAttrKey);
     await fetchData(
       'removeBookmark',

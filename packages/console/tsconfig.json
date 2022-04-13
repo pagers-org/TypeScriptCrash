@@ -16,9 +16,9 @@
       ],
     },
     "typeRoots": [
-      "src/types"
+      "src/@types"
     ]
   },
-  "include": ["**/*.ts"],
+  // "include": ["**/*.ts", "src/helper/debounce.ts", "src/helper/index.js"],
   "exclude": ["node_modules"]
 }
