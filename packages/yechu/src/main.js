@@ -1,12 +1,7 @@
 import '../assets/index.css';
 import { addBookmark, getBookmarkList, removeBookmark } from './api/index';
-import {
-  MAX_IMG_COUNT,
-  TAB_EXPLORE,
-  TAB_SAVED,
-  FOX_IMG_URL,
-} from './constatnt';
-import { $, toggleLoading, debounce } from './helper/index.js';
+import { MAX_IMG_COUNT, Api, Tabs } from './constatnt';
+import { $, toggleLoading, debounce } from './helper/index';
 import { getUserInfo } from './helper/storage';
 
 function getUserId() {
@@ -26,7 +21,7 @@ const createPin = () => {
   const buttonWrapper = document.createElement('div');
   const image = document.createElement('img');
   const random = Math.floor(Math.random() * MAX_IMG_COUNT) + 1;
-  image.src = `${FOX_IMG_URL}/${random}.jpg`;
+  image.src = `${Api.FOX_IMG_URL}/${random}.jpg`;
   buttonWrapper.setAttribute('class', 'button-wrapper');
   buttonWrapper.innerHTML = HeartButton(globalIndex, random);
   pin.classList.add('pin');
@@ -37,6 +32,7 @@ const createPin = () => {
 };
 
 const HeartButton = (id, key, isSaved) => {
+  // console.log(key);
   return `
   <div class="anim-icon anim-icon-md heart">
     <input type="checkbox" id="heart${id}" ${isSaved && 'checked'}/>
@@ -76,7 +72,7 @@ const changeTab = async tabName => {
   const $main = $('main');
   $main.innerHTML = '';
 
-  if (tabName === TAB_EXPLORE) {
+  if (tabName === Tabs.EXPLORE) {
     $main.classList.remove('saved');
     $main.innerHTML = `
       <div class="container"></div>
@@ -89,11 +85,12 @@ const changeTab = async tabName => {
     return;
   }
 
-  if (tabName === TAB_SAVED) {
+  if (tabName === Tabs.SAVED) {
     $main.classList.add('saved');
     const result = await getBookmarkList('/user/bookmark', {
       _id: getUserId(),
     });
+    console.log(result);
     const $content = `
     <div class="container">
     ${result.map((item, index) => renderSavedPin(index, item)).join('')}

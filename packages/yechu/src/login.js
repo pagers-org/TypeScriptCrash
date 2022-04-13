@@ -1,7 +1,7 @@
 import '../assets/page/login.css';
-import { login, signup } from './api/index.js';
-import { $all, $ } from './helper/index.js';
-import { REG_EMAIL, LOGIN } from './constatnt';
+import { login, signup } from './api/index';
+import { $all, $ } from './helper/index';
+import { REG_EMAIL, Auth } from './constatnt';
 import { setUserInfo } from './helper/storage';
 
 function toggleForm() {
@@ -25,7 +25,7 @@ $all('button').forEach(btn => {
     const email = signForm.children[0].value;
     const password = signForm.children[1].value;
 
-    if (targetButton === LOGIN) {
+    if (targetButton === Auth.LOGIN) {
       const data = await login('/user/login', {
         email,
         password,
