@@ -1,6 +1,6 @@
 import { REGEXP_EMAIL } from '../constants';
 
-export const isEmpty = data => {
+export const isEmpty = (data: any) => {
   if (data instanceof Array) return data.length === 0;
   if (data instanceof Set || data instanceof Map) return data.size === 0;
   if (data.constructor === Object) return Object.keys(data).length === 0;
@@ -10,15 +10,8 @@ export const isEmpty = data => {
   return false;
 };
 
-export const isEquals = (left, right) => {
-  if (typeof left !== typeof right) return false;
-  if (typeof left === 'string' || typeof left === 'number')
-    return left === right;
-
-  return JSON.stringify(left) === JSON.stringify(right);
-};
-
-export const isValidEmail = email => REGEXP_EMAIL.test(email);
+export const isValidEmail = (email: string): boolean =>
+  REGEXP_EMAIL.test(email);
 
 export const createUUID = () => {
   let present = new Date().getTime();

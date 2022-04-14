@@ -1,11 +1,10 @@
 const USER_TOKEN = 'USER_TOKEN';
 
-export const setUserToken = token => {
+export const setUserToken = (token: string) => {
   try {
     if (!token) throw new Error('유효하지 않은 토큰입니다.');
   } catch (error) {
-    console.error(error);
-    alert(error.message);
+    alert((<Error>error).message);
   }
 
   localStorage.setItem(USER_TOKEN, token);
@@ -17,7 +16,7 @@ export const getUserToken = () => {
     if (!token) throw new Error('로그인 후 이용해주세요!');
     return token;
   } catch (error) {
-    console.error(error);
-    alert(error.message);
+    alert((<Error>error).message);
+    return null;
   }
 };
