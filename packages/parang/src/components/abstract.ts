@@ -1,7 +1,10 @@
 import { $addEvent } from '../helper';
 
-export default class AbstractComponent {
-  constructor() {
+export default abstract class AbstractComponent {
+  $element;
+
+  constructor($element: HTMLElement) {
+    this.$element = $element;
     this.render();
     this.bindEventGroup();
   }
@@ -11,6 +14,7 @@ export default class AbstractComponent {
   }
 
   eventGroup() {
+    console.log('call eventGroup');
     return [];
   }
 
