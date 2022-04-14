@@ -6,7 +6,7 @@ export const setUserInfo = (id: string) => {
     localStorage.setItem(Auth.USER_TOKEN, id);
     return;
   } catch (e) {
-    console.error(e);
+    return alert(e);
   }
 };
 export const getUserInfo = () => {
@@ -15,6 +15,6 @@ export const getUserInfo = () => {
     if (!userInfo) return null;
     return userInfo;
   } catch (e) {
-    console.error(e);
+    return alert(e);
   }
 };

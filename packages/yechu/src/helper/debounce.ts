@@ -1,4 +1,4 @@
-function throttle(delay: number, noTrailing, callback, debounceMode) {
+function throttle(delay, noTrailing, callback, debounceMode) {
   let timeoutID;
   let cancelled = false;
   let lastExec = 0;

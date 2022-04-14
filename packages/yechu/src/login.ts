@@ -16,13 +16,12 @@ $<HTMLDivElement>('.container').addEventListener('click', e => {
 $all<HTMLButtonElement>('button').forEach(btn => {
   btn.addEventListener('click', async e => {
     e.preventDefault();
+    if (e.target === null) throw new Error(' element is null');
+    const target = e.target as HTMLButtonElement;
+    const { parentElement: signForm, innerText: targetButton } = target;
 
-    const elem = e.target as HTMLButtonElement;
-    if (!elem) throw new Error('button element is null');
-    const { parentElement: signForm, innerText: targetButton } = elem;
-
-    const email = signForm.children[0].value;
-    const password = signForm.children[1].value;
+    const email: string = signForm.children[0].value;
+    const password: string = signForm.children[1].value;
 
     if (targetButton === Auth.LOGIN) {
       const data = await login('/user/login', {
@@ -53,5 +52,5 @@ $all<HTMLButtonElement>('button').forEach(btn => {
 });
 
 const goMainPage = () => {
-  // location.replace('http://localhost:5510/');
+  location.replace('http://localhost:5510/');
 };

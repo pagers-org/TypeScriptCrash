@@ -10,7 +10,7 @@ declare module 'Fox' {
   };
 
   type BookmarkDataType = {
-    _id: string;
+    _id: string | null | void;
     url?: string;
   };
 }

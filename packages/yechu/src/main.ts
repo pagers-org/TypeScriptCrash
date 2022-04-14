@@ -1,7 +1,7 @@
 import '../assets/index.css';
 import { BookmarkDataType } from 'Fox';
 import { addBookmark, getBookmarkList, removeBookmark } from './api/index';
-import { MAX_IMG_COUNT, FOX_IMG_URL, Tabs } from './constatnt';
+import { Api, MAX_IMG_COUNT, Tabs } from './constatnt';
 import { $, toggleLoading, debounce } from './helper/index';
 import { getUserInfo } from './helper/storage';
 
@@ -18,7 +18,7 @@ const createPin = (num: number) => {
   const buttonWrapper = document.createElement('div');
   const image = document.createElement('img');
   const random = Math.floor(Math.random() * MAX_IMG_COUNT) + 1;
-  image.src = `${FOX_IMG_URL}/${random}.jpg`;
+  image.src = `${Api.FOX_IMG_URL}/${random}.jpg`;
   buttonWrapper.setAttribute('class', 'button-wrapper');
   buttonWrapper.innerHTML = HeartButton(globalIndex, random);
   pin.classList.add('pin');
@@ -33,11 +33,11 @@ const HeartButton = (
   key: number | BookmarkDataType,
   isSaved?: boolean,
 ) => {
-  if (isSaved) key as BookmarkDataType;
   return `
   <div class="anim-icon anim-icon-md heart">
     <input type="checkbox" id="heart${id}" ${isSaved && 'checked'}/>
-    <label for="heart${id}" key=${isSaved ? key._id : key}></label>
+    <label for="heart${id}" key=${isSaved ? (key as BookmarkDataType)._id : key
+    }></label>
   </div>
   `;
 };
@@ -60,19 +60,16 @@ window.addEventListener('scroll', () => {
   loadMore();
 });
 
-$<HTMLLinkElement>('nav').addEventListener('click', event => {
-  event.stopPropagation();
-  const { target } = event;
+$<HTMLLinkElement>('nav').addEventListener('click', e => {
+  e.stopPropagation();
 
-  if (target === null) {
-    console.log('target is null');
-    return;
+  const { target } = e;
+
+  if (target instanceof Element) {
+    if (!target.matches('input')) return;
+    const tabName = target.id;
+    changeTab(tabName);
   }
-
-  if (!target.matches('input')) return;
-
-  const tabName = target.id;
-  changeTab(tabName);
 });
 
 const changeTab = async (tabName: string) => {
@@ -117,17 +114,21 @@ const renderSavedPin = (item: BookmarkDataType, id: number) => {
   <div class="pin">
         <div class="button-wrapper">
           ${HeartButton(id, item, true)}
-        </div><img src="${FOX_IMG_URL}/${item.url}.jpg">
+        </div><img src="${Api.FOX_IMG_URL}/${item.url}.jpg">
       </div>
   `;
 };
 
-$('main').addEventListener('click', async event => {
-  if (!event.target.matches('label[for^="heart"]')) return;
-  const bookmarkId = event.target.getAttribute('key');
-  const selectedPin = event.target.closest('.pin');
+$('main').addEventListener('click', async e => {
+  if (e.target === null) throw new Error('elem is null');
+  const target = e.target as Element;
+
+  if (!(e.target as Element).matches('label[for^="heart"]')) return;
+  const bookmarkId = target.getAttribute('key');
+  const selectedPin = target.closest('.pin');
 
   const isSavedTab = $('main').classList.contains('saved');
+
   if (!isSavedTab) {
     await addBookmark(`/user/bookmark/${bookmarkId}`, {
       _id: getUserInfo(),
@@ -139,6 +140,6 @@ $('main').addEventListener('click', async event => {
   await removeBookmark(`/user/bookmark/${bookmarkId}`, {
     _id: getUserInfo(),
   });
-  selectedPin.style.display = 'none';
+  (selectedPin as HTMLDivElement).style.display = 'none';
   console.log('북마크에서 제거');
 });

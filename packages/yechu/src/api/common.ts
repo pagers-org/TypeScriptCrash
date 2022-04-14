@@ -1,6 +1,5 @@
 import { Api } from '../constatnt';
 
-
 export async function fetchData<T>(
   url: string,
   data: T,
