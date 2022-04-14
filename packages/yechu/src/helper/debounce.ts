@@ -1,5 +1,12 @@
-function throttle(delay, noTrailing, callback, debounceMode) {
-  let timeoutID;
+type FuncType = () => void;
+
+function throttle(
+  delay: number,
+  noTrailing: FuncType | undefined,
+  callback: FuncType | boolean | undefined,
+  debounceMode: FuncType | boolean | undefined,
+) {
+  let timeoutID: ReturnType<typeof setTimeout> | undefined;
   let cancelled = false;
   let lastExec = 0;
 
@@ -19,8 +26,9 @@ function throttle(delay, noTrailing, callback, debounceMode) {
     noTrailing = undefined;
   }
 
-  function wrapper(...args) {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function wrapper(this: any, ...args: []) {
+    //eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
     const elapsed = Date.now() - lastExec;
 
@@ -28,6 +36,8 @@ function throttle(delay, noTrailing, callback, debounceMode) {
 
     function exec() {
       lastExec = Date.now();
+      if (!callback) return;
+      callback = callback as FuncType;
       callback.apply(self, args);
     }
 
@@ -53,4 +63,8 @@ function throttle(delay, noTrailing, callback, debounceMode) {
   return wrapper;
 }
 
-export const debounce = (callback, delay) => throttle(delay, callback, false);
+export const debounce = (
+  callback: FuncType,
+  delay: number,
+  debounceMode?: undefined,
+) => throttle(delay, callback, false, debounceMode);
