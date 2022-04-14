@@ -3,11 +3,8 @@ import { fetchData } from './api/index';
 import { $, toggleLoading, debounce } from './helper';
 import StorageManager from './utils/storageMap';
 import { STORAGE_KEY_NAMES, FOX_IMAGES_URL } from './utils/constants';
-import { BookMarkInterface } from 'Global';
-interface ElementInterface {
-  _id: string;
-  url: string;
-}
+import { BookMarkInterface, ElementInterface } from 'Global';
+
 const storageMap = new StorageManager(STORAGE_KEY_NAMES.USER_TOKEN);
 
 (() => {
@@ -17,7 +14,6 @@ const storageMap = new StorageManager(STORAGE_KEY_NAMES.USER_TOKEN);
   location.replace('./login.html');
 })();
 
-let globalIndex = 0;
 const _id = storageMap.getValue();
 const $main = $('main');
 
@@ -59,6 +55,7 @@ const createHeartElem = (
 </div>`;
 };
 
+let globalIndex = 0;
 const loadMore = debounce(() => {
   const container = $('.container');
   const pinList = [];
@@ -74,6 +71,7 @@ window.addEventListener('scroll', () => {
   const loader = $('.loader');
   if (loader === null) return;
   if (loader.getBoundingClientRect().top > window.innerHeight) return;
+  console.log(loader.getBoundingClientRect().top > window.innerHeight);
   loadMore();
 });
 
@@ -140,7 +138,7 @@ $main.addEventListener('click', async (event: MouseEvent) => {
   const targetAttrKey = target.getAttribute('key') as string;
   const requestUrl = `/user/bookmark/${targetAttrKey}`;
 
-  if (targetAttrKey.length > 3) {
+  if (targetAttrKey?.length > 3) {
     await fetchData('removeBookmark', requestUrl, { _id }, 'DELETE');
     renderSavePage();
   }
