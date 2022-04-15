@@ -4,6 +4,7 @@ import { $, toggleLoading, debounce } from './helper';
 import StorageManager from './utils/storageMap';
 import { STORAGE_KEY_NAMES, FOX_IMAGES_URL } from './utils/constants';
 import { BookMarkInterface, ElementInterface } from 'Global';
+import { getRandom } from './helper/randomId';
 
 const storageMap = new StorageManager(STORAGE_KEY_NAMES.USER_TOKEN);
 
@@ -25,19 +26,16 @@ NAV_MENU.forEach(item =>
   ),
 );
 
-const createPin = (index: number) => {
+const createPin = () => {
   toggleLoading();
-  const pin = document.createElement('div');
-  const buttonWrapper = document.createElement('div');
-  const image = document.createElement('img');
-  const random = Math.floor(Math.random() * 123) + 1;
-  image.src = `${FOX_IMAGES_URL}${random}.jpg`;
-  buttonWrapper.setAttribute('class', 'button-wrapper');
-  buttonWrapper.innerHTML = createHeartElem(globalIndex, random, false);
-
-  pin.classList.add('pin');
-  pin.appendChild(buttonWrapper);
-  pin.appendChild(image);
+  const random = getRandom();
+  const pin = `
+  <div class="pin">
+    <div class="button-wrapper">
+      ${createHeartElem(globalIndex, random, false)}
+    </div>
+    <img src="${FOX_IMAGES_URL}${random}.jpg" />
+  </div>`;
   toggleLoading();
   return pin;
 };
@@ -48,7 +46,7 @@ const createHeartElem = (
   isChecked = false,
 ) => {
   return `
-  <div class="anim-icon anim-icon-md heart">
+<div class="anim-icon anim-icon-md heart">
   <input type="checkbox" id="heart${index}" key=${key} 
   ${isChecked && 'checked'}/>
   <label for="heart${index}" key=${key}></label>
@@ -60,18 +58,17 @@ const loadMore = debounce(() => {
   const container = $('.container');
   const pinList = [];
   for (let i = 10; i > 0; i--) {
-    pinList.push(createPin(++globalIndex));
+    ++globalIndex;
+    pinList.push(createPin());
   }
-  container.append(...pinList);
-}, 500);
 
-loadMore();
+  container.insertAdjacentHTML('afterbegin', pinList.join(''));
+}, 500);
 
 window.addEventListener('scroll', () => {
   const loader = $('.loader');
   if (loader === null) return;
   if (loader.getBoundingClientRect().top > window.innerHeight) return;
-  console.log(loader.getBoundingClientRect().top > window.innerHeight);
   loadMore();
 });
 
@@ -156,6 +153,7 @@ $main.addEventListener('click', async (event: MouseEvent) => {
         _id,
       },
     );
+
     const selectedImage = result.filter(item => item.url === targetAttrKey);
     await fetchData(
       'removeBookmark',
