@@ -2,7 +2,7 @@ import { login, signup } from '../../api';
 import { EVENT_TYPE, FOX_EXPLORE_MAIN } from '../../constants';
 import {
   $all,
-  $initValue,
+  $resetInputValue,
   $value,
   isEmpty,
   isValidEmail,
@@ -68,7 +68,7 @@ export default class Auth extends AbstractComponent {
     if (!target.matches('a')) return;
 
     $all('.forms').forEach(({ classList }) => {
-      $initValue(this.inputSelectors);
+      $resetInputValue(this.inputSelectors);
       classList.toggle('hidden');
     });
   }
@@ -89,7 +89,7 @@ export default class Auth extends AbstractComponent {
     } catch (error) {
       alert(error.message);
     } finally {
-      $initValue(this.inputSelectors);
+      $resetInputValue(this.inputSelectors);
     }
   }
 
