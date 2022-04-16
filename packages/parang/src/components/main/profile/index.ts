@@ -1,7 +1,7 @@
 export default class Profile {
   userToken;
 
-  constructor(userToken) {
+  constructor(userToken: string) {
     console.log('Not Implements');
     this.userToken = userToken;
   }

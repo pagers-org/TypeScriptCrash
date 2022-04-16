@@ -5,19 +5,29 @@ import { BASE_URL, IMAGE_API_URL } from '../../constants';
  *
  */
 class Client {
+  private config: { headers: Headers };
+
   constructor() {
     this.config = {
       headers: new Headers({ 'content-type': 'application/json' }),
     };
   }
 
-  getImage(num) {
+  getImage(num: number) {
     return fetch(`${IMAGE_API_URL}/${num}.jpg`);
   }
 
-  async request({ url: apiPath, body, method }) {
+  async request<T = void>({
+    url: apiPath,
+    body,
+    method,
+  }: {
+    url: string;
+    body: { [key: string]: string };
+    method: string;
+  }): Promise<T | undefined> {
     const requestURL = `${BASE_URL}${apiPath}`;
-    const config = {
+    const config: { method: string; headers: Headers; body?: string } = {
       ...this.config,
       method,
     };
@@ -26,9 +36,10 @@ class Client {
 
     try {
       const response = await fetch(requestURL, config);
-      return await this.parse(response);
+      return await this.parse<T>(response);
     } catch (error) {
-      alert(error.message);
+      if (error instanceof Error) alert(error.message);
+      return;
     }
   }
 
@@ -39,7 +50,7 @@ class Client {
    *
    * @param {*} response
    */
-  async parse(response) {
+  async parse<T>(response: Response): Promise<T> {
     const { ok: isValidResponse, status } = response;
     try {
       if (!isValidResponse) throw new Error('invalid response');

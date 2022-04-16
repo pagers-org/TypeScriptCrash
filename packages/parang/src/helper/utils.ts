@@ -1,6 +1,7 @@
 import { REGEXP_EMAIL } from '../constants';
 
 export const isEmpty = (data: any) => {
+  if (data === undefined) return true;
   if (data instanceof Array) return data.length === 0;
   if (data instanceof Set || data instanceof Map) return data.size === 0;
   if (data.constructor === Object) return Object.keys(data).length === 0;

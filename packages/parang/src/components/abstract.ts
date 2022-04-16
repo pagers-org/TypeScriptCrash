@@ -1,19 +1,24 @@
 import { $addEvent } from '../helper';
 
 export default abstract class AbstractComponent {
-  $element;
-
-  constructor($element: HTMLElement) {
-    this.$element = $element;
+  constructor() {
+    this.bindMembers();
     this.render();
     this.bindEventGroup();
+  }
+
+  bindMembers() {
+    console.log('call members');
   }
 
   render() {
     console.log('call render');
   }
 
-  eventGroup() {
+  eventGroup(): {
+    type: keyof HTMLElementEventMap;
+    callback: EventListenerOrEventListenerObject;
+  }[] {
     console.log('call eventGroup');
     return [];
   }
