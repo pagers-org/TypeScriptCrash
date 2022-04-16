@@ -9,7 +9,7 @@ import {
   Value,
 } from '@/core';
 
-export class Component extends HTMLElement implements IComponent {
+export class Component extends Element implements IComponent {
   $container: HTMLElement;
 
   $state: Value<any>;

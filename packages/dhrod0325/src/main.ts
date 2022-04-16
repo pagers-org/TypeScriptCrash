@@ -1,5 +1,5 @@
 import '/assets/index.css';
-import { App, Component, EventEmitter } from './core';
+import { App, EventEmitter } from './core';
 import { KEY, storage, User } from './view';
 
 try {
@@ -27,16 +27,7 @@ async function render(_id: string) {
 
   const app = new App(document.querySelector('#app'));
 
-  app.addComponent(
-    <Component>document.createElement('pin-nav'),
-    componentParam,
-  );
-  app.addComponent(
-    <Component>document.createElement('pin-list'),
-    componentParam,
-  );
-  app.addComponent(
-    <Component>document.createElement('loading-progress'),
-    componentParam,
-  );
+  app.addComponent(document.createElement('pin-nav'), componentParam);
+  app.addComponent(document.createElement('pin-list'), componentParam);
+  app.addComponent(document.createElement('loading-progress'), componentParam);
 }
