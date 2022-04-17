@@ -2,7 +2,7 @@ const ERROR_MSG = {
   INVALID_TYPE: (TYPE: string) => `유효하지 않은 TYPE : [${TYPE}] 입니다`,
 };
 
-type OperationType = '+' | '-' | '*' | '/';
+type OperationType = '*' | '/' | '-' | '+';
 
 const OPERATIONS: OperationType[] = ['*', '/', '-', '+'];
 

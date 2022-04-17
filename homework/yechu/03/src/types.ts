@@ -1,12 +1,12 @@
 export type Summary = {
-  Countries: Array<CountriesObjectType>;
+  Countries: Array<FullCountriesObjType>;
   Date: string;
   Global: object;
   ID: string;
   Message: string;
 };
 
-type CountriesObjectType = {
+type FullCountriesObjType = {
   Country: string;
   CountryCode: string;
   Date: string;
