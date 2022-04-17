@@ -4,7 +4,5 @@ declare module 'Global' {
     url: string;
   }
 
-  interface IdInterface {
-    _id: string;
-  }
+  type IdInterface = Pick<ElementInterface, '_id'>;
 }
