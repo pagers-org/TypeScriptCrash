@@ -1,4 +1,4 @@
-export * from "./debounce.js";
+export * from "./debounce";
 export * from "./dom";
 export * from "./storage";
 export * from "./api";
