@@ -1,1 +1,4 @@
-export const getRandom = () => Math.floor(Math.random() * 123) + 1;
+import { RANDOM_NUMBER_RANGE } from '../utils/constants';
+
+export const getRandom = () =>
+  Math.floor(Math.random() * RANDOM_NUMBER_RANGE) + 1;

@@ -3,7 +3,7 @@ import { fetchData } from './api/index';
 import { $, toggleLoading, debounce } from './helper';
 import StorageManager from './utils/storageMap';
 import { STORAGE_KEY_NAMES, FOX_IMAGES_URL } from './utils/constants';
-import { BookMarkInterface, ElementInterface } from 'Global';
+import { ElementInterface, IdInterface } from 'Global';
 import { getRandom } from './helper/randomId';
 
 const storageMap = new StorageManager(STORAGE_KEY_NAMES.USER_TOKEN);
@@ -64,7 +64,7 @@ const loadMore = debounce(() => {
 
   container.insertAdjacentHTML('afterbegin', pinList.join(''));
 }, 500);
-
+loadMore();
 window.addEventListener('scroll', () => {
   const loader = $('.loader');
   if (loader === null) return;
@@ -136,7 +136,12 @@ $main.addEventListener('click', async (event: MouseEvent) => {
   const requestUrl = `/user/bookmark/${targetAttrKey}`;
 
   if (targetAttrKey?.length > 3) {
-    await fetchData('removeBookmark', requestUrl, { _id }, 'DELETE');
+    await fetchData<IdInterface>(
+      'removeBookmark',
+      requestUrl,
+      { _id },
+      'DELETE',
+    );
     renderSavePage();
   }
 
@@ -146,7 +151,7 @@ $main.addEventListener('click', async (event: MouseEvent) => {
       return;
     }
 
-    const result: BookMarkInterface[] = await fetchData(
+    const result: ElementInterface[] = await fetchData<IdInterface>(
       'getBookmarkList',
       '/user/bookmark',
       {
@@ -155,7 +160,7 @@ $main.addEventListener('click', async (event: MouseEvent) => {
     );
 
     const selectedImage = result.filter(item => item.url === targetAttrKey);
-    await fetchData(
+    await fetchData<IdInterface>(
       'removeBookmark',
       `/user/bookmark/${selectedImage[0]?._id}`,
       { _id },

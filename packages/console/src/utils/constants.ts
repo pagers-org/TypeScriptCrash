@@ -10,3 +10,5 @@ export const FOX_IMAGES_URL = 'https://randomfox.ca/images/';
 export const STORAGE_KEY_NAMES = {
   USER_TOKEN: 'user_token',
 };
+
+export const RANDOM_NUMBER_RANGE = 123;
