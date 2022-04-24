@@ -1,21 +1,19 @@
 import { login, signup } from '../../api';
-import { EVENT_TYPE, FOX_EXPLORE_MAIN } from '../../constants';
+import { FOX_EXPLORE_MAIN } from '../../constants';
 import {
   $all,
   $resetInputValue,
   $value,
-  isEmpty,
   isValidEmail,
   setUserToken,
 } from '../../helper';
 import AbstractComponent from '../abstract';
 
 export default class Auth extends AbstractComponent {
-  inputSelectors;
+  $element: HTMLElement;
+  inputSelectors: string[];
 
-  constructor() {
-    super();
-
+  bindMembers() {
     this.inputSelectors = [
       '#signup-email',
       '#signup-password',
@@ -26,7 +24,7 @@ export default class Auth extends AbstractComponent {
   }
 
   template() {
-    return `
+    return /*html*/ `
     <div class="app">
       <div class="login-wrapper">
         <div class="login-page">
@@ -53,29 +51,31 @@ export default class Auth extends AbstractComponent {
 
   render() {
     document.body.innerHTML = this.template();
-    this.$element = document.body.firstElementChild;
+    this.$element = document.body.firstElementChild as HTMLElement;
   }
 
   eventGroup() {
     return [
-      { type: EVENT_TYPE.CLICK, callback: this.toggleForm.bind(this) },
-      { type: EVENT_TYPE.CLICK, callback: this.signup.bind(this) },
-      { type: EVENT_TYPE.CLICK, callback: this.login.bind(this) },
+      { type: 'click' as keyof HTMLElementEventMap, callback: this.toggleForm },
+      { type: 'click' as keyof HTMLElementEventMap, callback: this.signup },
+      { type: 'click' as keyof HTMLElementEventMap, callback: this.login },
     ];
   }
 
-  toggleForm({ target }) {
-    if (!target.matches('a')) return;
+  toggleForm = (event: Event) => {
+    const $target = event.target as HTMLAnchorElement;
+    if (!$target.matches('a')) return;
 
     $all('.forms').forEach(({ classList }) => {
       $resetInputValue(this.inputSelectors);
       classList.toggle('hidden');
     });
-  }
+  };
 
-  async signup(event) {
+  signup = async (event: Event) => {
     event.preventDefault();
-    if (!event.target.matches('button[data-submit="signup"]')) return;
+    const $target = event.target as HTMLButtonElement;
+    if (!$target.matches('button[data-submit="signup"]')) return;
 
     const [{ value: email }, { value: password }, { value: passwordConfirm }] =
       $value(this.inputSelectors);
@@ -87,15 +87,16 @@ export default class Auth extends AbstractComponent {
       await signup({ email, password });
       alert('회원가입이 완료되었습니다.\n로그인해주세요.');
     } catch (error) {
-      alert(error.message);
+      if (error instanceof Error) alert(error.message);
     } finally {
       $resetInputValue(this.inputSelectors);
     }
-  }
+  };
 
-  async login(event) {
+  login = async (event: Event) => {
     event.preventDefault();
-    if (!event.target.matches('button[data-submit="login"]')) return;
+    const $target = event.target as HTMLButtonElement;
+    if (!$target.matches('button[data-submit="login"]')) return;
 
     const [_1, _2, _3, { value: email }, { value: password }] = $value(
       this.inputSelectors,
@@ -104,15 +105,19 @@ export default class Auth extends AbstractComponent {
     if (!isValidEmail(email)) return alert('옳지 않은 이메일 형식입니다.');
 
     try {
-      const userData = await login({ email, password });
-      if (isEmpty(userData)) return alert('해당 계정은 올바르지 않습니다.');
+      const userData = await login<{ _id: string; email: string }[]>({
+        email,
+        password,
+      });
+      if (userData === undefined)
+        return alert('해당 계정은 올바르지 않습니다.');
       this.successLogin(userData[0]);
     } catch (error) {
-      alert(error.message);
+      if (error instanceof Error) alert(error.message);
     }
-  }
+  };
 
-  successLogin({ _id, email }) {
+  successLogin({ _id, email }: { _id: string; email: string }) {
     alert(`환영합니다, ${email}님!`);
     setUserToken(_id);
     location.replace(FOX_EXPLORE_MAIN);

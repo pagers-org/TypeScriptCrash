@@ -13,8 +13,3 @@ export const HTTP_METHODS = {
 // 정규표현식
 export const REGEXP_EMAIL =
   /^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
-
-export const EVENT_TYPE = {
-  CLICK: 'click',
-  KEYDOWN: 'keydown',
-};

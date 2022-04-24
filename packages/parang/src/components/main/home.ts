@@ -3,18 +3,16 @@ import Explore from './explore';
 import Bookmark from './bookmark';
 import AbstractComponent from '../abstract';
 import { $, getUserToken } from '../../helper';
-import { EVENT_TYPE } from '../../constants';
 
 export default class Home extends AbstractComponent {
-  $main;
-  profile;
-  expore;
-  bookmark;
+  $element: HTMLElement;
+  $main: HTMLElement;
+  profile: Profile;
+  explore: Explore;
+  bookmark: Bookmark;
 
-  constructor() {
-    super();
-
-    const userToken = getUserToken();
+  bindMembers() {
+    const userToken = getUserToken() as string;
     if (userToken === undefined) location.replace('./login.html');
 
     this.$main = $('main');
@@ -25,7 +23,7 @@ export default class Home extends AbstractComponent {
   }
 
   template() {
-    return `
+    return /*html*/ `
     <div class="app">
       <header>
         <nav>
@@ -101,25 +99,26 @@ export default class Home extends AbstractComponent {
 
   render() {
     document.body.innerHTML = this.template();
-    this.$element = document.body.firstElementChild;
+    this.$element = document.body.firstElementChild as HTMLElement;
   }
 
   eventGroup() {
     return [
-      { type: EVENT_TYPE.CLICK, callback: this.tabChange.bind(this) },
-      { type: EVENT_TYPE.CLICK, callback: Explore.likeFox },
+      { type: 'click' as keyof HTMLElementEventMap, callback: this.tabChange },
+      { type: 'click' as keyof HTMLElementEventMap, callback: Explore.likeFox },
     ];
   }
 
-  tabChange(event) {
+  tabChange = (event: Event) => {
     event.stopPropagation();
-    if (!event.target.matches('nav input')) return;
+    const $target = event.target as HTMLInputElement;
+    if (!$target.matches('nav input')) return;
 
     this.$main.innerHTML = '';
 
-    if (event.target.matches('#explore')) this.setExplorePage();
-    if (event.target.matches('#saved')) this.setBookmarkPage();
-  }
+    if ($target.matches('#explore')) this.setExplorePage();
+    if ($target.matches('#saved')) this.setBookmarkPage();
+  };
 
   setExplorePage() {
     this.$main.classList.remove('saved');

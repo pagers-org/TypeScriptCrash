@@ -5,10 +5,11 @@ const GET_IMAGE_COUNT = 10;
 const MAX_FOX_IMAGE_COUNT = 123;
 
 export default class Explore {
-  userToken;
+  photoIndex = 0;
+  static userToken: string;
 
-  constructor(userToken) {
-    this.userToken = userToken;
+  constructor(userToken: string) {
+    Explore.userToken = userToken;
 
     this.loadMore();
 
@@ -34,11 +35,11 @@ export default class Explore {
       ...imageList.map(({ url: foxImageURL }) => {
         const pin = document.createElement('div');
         pin.classList.add('pin');
-        pin.innerHTML = `
+        pin.innerHTML = /*html*/ `
         <div class="button-wrapper">
           <div class="anim-icon anim-icon-md heart">
             <input type="checkbox" id="heart${this.photoIndex}" />
-            <label for="heart${this.photoIndex}" key=${createUUID()}></label>
+            <label for="heart${this.photoIndex++}" key=${createUUID()}></label>
           </div>
         </div>
         <img src="${foxImageURL}" />
@@ -64,9 +65,11 @@ export default class Explore {
     return result;
   }
 
-  static async likeFox(event) {
-    if (!event.target.matches('label[for^="heart"]')) return;
-    const key = event.target.getAttribute('key');
+  static async likeFox(event: Event) {
+    const $target = event.target as HTMLLabelElement;
+    if (!$target.matches('label[for^="heart"]')) return;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const key = $target.getAttribute('key')!;
     await setBookmark(key, { _id: this.userToken });
     alert('북마크에 저장되었습니다.');
   }

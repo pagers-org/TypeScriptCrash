@@ -14,7 +14,7 @@ export const toggleLoading = (): void => {
   $('.loading').classList.toggle('hidden');
 };
 
-export const $value = (selectors: string) =>
+export const $value = (selectors: string[]): HTMLInputElement[] =>
   Array.from({ length: selectors.length }, (_, index) => $(selectors[index]));
 
 export const $resetInputValue = (selectors: string[]) =>
@@ -22,6 +22,6 @@ export const $resetInputValue = (selectors: string[]) =>
 
 export const $addEvent = (
   $element: HTMLElement,
-  eventType: string,
-  listenser: (this: HTMLElement) => void,
+  eventType: keyof HTMLElementEventMap,
+  listenser: EventListenerOrEventListenerObject,
 ) => $element.addEventListener(eventType, listenser);

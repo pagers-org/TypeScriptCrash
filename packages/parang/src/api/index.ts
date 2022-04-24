@@ -1,8 +1,8 @@
 import { HTTP_METHODS, IMAGE_API_URL } from '../constants';
 import client from './config';
 
-export const signup = async body => {
-  const response = await client.request({
+export const signup = async <T>(body: { [key: string]: string }) => {
+  const response = await client.request<T>({
     method: HTTP_METHODS.POST,
     url: '/api/user',
     body,
@@ -11,8 +11,8 @@ export const signup = async body => {
   return response;
 };
 
-export const login = async body => {
-  const response = await client.request({
+export const login = async <T>(body: { [key: string]: string }) => {
+  const response = await client.request<T>({
     method: HTTP_METHODS.POST,
     url: '/api/user/login',
     body,
@@ -21,8 +21,8 @@ export const login = async body => {
   return response;
 };
 
-export const getBookmarkList = async body => {
-  const response = await client.request({
+export const getBookmarkList = async <T>(body: { _id: string }) => {
+  const response = await client.request<T>({
     method: HTTP_METHODS.POST,
     url: '/api/user/bookmark',
     body,
@@ -31,8 +31,11 @@ export const getBookmarkList = async body => {
   return response;
 };
 
-export const setBookmark = async (key, body) => {
-  const response = client.request({
+export const setBookmark = async <T>(
+  key: string,
+  body: { [key: string]: string },
+) => {
+  const response = client.request<T>({
     method: HTTP_METHODS.POST,
     url: `/api/user/bookmark/${key}`,
     body,
@@ -41,6 +44,6 @@ export const setBookmark = async (key, body) => {
   return response;
 };
 
-export const getFoxImages = async foxNumber => {
+export const getFoxImages = async (foxNumber: number) => {
   return fetch(`${IMAGE_API_URL}/${foxNumber}.jpg`);
 };
