@@ -1,8 +1,10 @@
 import '../assets/index.css';
-import { fetchData } from './api';
-import { $, toggleLoading, debounce } from './helper/index.js';
+import { fetchData } from './api/index';
+import { $, toggleLoading, debounce } from './helper';
 import StorageManager from './utils/storageMap';
 import { STORAGE_KEY_NAMES, FOX_IMAGES_URL } from './utils/constants';
+import { ElementInterface, IdInterface } from 'Global';
+import { getRandom } from './helper/randomId';
 
 const storageMap = new StorageManager(STORAGE_KEY_NAMES.USER_TOKEN);
 
@@ -13,7 +15,6 @@ const storageMap = new StorageManager(STORAGE_KEY_NAMES.USER_TOKEN);
   location.replace('./login.html');
 })();
 
-let globalIndex = 0;
 const _id = storageMap.getValue();
 const $main = $('main');
 
@@ -27,42 +28,43 @@ NAV_MENU.forEach(item =>
 
 const createPin = () => {
   toggleLoading();
-  const pin = document.createElement('div');
-  const buttonWrapper = document.createElement('div');
-  const image = document.createElement('img');
-  const random = Math.floor(Math.random() * 123) + 1;
-  image.src = `${FOX_IMAGES_URL}${random}.jpg`;
-  buttonWrapper.setAttribute('class', 'button-wrapper');
-  buttonWrapper.innerHTML = createHeartElem(globalIndex, random, false);
-
-  pin.classList.add('pin');
-  pin.appendChild(buttonWrapper);
-  pin.appendChild(image);
+  const random = getRandom();
+  const pin = `
+  <div class="pin">
+    <div class="button-wrapper">
+      ${createHeartElem(globalIndex, random, false)}
+    </div>
+    <img src="${FOX_IMAGES_URL}${random}.jpg" />
+  </div>`;
   toggleLoading();
   return pin;
 };
 
-const createHeartElem = (index, key, isChecked = false) => {
+const createHeartElem = (
+  index: number,
+  key: string | number,
+  isChecked = false,
+) => {
   return `
-  <div class="anim-icon anim-icon-md heart">
-  <input type="checkbox" id="heart${index}" key=${key} ${
-    isChecked && 'checked'
-  }/>
+<div class="anim-icon anim-icon-md heart">
+  <input type="checkbox" id="heart${index}" key=${key} 
+  ${isChecked && 'checked'}/>
   <label for="heart${index}" key=${key}></label>
 </div>`;
 };
 
+let globalIndex = 0;
 const loadMore = debounce(() => {
   const container = $('.container');
   const pinList = [];
   for (let i = 10; i > 0; i--) {
-    pinList.push(createPin(++globalIndex));
+    ++globalIndex;
+    pinList.push(createPin());
   }
-  container.append(...pinList);
+
+  container.insertAdjacentHTML('afterbegin', pinList.join(''));
 }, 500);
-
 loadMore();
-
 window.addEventListener('scroll', () => {
   const loader = $('.loader');
   if (loader === null) return;
@@ -70,17 +72,17 @@ window.addEventListener('scroll', () => {
   loadMore();
 });
 
-const setMainInnerHtml = contents => {
+const setMainInnerHtml = (contents: string) => {
   $main.innerHTML = contents;
 };
 
-const mainAddOrRemoveClass = (isAdd, className) => {
+const mainAddOrRemoveClass = (isAdd: boolean, className: string) => {
   const method = isAdd ? 'add' : 'remove';
   $main.classList[method](className);
 };
 
-const render = (event, page) => {
-  if (event.target.matches(page)) {
+const render = (event: Event, page: string) => {
+  if ((<HTMLElement>event.target).matches(page)) {
     switch (page) {
       case '#explore':
         return renderExplorePage();
@@ -114,7 +116,7 @@ const renderSavePage = async () => {
     <div class="container">
     ${result
       .map(
-        ({ _id, url }, index) => `
+        ({ _id, url }: ElementInterface, index: number) => `
       <div class="pin">
         <div class="button-wrapper">
         ${createHeartElem(index, _id, true)}
@@ -128,12 +130,18 @@ const renderSavePage = async () => {
   setMainInnerHtml($content);
 };
 
-$main.addEventListener('click', async ({ target }) => {
-  const targetAttrKey = target.getAttribute('key');
+$main.addEventListener('click', async (event: MouseEvent) => {
+  const target = event.target as HTMLInputElement;
+  const targetAttrKey = target.getAttribute('key') as string;
   const requestUrl = `/user/bookmark/${targetAttrKey}`;
 
   if (targetAttrKey?.length > 3) {
-    await fetchData('removeBookmark', requestUrl, { _id }, 'DELETE');
+    await fetchData<IdInterface>(
+      'removeBookmark',
+      requestUrl,
+      { _id },
+      'DELETE',
+    );
     renderSavePage();
   }
 
@@ -143,11 +151,16 @@ $main.addEventListener('click', async ({ target }) => {
       return;
     }
 
-    const result = await fetchData('getBookmarkList', '/user/bookmark', {
-      _id,
-    });
+    const result: ElementInterface[] = await fetchData<IdInterface>(
+      'getBookmarkList',
+      '/user/bookmark',
+      {
+        _id,
+      },
+    );
+
     const selectedImage = result.filter(item => item.url === targetAttrKey);
-    await fetchData(
+    await fetchData<IdInterface>(
       'removeBookmark',
       `/user/bookmark/${selectedImage[0]?._id}`,
       { _id },
