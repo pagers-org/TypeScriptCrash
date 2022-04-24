@@ -12,8 +12,6 @@ export * from './http/ApiResponse';
 export * from './storage/StorageAdapter';
 export * from './storage/LocalStorage';
 
-export * from './store/Store';
-
 export * from './utils/RandomUtils';
 export * from './utils/StringUtils';
 export * from './utils/ObjectUtils';

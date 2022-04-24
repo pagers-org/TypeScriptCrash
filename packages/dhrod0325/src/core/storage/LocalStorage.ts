@@ -4,8 +4,8 @@ export class LocalStorage implements IStorage<string, any> {
   getItem(key: string): any {
     const value = localStorage.getItem(key);
 
-    if (typeof value !== 'string') {
-      throw new Error('value is not string');
+    if (value == null) {
+      throw new Error('value is null');
     }
 
     return JSON.parse(value);
