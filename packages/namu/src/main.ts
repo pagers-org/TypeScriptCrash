@@ -1,18 +1,13 @@
 import "../assets/index.css";
-import {
-  $,
-  toggleLoading,
-  debounce,
-  getLocal,
-  postAsync,
-} from "./helper/index.ts";
+import { $, toggleLoading, debounce, getLocal, postAsync } from "./helper";
 import { BASE_SERVER_URL, FOX_URL } from "./constant/url";
+import { Item } from "./interface";
 
-async function addBookmark(key, _id) {
+async function addBookmark(key: string, _id: string) {
   await postAsync(`${BASE_SERVER_URL}/api/user/bookmark/${key}`, { _id });
 }
 
-async function getBookmarkList(_id) {
+async function getBookmarkList(_id: string) {
   return await postAsync(`${BASE_SERVER_URL}/api/user/bookmark`, {
     _id,
   });
@@ -52,9 +47,10 @@ const loadMore = debounce(() => {
   const container = $(".container");
   const pinList = [];
   for (let i = 10; i > 0; i--) {
-    pinList.push(createPin(++globalIndex));
+    ++globalIndex;
+    pinList.push(createPin());
   }
-  container.append(...pinList);
+  container?.append(...pinList);
 }, 500);
 
 loadMore();
@@ -66,14 +62,17 @@ window.addEventListener("scroll", () => {
   loadMore();
 });
 
-$("nav").addEventListener("click", async (event) => {
+$("nav")?.addEventListener("click", async (event) => {
   event.stopPropagation();
-  if (!event.target.matches("input")) return;
+  if (!event.target) return;
 
-  const $main = $("main");
+  const target = event.target as HTMLElement;
+  if (!target.matches("input")) return;
+
+  const $main = $("main")!;
   $main.innerHTML = "";
 
-  if (event.target.matches("#explore")) {
+  if (target.matches("#explore")) {
     $main.classList.remove("saved");
     $main.innerHTML = `
       <div class="container"></div>
@@ -84,15 +83,15 @@ $("nav").addEventListener("click", async (event) => {
     loadMore();
   }
 
-  if (event.target.matches("#saved")) {
+  if (target.matches("#saved")) {
     $main.classList.add("saved");
-    const _id = getLocal("user_token");
+    const _id = getLocal("user_token")!;
     const result = await getBookmarkList(_id);
     const $content = `
     <div class="container">
     ${result
       .map(
-        ({ _id, url }, index) => `
+        ({ _id, url }: Item, index: string) => `
       <div class="pin">
         <div class="button-wrapper">
           <div class="anim-icon anim-icon-md heart">
@@ -110,10 +109,11 @@ $("nav").addEventListener("click", async (event) => {
   }
 });
 
-$("main").addEventListener("click", async (event) => {
-  if (!event.target.matches('label[for^="heart"]')) return;
-  const _id = getLocal("user_token");
-  await addBookmark(event.target.getAttribute("key"), _id);
+$("main")?.addEventListener("click", async (event) => {
+  const target = event.target as HTMLElement;
+  if (!target.matches('label[for^="heart"]')) return;
+  const _id = getLocal("user_token")!;
+  await addBookmark(target.getAttribute("key")!, _id);
 
   console.log("북마크에 저장되었습니다.");
 });
