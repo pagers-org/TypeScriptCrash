@@ -3,6 +3,7 @@ import { Global, ThemeProvider } from '@emotion/react';
 import { theme } from 'styles/theme';
 import { globalStyles } from 'styles/global';
 import normalize from 'emotion-normalize';
+import 'styles/font.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
 	return (
