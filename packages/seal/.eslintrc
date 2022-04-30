@@ -51,7 +51,8 @@
 		"import/prefer-default-export": "off",
 		"react/prop-types": "off",
 		"react/require-default-props": "off",
-		"arrow-body-style": "off"
+		"arrow-body-style": "off",
+		"@typescript-eslint/no-empty-interface": "off"
 	},
 	"globals": {
 		"React": "writable"

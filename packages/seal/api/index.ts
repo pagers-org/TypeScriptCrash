@@ -5,7 +5,14 @@ import {
 	PAGE_SIZE,
 	RANDOM_FOX_URL,
 } from 'constants/index';
-import { Feeds, GetFoxPicturesRequese, GetFoxPicutreResponse } from 'types/api';
+import { Feeds } from 'types';
+import {
+	GetFoxPicturesRequese,
+	GetFoxPicutreResponse,
+	LoginRequest,
+	LoginResponse,
+	SignupRequest,
+} from 'types/api';
 
 export const api = axios.create({
 	baseURL: BASE_URL,
@@ -14,6 +21,22 @@ export const api = axios.create({
 	},
 	timeout: 10000,
 });
+
+export const login = async ({ email, password }: LoginRequest) => {
+	const response = await api.post<LoginResponse[]>('/user/login', {
+		email,
+		password,
+	});
+
+	return response;
+};
+
+export const signup = async ({ email, password }: SignupRequest) => {
+	await api.post('/user', {
+		email,
+		password,
+	});
+};
 
 export const getFoxPictures = ({
 	page,
