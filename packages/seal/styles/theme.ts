@@ -9,6 +9,8 @@ export const theme = {
 		WHITE: '#fff',
 		GRAY: '#ccc',
 		LIGHT_GRAY: '#e6e6e6',
+		DARK_BLUE: '#3165b1',
+		LIGHT_BLUE: '#0081ff',
 	},
 	sizes: {
 		RADIUS: '40px',
