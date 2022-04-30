@@ -4,9 +4,9 @@ import InfiniteScroll from 'react-infinite-scroller';
 import Feed from './Feed';
 
 const Explore = () => {
-	const { data, fetchNextPage, hasNextPage } = useFoxPictures();
+	const { data, isLoading, fetchNextPage, hasNextPage } = useFoxPictures();
 
-	if (!data) return <Loading key="loading-1" />;
+	if (isLoading) return <Loading key="loading-1" />;
 
 	return (
 		<InfiniteScroll
