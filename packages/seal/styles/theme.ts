@@ -5,6 +5,10 @@ export const theme = {
 		BG_PURPLE: '#9439E4',
 		TEXT_COLOR: '#333',
 		HIGHLIGHT: '#8F7BF6',
+		RED: '#e2202c',
+		WHITE: '#fff',
+		GRAY: '#ccc',
+		LIGHT_GRAY: '#e6e6e6',
 	},
 	sizes: {
 		RADIUS: '40px',

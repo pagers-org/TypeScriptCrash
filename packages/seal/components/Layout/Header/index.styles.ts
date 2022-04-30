@@ -34,7 +34,7 @@ export const Nav = styled.nav`
 	padding: 0 20px;
 	width: 500px;
 	height: 100px;
-	background: white;
+	background: ${({ theme }) => theme.colors.WHITE};
 	border-radius: ${({ theme }) => theme.sizes.RADIUS};
 	display: flex;
 	align-items: center;
@@ -104,22 +104,8 @@ export const Label = styled.label<{
 			switch (selectedMenu) {
 				case 'explore': {
 					return css`
-						& > path:nth-of-type(3),
-						path:nth-of-type(6),
-						path:nth-of-type(9) {
+						& > path {
 							animation: ${explore} 0.3s linear;
-						}
-
-						& > path:nth-of-type(2),
-						path:nth-of-type(5),
-						path:nth-of-type(8) {
-							animation: ${explore} 0.3s linear 0.1s;
-						}
-
-						& > path:nth-of-type(1),
-						path:nth-of-type(4),
-						path:nth-of-type(7) {
-							animation: ${explore} 0.3s linear 0.2s;
 						}
 					`;
 				}
@@ -140,9 +126,4 @@ export const Label = styled.label<{
 export const Input = styled.input`
 	display: none;
 	pointer-events: none;
-
-	&: checked {
-		// color: ${({ theme }) => theme.colors.HIGHLIGHT};
-		// transform: translateY(-10px);
-	}
 `;
