@@ -4,13 +4,20 @@ import { theme } from 'styles/theme';
 import { globalStyles } from 'styles/global';
 import normalize from 'emotion-normalize';
 import 'styles/font.css';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+
+const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }: AppProps) {
 	return (
-		<ThemeProvider theme={theme}>
-			<Component {...pageProps} />
-			<Global styles={[normalize, globalStyles]} />
-		</ThemeProvider>
+		<QueryClientProvider client={queryClient}>
+			<ThemeProvider theme={theme}>
+				<Component {...pageProps} />
+				<Global styles={[normalize, globalStyles]} />
+				<ReactQueryDevtools initialIsOpen={false} />
+			</ThemeProvider>
+		</QueryClientProvider>
 	);
 }
 
