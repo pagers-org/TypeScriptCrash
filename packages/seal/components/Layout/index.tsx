@@ -1,5 +1,7 @@
 import Head from 'next/head';
-import React, { ReactNode } from 'react';
+import { useRouter } from 'next/router';
+import React, { ReactNode, useLayoutEffect } from 'react';
+import { getLocalStorage } from 'utils/localStorage';
 import Header from './Header';
 import { Wrapper } from './index.styles';
 
@@ -9,6 +11,13 @@ interface Props {
 }
 
 const Layout = ({ children, title }: Props) => {
+	const router = useRouter();
+
+	useLayoutEffect(() => {
+		const token = getLocalStorage('user_token');
+		if (!token) router.push('/login');
+	}, []);
+
 	return (
 		<Wrapper>
 			<Head>
