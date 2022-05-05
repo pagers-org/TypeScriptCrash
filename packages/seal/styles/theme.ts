@@ -12,8 +12,4 @@ export const theme = {
 		DARK_BLUE: '#3165b1',
 		LIGHT_BLUE: '#0081ff',
 	},
-	sizes: {
-		RADIUS: '40px',
-		ICON_SIZE: '37px',
-	},
 };

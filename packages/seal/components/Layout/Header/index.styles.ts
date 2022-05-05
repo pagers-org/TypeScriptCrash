@@ -30,35 +30,31 @@ const saved = keyframes`
   }
 `;
 
-export const Nav = styled.nav`
+export const Wrapper = styled.header`
+	width: 540px;
+	height: 110px;
+	background: rgba(255, 255, 255, 0.1);
+	border-radius: 0px 0px 40px 40px;
+	box-shadow: 0 0 40px #0001;
+`;
+
+export const Ul = styled.ul`
+	list-style: none;
 	padding: 0 20px;
 	width: 500px;
 	height: 100px;
-	background: ${({ theme }) => theme.colors.WHITE};
-	border-radius: ${({ theme }) => theme.sizes.RADIUS};
+	border-radius: $40px;
 	display: flex;
 	align-items: center;
 	justify-content: space-around;
 	position: relative;
-
-	&: before {
-		content: '';
-		width: calc(100% + 40px);
-		height: calc(50vh + 160px);
-		background: rgba(255, 255, 255, 0.1);
-		border-radius: calc(${({ theme }) => theme.sizes.RADIUS} + 10px);
-		position: absolute;
-		bottom: -10px;
-		z-index: -1;
-		box-shadow: 0 0 40px #0001;
-	}
 `;
 
 export const Label = styled.label<{
 	isChecked: boolean;
 	selectedMenu: Menu;
 }>`
-	width: calc(${({ theme }) => theme.sizes.ICON_SIZE} + 15px);
+	width: 42px;
 	height: auto;
 	aspect-ratio: 1/1;
 	color: ${({ isChecked, theme }) =>
@@ -94,7 +90,7 @@ export const Label = styled.label<{
 	}
 
 	& > svg {
-		width: ${({ theme }) => theme.sizes.ICON_SIZE};
+		width: 37px;
 		height: auto;
 		aspect-ratio: 1/1;
 

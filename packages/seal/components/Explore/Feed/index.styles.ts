@@ -16,7 +16,7 @@ const icon = keyframes`
 const checkIn = keyframes`
   0% {
     left: 60%;
-    top: 60%;
+    top: 50%;
     transform: translate(-50%, -50%);
     width: 16px;
     height: 16px;
@@ -42,7 +42,7 @@ const checkIn = keyframes`
 export const Wrapper = styled.div`
 	display: flex;
 	flex-direction: column;
-	margin-top: 1em;
+	margin-top: 15px;
 	border: 2px solid ${({ theme }) => theme.colors.LIGHT_GRAY};
 	border-radius: 15px;
 	padding: 20px;
