@@ -1,46 +1,58 @@
 import React, { ChangeEvent, useState } from 'react';
 import { Menu } from 'types';
 import { Icon } from '@iconify/react';
-import { Label, Nav, Input } from './index.styles';
+import { useRouter } from 'next/router';
+import { Label, Ul, Input, Wrapper } from './index.styles';
 
 const Header = () => {
-	const [selectedMenu, setSelectedMenu] = useState<Menu>('explore');
+	const router = useRouter();
 
-	const handleClickMenu = (e: ChangeEvent<HTMLInputElement>) => {
+	const [selectedMenu, setSelectedMenu] = useState<Menu>(
+		router.pathname === '/' ? 'explore' : 'saved',
+	);
+
+	const handleClickMenu = (e: ChangeEvent<HTMLInputElement>, path: string) => {
 		setSelectedMenu(e.target.value as Menu);
+		router.push(path);
 	};
 
 	return (
-		<header>
-			<Nav>
-				<Label
-					data-label="explore"
-					isChecked={selectedMenu === 'explore'}
-					selectedMenu={selectedMenu}
-				>
-					<Input
-						type="radio"
-						value="explore"
-						checked={selectedMenu === 'explore'}
-						onChange={handleClickMenu}
-					/>
-					<Icon icon="ic:baseline-apps" />
-				</Label>
-				<Label
-					data-label="saved"
-					isChecked={selectedMenu === 'saved'}
-					selectedMenu={selectedMenu}
-				>
-					<Input
-						type="radio"
-						value="saved"
-						checked={selectedMenu === 'saved'}
-						onChange={handleClickMenu}
-					/>
-					<Icon icon="eva:bookmark-outline" />
-				</Label>
-			</Nav>
-		</header>
+		<Wrapper>
+			<nav>
+				<Ul>
+					<li>
+						<Label
+							data-label="explore"
+							isChecked={selectedMenu === 'explore'}
+							selectedMenu={selectedMenu}
+						>
+							<Input
+								type="radio"
+								value="explore"
+								checked={selectedMenu === 'explore'}
+								onChange={(e) => handleClickMenu(e, '/')}
+							/>
+							<Icon icon="ic:baseline-apps" />
+						</Label>
+					</li>
+					<li>
+						<Label
+							data-label="saved"
+							isChecked={selectedMenu === 'saved'}
+							selectedMenu={selectedMenu}
+						>
+							<Input
+								type="radio"
+								value="saved"
+								checked={selectedMenu === 'saved'}
+								onChange={(e) => handleClickMenu(e, '/bookmark')}
+							/>
+							<Icon icon="eva:bookmark-outline" />
+						</Label>
+					</li>
+				</Ul>
+			</nav>
+		</Wrapper>
 	);
 };
 
