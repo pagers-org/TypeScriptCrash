@@ -1,7 +1,11 @@
 import { getFoxPictures } from 'api';
-import { useInfiniteQuery } from 'react-query';
+import { useInfiniteQuery, UseInfiniteQueryResult } from 'react-query';
+import { GetFoxPicutreResponse } from 'types/api';
 
-const useFoxPictures = () => {
+const useFoxPictures = (): UseInfiniteQueryResult<
+	GetFoxPicutreResponse,
+	never
+> => {
 	return useInfiniteQuery(
 		'getFoxPictures',
 		({ pageParam = 1 }) => getFoxPictures({ page: pageParam }),
