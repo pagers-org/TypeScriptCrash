@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-interface */
 import { Feeds, UserBasicForm } from 'types';
 
 export interface GetFoxPicturesRequese {
@@ -20,4 +19,18 @@ export interface LoginResponse extends UserBasicForm {
 	_id: string;
 	createdAt: string;
 	updatedAt: string;
+}
+
+export interface AddBookmarkRequest {
+	_id: string;
+	filename: string;
+}
+
+export interface GetBookmarksRequest {
+	_id: string;
+}
+
+export interface GetBookmarksResponse {
+	_id: string;
+	url: string;
 }

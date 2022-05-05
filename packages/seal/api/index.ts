@@ -6,7 +6,10 @@ import {
 	RANDOM_FOX_URL,
 } from 'constants/index';
 import { Feeds } from 'types';
-import {
+import type {
+	AddBookmarkRequest,
+	GetBookmarksRequest,
+	GetBookmarksResponse,
 	GetFoxPicturesRequese,
 	GetFoxPicutreResponse,
 	LoginRequest,
@@ -32,17 +35,31 @@ export const login = async ({ email, password }: LoginRequest) => {
 };
 
 export const signup = async ({ email, password }: SignupRequest) => {
-	await api.post('/user', {
+	await api.post<never>('/user', {
 		email,
 		password,
 	});
 };
 
+export const addBookmark = async ({ _id, filename }: AddBookmarkRequest) => {
+	await api.post<never>(`/user/bookmark/${filename}`, {
+		_id,
+	});
+};
+
+export const getBookmarks = async ({ _id }: GetBookmarksRequest) => {
+	const response = api.post<GetBookmarksResponse[]>('/user/bookmark', {
+		_id,
+	});
+
+	return response;
+};
+
 export const getFoxPictures = ({
 	page,
 	size = PAGE_SIZE,
-}: GetFoxPicturesRequese): Promise<GetFoxPicutreResponse> => {
-	return new Promise((resolve) => {
+}: GetFoxPicturesRequese) => {
+	return new Promise<GetFoxPicutreResponse>((resolve) => {
 		const result: Feeds[] = [];
 
 		for (let i = 1; i <= size; i += 1) {
