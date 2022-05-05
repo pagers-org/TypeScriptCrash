@@ -1,9 +1,7 @@
-import { login } from 'api';
 import { EMAIL_REGEX, ERROR_MESSAGE, SUCCESS_MESSAGE } from 'constants/index';
 import Link from 'next/link';
 import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useMutation } from 'react-query';
 import {
 	Button,
 	ErrorMessage,
@@ -17,6 +15,7 @@ import { setLocalStorage } from 'utils/localStorage';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { UserBasicForm } from 'types';
+import useLogin from 'hooks/mutation/useLogin';
 
 interface Inputs extends UserBasicForm {}
 
@@ -29,7 +28,7 @@ const LoginForm = () => {
 
 	const router = useRouter();
 
-	const { mutate } = useMutation(login, {
+	const { mutate } = useLogin({
 		onSuccess: (data) => {
 			const { _id, email } = data.data[0];
 			setLocalStorage('user_token', _id);
