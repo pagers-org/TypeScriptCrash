@@ -11,11 +11,10 @@ import {
 import Link from 'next/link';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { EMAIL_REGEX, ERROR_MESSAGE, SUCCESS_MESSAGE } from 'constants/index';
-import { signup } from 'api';
-import { useMutation } from 'react-query';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { UserBasicForm } from 'types';
+import useSignup from 'hooks/mutation/\buseSignup';
 
 interface Inputs extends UserBasicForm {
 	passwordCheck: string;
@@ -32,7 +31,7 @@ const SignupForm = () => {
 	const watchedPassword = watch('password');
 	const router = useRouter();
 
-	const { mutate } = useMutation(signup, {
+	const { mutate } = useSignup({
 		onSuccess: () => {
 			alert(SUCCESS_MESSAGE.SIGNUP);
 			router.push('/login');
